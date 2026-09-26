@@ -1,0 +1,1021 @@
+{
+  "total_agents": 100,
+  "teams_count": 12,
+  "agents": [
+    {
+      "agent_id": "D01",
+      "team": "Team 01 - Data Acquisition",
+      "name": "NWP Collector",
+      "role": "Crawls IMD GFS and NCMRWF GRIB2 numerical forecasts",
+      "allowed_tools": [
+        "curl",
+        "grib_parser"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "D02",
+      "team": "Team 01 - Data Acquisition",
+      "name": "IMD Data Collector",
+      "role": "Fetches gridded historical rainfall from IMD Pune",
+      "allowed_tools": [
+        "curl",
+        "netcdf_reader"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "D03",
+      "team": "Team 01 - Data Acquisition",
+      "name": "AWS Collector",
+      "role": "Ingests hourly telemetry from 1,200 active IMD AWS stations",
+      "allowed_tools": [
+        "aws_api",
+        "csv_parser"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "D04",
+      "team": "Team 01 - Data Acquisition",
+      "name": "ERA5 Collector",
+      "role": "Manages Copernicus CDS API queries for macro reanalysis",
+      "allowed_tools": [
+        "cdsapi",
+        "netcdf_reader"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "D05",
+      "team": "Team 01 - Data Acquisition",
+      "name": "Sentinel-1 Collector",
+      "role": "Queries CDSE STAC API for C-band SAR scenes",
+      "allowed_tools": [
+        "stac_api",
+        "safe_reader"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "D06",
+      "team": "Team 01 - Data Acquisition",
+      "name": "Sentinel-2 Collector",
+      "role": "Ingests Level-2A BOA multispectral satellite tiles",
+      "allowed_tools": [
+        "stac_api",
+        "jp2_reader"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "D07",
+      "team": "Team 01 - Data Acquisition",
+      "name": "DEM/Soil Collector",
+      "role": "Downloads Copernicus GLO-30 and SoilGrids 250m layers",
+      "allowed_tools": [
+        "s3_client",
+        "rasterio"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "D08",
+      "team": "Team 01 - Data Acquisition",
+      "name": "Dataset Catalog Agent",
+      "role": "Hashes raw files, checks bytes, and updates manifests",
+      "allowed_tools": [
+        "sha256",
+        "json_manifest"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "Q01",
+      "team": "Team 02 - Data QA & Provenance",
+      "name": "Missing Data Agent",
+      "role": "Detects dropouts, recommends spatial vs temporal imputation",
+      "allowed_tools": [
+        "null_checker",
+        "imputer"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "Q02",
+      "team": "Team 02 - Data QA & Provenance",
+      "name": "Duplicate Detector",
+      "role": "Removes duplicate station rows and overlapping timestamps",
+      "allowed_tools": [
+        "hash_matcher",
+        "dedup"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "Q03",
+      "team": "Team 02 - Data QA & Provenance",
+      "name": "Outlier Detector",
+      "role": "Flags unphysical meteorological and soil sensor spikes",
+      "allowed_tools": [
+        "zscore",
+        "iqr_filter"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "Q04",
+      "team": "Team 02 - Data QA & Provenance",
+      "name": "Timestamp Validator",
+      "role": "Enforces strict UTC ISO-8601 timestamps and temporal continuity",
+      "allowed_tools": [
+        "datetime_parser"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "Q05",
+      "team": "Team 02 - Data QA & Provenance",
+      "name": "Spatial Integrity Agent",
+      "role": "Verifies coordinates lie within true district/panchayat bounds",
+      "allowed_tools": [
+        "shapely",
+        "geopandas"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "Q06",
+      "team": "Team 02 - Data QA & Provenance",
+      "name": "Unit Consistency Agent",
+      "role": "Guarantees standard physical units across all feature tables",
+      "allowed_tools": [
+        "unit_converter"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "Q07",
+      "team": "Team 02 - Data QA & Provenance",
+      "name": "Leakage Detector",
+      "role": "Audits train/test splits to guarantee zero spatial or temporal leakage",
+      "allowed_tools": [
+        "leakage_audit"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "Q08",
+      "team": "Team 02 - Data QA & Provenance",
+      "name": "Provenance Auditor",
+      "role": "Tracks cryptographic SHA-256 lineage from raw source to tensor",
+      "allowed_tools": [
+        "lineage_graph"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "G01",
+      "team": "Team 03 - Geospatial Intelligence",
+      "name": "CRS Agent",
+      "role": "Warps disparate rasters to canonical EPSG:4326 and target UTM metric zones",
+      "allowed_tools": [
+        "pyproj",
+        "rasterio_warp"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "G02",
+      "team": "Team 03 - Geospatial Intelligence",
+      "name": "Grid Generator",
+      "role": "Generates the authoritative 1000m x 1000m metric analysis mesh",
+      "allowed_tools": [
+        "grid_builder"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "G03",
+      "team": "Team 03 - Geospatial Intelligence",
+      "name": "DEM Processor",
+      "role": "Mosaics elevation tiles, fills sinks and voids",
+      "allowed_tools": [
+        "dem_filler",
+        "richdem"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "G04",
+      "team": "Team 03 - Geospatial Intelligence",
+      "name": "Slope/Aspect Agent",
+      "role": "Calculates numerical gradient vectors, slope degrees, aspect radians",
+      "allowed_tools": [
+        "gradient_calc"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "G05",
+      "team": "Team 03 - Geospatial Intelligence",
+      "name": "TWI Agent",
+      "role": "Computes Topographic Wetness Index for waterlogging risk",
+      "allowed_tools": [
+        "twi_solver"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "G06",
+      "team": "Team 03 - Geospatial Intelligence",
+      "name": "Flow Accumulation Agent",
+      "role": "Runs D8 hydrological routing algorithms to identify drainage paths",
+      "allowed_tools": [
+        "d8_router"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "G07",
+      "team": "Team 03 - Geospatial Intelligence",
+      "name": "Spatial Join Agent",
+      "role": "Intersects station points and farm plot boundaries with 1-km grid centroids",
+      "allowed_tools": [
+        "spatial_index"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "G08",
+      "team": "Team 03 - Geospatial Intelligence",
+      "name": "Raster Alignment Agent",
+      "role": "Resamples, clips, and stacks features into uniform multidimensional tensors",
+      "allowed_tools": [
+        "tensor_stacker"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W01",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "Model-1 Baseline Agent",
+      "role": "Maintains and runs spatial bilinear and Random Forest baselines",
+      "allowed_tools": [
+        "baseline_rf"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W02",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "RF/XGBoost Agent",
+      "role": "Optimizes gradient boosted tree ensembles for tabular point downscaling",
+      "allowed_tools": [
+        "xgboost",
+        "optuna"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W03",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "CNN Agent",
+      "role": "Constructs 2D convolutional super-resolution encoders for continuous fields",
+      "allowed_tools": [
+        "torch_cnn"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W04",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "U-Net Agent",
+      "role": "Implements multiscale encoder-decoder networks with skip connections",
+      "allowed_tools": [
+        "torch_unet"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W05",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "Weather Feature Agent",
+      "role": "Derives Vapor Pressure Deficit, dewpoint, atmospheric lapse rates",
+      "allowed_tools": [
+        "meteo_formulas"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W06",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "Temperature Agent",
+      "role": "Oversees Model 2 diurnal lapse rate and thermal refinement",
+      "allowed_tools": [
+        "tmax_tmin_engine"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W07",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "Rainfall Classifier Agent",
+      "role": "Trains the two-stage precipitation gate P(Rain > 0.1 mm)",
+      "allowed_tools": [
+        "binary_classifier"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W08",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "Rainfall Regressor Agent",
+      "role": "Models conditional precipitation amounts resolving drizzle bias",
+      "allowed_tools": [
+        "amount_regressor"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W09",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "Weather Error Analysis Agent",
+      "role": "Deconstructs residual errors across elevation gradients and seasons",
+      "allowed_tools": [
+        "residual_analyzer"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "W10",
+      "team": "Team 04 - Weather Intelligence",
+      "name": "Weather Experiment Manager",
+      "role": "Logs experiment parameters, artifacts, and training curves",
+      "allowed_tools": [
+        "mlflow_logger"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO01",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "Sentinel-1 QA Agent",
+      "role": "Verifies SAR IW-GRD radiometric calibration and orbit file precision",
+      "allowed_tools": [
+        "snap_calib"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO02",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "Sentinel-1 VV Agent",
+      "role": "Extracts calibrated VV backscatter for soil moisture dielectric sensitivity",
+      "allowed_tools": [
+        "vv_extractor"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO03",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "Sentinel-1 VH Agent",
+      "role": "Extracts cross-polarized VH backscatter for canopy volume scattering",
+      "allowed_tools": [
+        "vh_extractor"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO04",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "Sentinel-2 QA Agent",
+      "role": "Filters high cloud cover scenes and verifies atmospheric correction quality",
+      "allowed_tools": [
+        "scl_filter"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO05",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "NDVI Agent",
+      "role": "Computes Normalized Difference Vegetation Index from Red and NIR bands",
+      "allowed_tools": [
+        "ndvi_calculator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO06",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "NDRE Agent",
+      "role": "Computes Normalized Difference Red Edge for non-saturating Kharif crop vigor",
+      "allowed_tools": [
+        "ndre_calculator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO07",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "EVI Agent",
+      "role": "Derives Enhanced Vegetation Index with blue-band atmospheric aerosol resistance",
+      "allowed_tools": [
+        "evi_calculator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO08",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "LST Agent",
+      "role": "Integrates MODIS and Landsat thermal bands for land surface skin temperature",
+      "allowed_tools": [
+        "lst_retriever"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO09",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "Cloud/Shadow Agent",
+      "role": "Masks contaminated optical pixels using the Scene Classification Layer",
+      "allowed_tools": [
+        "cloud_masker"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "EO10",
+      "team": "Team 05 - Earth Observation / Vision",
+      "name": "Image Patch/Label Agent",
+      "role": "Extracts 1,000+ clean 256x256 spatial patches with zero spatial cross-leakage",
+      "allowed_tools": [
+        "patch_extractor"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "SH01",
+      "team": "Team 06 - Soil & Hydrology",
+      "name": "SoilGrids Agent",
+      "role": "Ingests and resamples the 6 standard depth layers of sand, clay, silt, and SOC",
+      "allowed_tools": [
+        "soilgrids_wcs"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "SH02",
+      "team": "Team 06 - Soil & Hydrology",
+      "name": "Soil Moisture Agent",
+      "role": "Coordinates Model 4 retrieval combining SAR backscatter, optical NDVI, and LST",
+      "allowed_tools": [
+        "soil_moisture_fusion"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "SH03",
+      "team": "Team 06 - Soil & Hydrology",
+      "name": "SAR Moisture Agent",
+      "role": "Inverts physical dielectric models to estimate top 0-5 cm volumetric water content",
+      "allowed_tools": [
+        "dielectric_inverter"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "SH04",
+      "team": "Team 06 - Soil & Hydrology",
+      "name": "Water Balance Agent",
+      "role": "Calculates Root Zone Soil Moisture (5-40 cm) via continuous hydrological continuity",
+      "allowed_tools": [
+        "water_balance_pde"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "SH05",
+      "team": "Team 06 - Soil & Hydrology",
+      "name": "River Network Agent",
+      "role": "Extracts HydroSHEDS stream vectors and computes shortest distance to drainage",
+      "allowed_tools": [
+        "stream_tracer"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "SH06",
+      "team": "Team 06 - Soil & Hydrology",
+      "name": "Flood Feature Agent",
+      "role": "Generates flow accumulation, catchment area, and depression storage rasters",
+      "allowed_tools": [
+        "flood_indices"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "SH07",
+      "team": "Team 06 - Soil & Hydrology",
+      "name": "Hydrology Validation Agent",
+      "role": "Validates soil moisture against in-situ TDR probe networks",
+      "allowed_tools": [
+        "tdr_comparator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "SH08",
+      "team": "Team 06 - Soil & Hydrology",
+      "name": "Soil Experiment Agent",
+      "role": "Calibrates Saxton-Rawls pedotransfer equations for Field Capacity & Wilting Point",
+      "allowed_tools": [
+        "pedotransfer_calc"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "C01",
+      "team": "Team 07 - Crop Intelligence",
+      "name": "Crop Classification Agent",
+      "role": "Segregates crop parcel types (paddy, wheat, maize, sugarcane) via time-series SAR",
+      "allowed_tools": [
+        "crop_classifier"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "C02",
+      "team": "Team 07 - Crop Intelligence",
+      "name": "Phenology Agent",
+      "role": "Tracks biological growth stages (Emergence, Vegetative, Flowering, Maturity)",
+      "allowed_tools": [
+        "pheno_tracker"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "C03",
+      "team": "Team 07 - Crop Intelligence",
+      "name": "GDD Agent",
+      "role": "Calculates accumulated Growing Degree Days",
+      "allowed_tools": [
+        "gdd_calculator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "C04",
+      "team": "Team 07 - Crop Intelligence",
+      "name": "Crop Health Agent",
+      "role": "Detects sudden drops in canopy chlorophyll indicating pest or drought stress",
+      "allowed_tools": [
+        "health_monitor"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "C05",
+      "team": "Team 07 - Crop Intelligence",
+      "name": "Vegetation Anomaly Agent",
+      "role": "Compares current seasonal NDVI trajectories against 5-year climatological normals",
+      "allowed_tools": [
+        "anomaly_detector"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "C06",
+      "team": "Team 07 - Crop Intelligence",
+      "name": "Crop Calendar Agent",
+      "role": "Validates sowing and harvest dates against DES district cropping windows",
+      "allowed_tools": [
+        "calendar_verifier"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "C07",
+      "team": "Team 07 - Crop Intelligence",
+      "name": "Yield Features Agent",
+      "role": "Aggregates mid-season biomass and weather deficit metrics for Model 7",
+      "allowed_tools": [
+        "yield_features"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "C08",
+      "team": "Team 07 - Crop Intelligence",
+      "name": "Yield Validation Agent",
+      "role": "Compares model yield forecasts with official district Crop Cutting Experiments",
+      "allowed_tools": [
+        "cce_validator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML01",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "Baseline Scientist",
+      "role": "Implements simple, defensible baselines (Bilinear, Ridge, Random Forest)",
+      "allowed_tools": [
+        "baseline_suite"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML02",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "XGBoost Scientist",
+      "role": "Tunes gradient boosted trees with early stopping and monotonic constraints",
+      "allowed_tools": [
+        "xgboost_tuner"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML03",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "Random Forest Scientist",
+      "role": "Evaluates bagging ensembles for robust tabular downscaling",
+      "allowed_tools": [
+        "rf_evaluator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML04",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "CNN Scientist",
+      "role": "Designs deep residual convolutional networks for 2D spatial super-resolution",
+      "allowed_tools": [
+        "resnet_sr"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML05",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "U-Net Scientist",
+      "role": "Implements spatial multi-resolution architectures with topographic skip connections",
+      "allowed_tools": [
+        "unet_sr"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML06",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "Transformer Scientist",
+      "role": "Researches Swin Transformer attention mechanisms for long-range spatial patterns",
+      "allowed_tools": [
+        "swin_transformer"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML07",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "Spatiotemporal Scientist",
+      "role": "Explores ConvLSTM and SimVP for recurrent temporal weather sequences",
+      "allowed_tools": [
+        "spatiotemporal_net"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML08",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "Hyperparameter Agent",
+      "role": "Runs Bayesian optimization over learning rates, depths, and batch sizes",
+      "allowed_tools": [
+        "optuna_optimizer"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML09",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "Ablation Agent",
+      "role": "Systematically isolates and evaluates the performance contribution of each feature",
+      "allowed_tools": [
+        "ablation_runner"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "ML10",
+      "team": "Team 08 - ML Research & Experimentation",
+      "name": "Experiment Director",
+      "role": "Enforces the single-active model rule and declares architectural winners",
+      "allowed_tools": [
+        "director_lock"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "V01",
+      "team": "Team 09 - Validation & Uncertainty",
+      "name": "Spatial CV Agent",
+      "role": "Partitions data into spatially isolated Panchayat clusters",
+      "allowed_tools": [
+        "spatial_kfold"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "V02",
+      "team": "Team 09 - Validation & Uncertainty",
+      "name": "Temporal CV Agent",
+      "role": "Enforces strict walk-forward expanding window validation protocols",
+      "allowed_tools": [
+        "walk_forward_cv"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "V03",
+      "team": "Team 09 - Validation & Uncertainty",
+      "name": "AWS Validation Agent",
+      "role": "Evaluates downscaled outputs strictly against independent IMD AWS ground telemetry",
+      "allowed_tools": [
+        "aws_evaluator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "V04",
+      "team": "Team 09 - Validation & Uncertainty",
+      "name": "Error Analysis Agent",
+      "role": "Generates spatial error heatmaps, residual distribution plots, quantile analyses",
+      "allowed_tools": [
+        "error_heatmap"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "V05",
+      "team": "Team 09 - Validation & Uncertainty",
+      "name": "Calibration Agent",
+      "role": "Tunes Temperature Scaling and Isotonic Calibration for probability outputs",
+      "allowed_tools": [
+        "temp_scaler"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "V06",
+      "team": "Team 09 - Validation & Uncertainty",
+      "name": "Conformal Agent",
+      "role": "Computes finite-sample non-conformity scores for Conformalized Quantile Regression",
+      "allowed_tools": [
+        "cqr_engine"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "V07",
+      "team": "Team 09 - Validation & Uncertainty",
+      "name": "OOD Agent",
+      "role": "Calculates Mahalanobis distance in latent feature space to detect atmospheric anomalies",
+      "allowed_tools": [
+        "mahalanobis_ood"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "V08",
+      "team": "Team 09 - Validation & Uncertainty",
+      "name": "Abstention Agent",
+      "role": "Triggers automated fallback to official IMD district forecasts when uncertainty spikes",
+      "allowed_tools": [
+        "abstention_trigger"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "DI01",
+      "team": "Team 10 - Decision Intelligence",
+      "name": "Irrigation Agent",
+      "role": "Computes FAO-56 Penman-Monteith ET0, scales by Kc, and determines net water needs",
+      "allowed_tools": [
+        "fao56_engine"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "DI02",
+      "team": "Team 10 - Decision Intelligence",
+      "name": "Spraying Agent",
+      "role": "Evaluates wind speed, rainfall probability, and leaf wetness before pesticide application",
+      "allowed_tools": [
+        "spray_advisor"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "DI03",
+      "team": "Team 10 - Decision Intelligence",
+      "name": "Sowing Agent",
+      "role": "Evaluates 10-day rainfall onset probability and soil moisture for optimal sowing timing",
+      "allowed_tools": [
+        "sowing_advisor"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "DI04",
+      "team": "Team 10 - Decision Intelligence",
+      "name": "Harvest Agent",
+      "role": "Monitors dry spell windows and atmospheric humidity to prevent post-harvest mold losses",
+      "allowed_tools": [
+        "harvest_advisor"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "DI05",
+      "team": "Team 10 - Decision Intelligence",
+      "name": "Hazard Action Agent",
+      "role": "Translates Model 8/9 flood and heatwave alerts into emergency defense protocols",
+      "allowed_tools": [
+        "hazard_protocols"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "DI06",
+      "team": "Team 10 - Decision Intelligence",
+      "name": "Uncertainty Decision Agent",
+      "role": "Applies risk-sensitive loss matrices to prevent actions under high uncertainty",
+      "allowed_tools": [
+        "risk_optimizer"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "DI07",
+      "team": "Team 10 - Decision Intelligence",
+      "name": "Advisory Composer",
+      "role": "Synthesizes verified recommendations into actionable, localized, plain-language text",
+      "allowed_tools": [
+        "advisory_builder"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "MO01",
+      "team": "Team 11 - MLOps & Backend",
+      "name": "Training Orchestrator",
+      "role": "Manages single-active training queue and spawns background compute tasks",
+      "allowed_tools": [
+        "queue_orchestrator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "MO02",
+      "team": "Team 11 - MLOps & Backend",
+      "name": "Dataset Versioning",
+      "role": "Tags and freezes training datasets with immutable cryptographic SHA-256 hashes",
+      "allowed_tools": [
+        "dataset_hasher"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "MO03",
+      "team": "Team 11 - MLOps & Backend",
+      "name": "Model Registry",
+      "role": "Catalogs model artifacts, hyperparameters, and lineage into artifacts/registry.json",
+      "allowed_tools": [
+        "model_registry"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "MO04",
+      "team": "Team 11 - MLOps & Backend",
+      "name": "Experiment Tracker",
+      "role": "Logs loss curves, validation metrics, and hardware resource consumption",
+      "allowed_tools": [
+        "experiment_tracker"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "MO05",
+      "team": "Team 11 - MLOps & Backend",
+      "name": "Inference Server",
+      "role": "Wraps trained weights into low-latency asynchronous FastAPI inference endpoints",
+      "allowed_tools": [
+        "fastapi_runner"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "MO06",
+      "team": "Team 11 - MLOps & Backend",
+      "name": "API Agent",
+      "role": "Validates OpenAPI request/response contracts and monitors latency SLAs (< 250 ms)",
+      "allowed_tools": [
+        "contract_validator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "MO07",
+      "team": "Team 11 - MLOps & Backend",
+      "name": "Monitoring Agent",
+      "role": "Tracks input feature drift, missing station feeds, and live telemetry latency",
+      "allowed_tools": [
+        "drift_monitor"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "MO08",
+      "team": "Team 11 - MLOps & Backend",
+      "name": "Resource/GPU Scheduler",
+      "role": "Allocates memory, manages batch sizes, and prevents CPU/GPU out-of-memory crashes",
+      "allowed_tools": [
+        "gpu_scheduler"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "UI01",
+      "team": "Team 12 - Product / UI / Advisory",
+      "name": "Dashboard Agent",
+      "role": "Powers the high-level Command Center, Panchayat status cards, and live KPIs",
+      "allowed_tools": [
+        "dashboard_engine"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "UI02",
+      "team": "Team 12 - Product / UI / Advisory",
+      "name": "GIS Map Agent",
+      "role": "Renders 1-km weather grids, satellite overlays, and vector boundaries via Leaflet/MapLibre",
+      "allowed_tools": [
+        "gis_renderer"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "UI03",
+      "team": "Team 12 - Product / UI / Advisory",
+      "name": "Digital Twin Agent",
+      "role": "Drives the interactive What-If simulation slider and live waterlogging scenario runner",
+      "allowed_tools": [
+        "twin_simulator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "UI04",
+      "team": "Team 12 - Product / UI / Advisory",
+      "name": "Visualization Agent",
+      "role": "Generates dynamic chart components (Predicted vs Observed, NDVI timelines, CQR)",
+      "allowed_tools": [
+        "chart_engine"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "UI05",
+      "team": "Team 12 - Product / UI / Advisory",
+      "name": "Hindi Advisory Agent",
+      "role": "Translates complex scientific outputs into natural, vernacular Hindi dialects",
+      "allowed_tools": [
+        "hindi_translator"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "UI06",
+      "team": "Team 12 - Product / UI / Advisory",
+      "name": "Accessibility Agent",
+      "role": "Formats advisories for low-bandwidth mobile devices, SMS text, and IVR voice scripts",
+      "allowed_tools": [
+        "sms_ivr_formatter"
+      ],
+      "status": "IDLE"
+    },
+    {
+      "agent_id": "UI07",
+      "team": "Team 12 - Product / UI / Advisory",
+      "name": "Demo/Presentation Agent",
+      "role": "Manages the Astra-style KisanOrb multi-state visual interaction engine",
+      "allowed_tools": [
+        "kisan_orb_engine"
+      ],
+      "status": "IDLE"
+    }
+  ]
+}

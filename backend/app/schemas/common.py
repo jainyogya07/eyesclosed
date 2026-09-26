@@ -1,0 +1,25 @@
+"""
+Common enumerations and primitive types.
+"""
+from enum import Enum
+
+class ModelReadinessState(str, Enum):
+    NOT_AVAILABLE = "NOT_AVAILABLE"
+    DATA_AUDIT = "DATA_AUDIT"
+    TRAINING = "TRAINING"
+    VALIDATING = "VALIDATING"
+    PILOT = "PILOT"
+    FROZEN_PILOT = "FROZEN_PILOT"
+    PRODUCTION = "PRODUCTION"
+    FAILED_VALIDATION = "FAILED_VALIDATION"
+
+class OODStatus(str, Enum):
+    IN_DOMAIN = "IN_DOMAIN"
+    OOD = "OOD"
+    ABSTAIN = "ABSTAIN"
+
+class QualityStatus(str, Enum):
+    VERIFIED = "VERIFIED"
+    PILOT_VALIDATED = "PILOT_VALIDATED"
+    DEGRADED_CONFIDENCE = "DEGRADED_CONFIDENCE"
+    ABSTAIN_UNPHYSICAL = "ABSTAIN_UNPHYSICAL"

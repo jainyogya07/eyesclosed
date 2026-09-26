@@ -1,0 +1,241 @@
+/* =====================================================================
+   Kisaan Ki Yash — Scientific & Cinematic UI Design System
+   Theme: Light / Premium / Scientific
+   Palette: Off-White + Atmospheric Blue + Lush Canopy Green + Charcoal
+   ===================================================================== */
+
+:root {
+  /* Surface & Canvas Tokens */
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-subtle: #f1f5f9;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --bg-glass-card: rgba(255, 255, 255, 0.72);
+  --bg-glass-dark: rgba(15, 23, 42, 0.75);
+
+  /* Typography & Text */
+  --text-primary: #0f172a;       /* Deep obsidian charcoal */
+  --text-secondary: #475569;     /* Slate */
+  --text-muted: #94a3b8;         /* Subdued caption */
+  --text-inverse: #f8fafc;
+
+  /* Scientific Accent Colors */
+  --color-earth-emerald: #059669; /* Agriculture & healthy crop */
+  --color-earth-light: #10b981;
+  --color-earth-subtle: #ecfdf5;
+  --color-atmosphere-blue: #0284c7; /* Weather & precipitation */
+  --color-atmosphere-light: #38bdf8;
+  --color-atmosphere-subtle: #f0f9ff;
+  --color-solar-amber: #d97706;  /* Warning & Moderate Risk */
+  --color-solar-light: #f59e0b;
+  --color-solar-subtle: #fffbeb;
+  --color-hazard-crimson: #dc2626; /* Critical & Prohibited */
+  --color-hazard-light: #ef4444;
+  --color-hazard-subtle: #fef2f2;
+  --color-quantum-violet: #7c3aed; /* Digital Twin & What-If */
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(226, 232, 240, 0.8);
+  --border-card: rgba(203, 213, 225, 0.6);
+  --border-focus: rgba(2, 132, 199, 0.4);
+  --border-glow-emerald: rgba(16, 185, 129, 0.3);
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --shadow-glow: 0 0 25px rgba(2, 132, 199, 0.15);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Typography Stacks */
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* Animations for Kisan Intelligence Core */
+@keyframes kisanSpinClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes kisanSpinCounter {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes kisanBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+@keyframes kisanPulse {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+@keyframes subtleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Scientific Utilities */
+.mono {
+  font-family: var(--font-mono);
+}
+
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+}
+
+.glass-panel-elevated {
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* Badge System */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.badge-pilot {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.badge-frozen {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.badge-validating {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.badge-unavailable {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.badge-critical {
+  background: var(--color-hazard-subtle);
+  color: var(--color-hazard-crimson);
+  border: 1px solid #fca5a5;
+}
+
+/* Action Status Buttons */
+.action-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+.action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dropdown Hover State */
+.dropdown-item {
+  transition: background 0.15s ease;
+}
+.dropdown-item:hover {
+  background: var(--bg-surface-subtle);
+}
+
+/* Responsive Media Queries */
+@media (max-width: 960px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-hamburger {
+    display: block !important;
+  }
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
+  .location-chip {
+    display: none !important;
+  }
+}
+
+@media (min-width: 961px) {
+  .location-chip {
+    display: inline-flex !important;
+  }
+}
