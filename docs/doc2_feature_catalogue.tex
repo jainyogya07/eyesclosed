@@ -1,0 +1,459 @@
+\documentclass[12pt,a4paper]{article}
+
+% ─── Packages ────────────────────────────────────────────────────────────────
+\usepackage[top=2.0cm,bottom=2.2cm,left=2.4cm,right=2.4cm]{geometry}
+\usepackage{fontenc}
+\usepackage{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{multicol}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{hhline}
+\usepackage{setspace}
+\usepackage{mdframed}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{fontawesome5}
+
+% ─── Colour Palette ──────────────────────────────────────────────────────────
+\definecolor{primaryGreen}{RGB}{22,101,52}
+\definecolor{accentGreen}{RGB}{74,222,128}
+\definecolor{deepTeal}{RGB}{15,118,110}
+\definecolor{softGold}{RGB}{202,138,4}
+\definecolor{lightBg}{RGB}{240,253,244}
+\definecolor{cardBg}{RGB}{220,252,231}
+\definecolor{borderGreen}{RGB}{134,239,172}
+\definecolor{textDark}{RGB}{20,83,45}
+\definecolor{sectionBar}{RGB}{16,185,129}
+\definecolor{orange}{RGB}{194,65,12}
+\definecolor{blue}{RGB}{37,99,235}
+\definecolor{purple}{RGB}{109,40,217}
+\definecolor{rose}{RGB}{190,18,60}
+\definecolor{amber}{RGB}{161,98,7}
+\definecolor{skyblue}{RGB}{3,105,161}
+\definecolor{tierGold}{RGB}{202,138,4}
+\definecolor{tierSilver}{RGB}{100,116,139}
+
+% ─── Typography ──────────────────────────────────────────────────────────────
+\setlength{\parskip}{5pt}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+
+\titleformat{\section}[block]
+  {\large\bfseries\color{primaryGreen}}
+  {}{0em}{\colorbox{cardBg}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering #1}}}[{\vspace{2pt}\color{sectionBar}\titlerule[1.2pt]}]
+
+\titleformat{\subsection}[hang]
+  {\normalsize\bfseries\color{deepTeal}}
+  {\thesubsection.}{0.5em}{}
+
+% ─── Header / Footer ─────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primaryGreen}\textbf{Kisaan Ki Yash} — Feature Catalogue}
+\fancyhead[R]{\small\color{deepTeal}SIH 2024 Submission}
+\fancyfoot[C]{\small\color{gray}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{borderGreen}\leaders\hrule height \headrulewidth\hfill}}
+
+% ─── Custom Boxes ────────────────────────────────────────────────────────────
+\tcbuselibrary{skins,breakable,most}
+
+\newtcolorbox{featurebox}[3][]{
+  colback=#2!8, colframe=#2, coltitle=white,
+  fonttitle=\bfseries\small, title=#3,
+  boxrule=1.4pt, arc=6pt, left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before upper={\setlength{\parskip}{3pt}}, #1
+}
+
+\newtcolorbox{impactbox}{
+  colback=softGold!10, colframe=softGold,
+  boxrule=1.2pt, arc=5pt, left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{pricebox}[2]{
+  colback=#1!8, colframe=#1, coltitle=white,
+  fonttitle=\bfseries, title=#2,
+  boxrule=1.2pt, arc=6pt, left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{starbox}{
+  colback=tierGold!12, colframe=tierGold,
+  boxrule=1.5pt, arc=7pt, left=10pt, right=10pt, top=8pt, bottom=8pt,
+  fontupper=\small
+}
+
+% ─── Hyperref ────────────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true, linkcolor=primaryGreen, urlcolor=deepTeal,
+  pdftitle={Kisaan Ki Yash -- Feature Catalogue},
+  pdfauthor={Kisaan Ki Yash Team}
+}
+
+% Tier Badge macro
+\newcommand{\freebadge}{\textcolor{white}{\colorbox{primaryGreen}{\footnotesize\textbf{FREE}}}}
+\newcommand{\saathibadge}{\textcolor{white}{\colorbox{blue}{\footnotesize\textbf{₹49/mo}}}}
+\newcommand{\probadge}{\textcolor{white}{\colorbox{purple}{\footnotesize\textbf{₹89/mo}}}}
+\newcommand{\bizzbadge}{\textcolor{white}{\colorbox{amber}{\footnotesize\textbf{₹499/mo}}}}
+\newcommand{\newbadge}{\textcolor{white}{\colorbox{rose}{\footnotesize\textbf{NEW}}}}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\begin{document}
+% ══════════════════════════════════════════════════════════════════════════════
+
+% ─── Cover ───────────────────────────────────────────────────────────────────
+\begin{titlepage}
+\pagecolor{lightBg}
+\centering
+\vspace*{1.8cm}
+
+{\color{primaryGreen}\rule{\linewidth}{2.5pt}}
+\vspace{0.6cm}
+
+{\Huge\bfseries\color{primaryGreen} Kisaan Ki Yash}\\[0.3cm]
+{\large\color{deepTeal}\itshape किसान की यश}\\[0.5cm]
+{\color{sectionBar}\rule{0.4\linewidth}{1pt}}\\[0.8cm]
+
+{\LARGE\bfseries\color{textDark} Complete Feature Catalogue}\\[0.3cm]
+{\normalsize\color{gray} From micro-alerts to AI decision intelligence — every feature, every tier, every impact}
+
+\vspace{1.5cm}
+
+\begin{tcolorbox}[colback=cardBg,colframe=primaryGreen,arc=10pt,boxrule=1.8pt,width=0.78\linewidth,center]
+\centering
+\textbf{\large\color{primaryGreen}Tier Legend}\\[8pt]
+\begin{tabular}{cccc}
+\freebadge & \saathibadge & \probadge & \bizzbadge \\[4pt]
+Free Forever & Kisan Saathi & Kisan Pro & FPO / Business
+\end{tabular}\\[6pt]
+\newbadge\ \ {\small = New feature being integrated before final submission}
+\end{tcolorbox}
+
+\vspace{1.5cm}
+
+\begin{tabular}{rl}
+\textbf{\color{primaryGreen}Platform:} & Kisaan Ki Yash — 1-km Hyperlocal Agricultural Intelligence \\
+\textbf{\color{primaryGreen}Coverage:} & Lucknow District, UP (Pilot) $\rightarrow$ Pan-India \\
+\textbf{\color{primaryGreen}Models:} & 10 AI/ML Models (M1--M10) \\
+\textbf{\color{primaryGreen}Live URL:} & \href{https://kisaankiyash.vercel.app}{kisaankiyash.vercel.app} \\
+\end{tabular}
+
+\vfill
+{\color{primaryGreen}\rule{\linewidth}{2.5pt}}
+\end{titlepage}
+
+\pagecolor{white}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{MICRO FEATURES — Always Free}
+\textit{Core features accessible to every farmer, zero cost, zero app required}
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{featurebox}{primaryGreen}{F-01 \quad Hyperlocal 1-km Temperature Forecast \quad \freebadge}
+Real-time downscaled temperature for the farmer's exact 1-km grid cell — not a district average. Powered by Model 1 (Random Forest + AWS calibration).
+
+\textbf{Impact:} Farmers know if their field will be 2°C cooler than the town forecast — critical for frost-sensitive crops like tomato and mango.
+\end{featurebox}
+
+\begin{featurebox}{primaryGreen}{F-02 \quad Daily Rain Yes/No Alert \quad \freebadge}
+Simple go/no-go rainfall prediction for the next 24 hours delivered via SMS or WhatsApp. Model 3 hurdle classifier outputs rain probability; threshold-based binary alert generated automatically.
+
+\textbf{Impact:} Prevents unnecessary irrigation on a day when rain is coming — saves water, electricity, and diesel pump costs.
+\end{featurebox}
+
+\begin{featurebox}{primaryGreen}{F-03 \quad 3-Day Basic Weather Forecast \quad \freebadge}
+Temperature high/low, humidity, and wind speed for 3 days at 1-km resolution, displayed in Hindi on a simple card view. No internet required beyond initial SMS.
+
+\textbf{Impact:} Helps farmers plan field operations (spraying, harvesting, sowing) 3 days in advance.
+\end{featurebox}
+
+\begin{featurebox}{primaryGreen}{F-04 \quad WhatsApp \& SMS Advisory Delivery \quad \freebadge}
+Zero-app-install distribution. All advisories are delivered as plain Hindi text via WhatsApp Business API or SMS gateway — works on any ₹500 feature phone.
+
+\textbf{Impact:} Eliminates smartphone adoption as a barrier. Reaches the bottom 60\% of farmers who do not own smartphones.
+\end{featurebox}
+
+\begin{featurebox}{primaryGreen}{F-05 \quad Panchayat-Level Location Tagging \quad \freebadge}
+All forecasts are tagged to the farmer's specific panchayat (one of 5 pilot panchayats in Lucknow → 6,000+ across UP). No GPS required — farmer registers their village name once.
+
+\textbf{Impact:} Replaces generic district forecasts with village-level accuracy.
+\end{featurebox}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{SMALL-MEDIUM FEATURES — Kisan Saathi (₹49/month)}
+\textit{Operational intelligence for input optimisation and daily farm management}
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{featurebox}{blue}{F-06 \quad Soil Moisture Status \quad \saathibadge}
+Surface and root-zone soil moisture estimate for the farmer's 1-km cell, fusing Sentinel-1 SAR backscatter with ISRIC SoilGrids soil texture data (Model 4).
+
+\textbf{Impact:} Tells farmer directly: ``Your field's root zone has 24\% volumetric moisture — this is above the irrigation threshold for paddy. Skip irrigation today.'' Saves 2--4 irrigation events per crop cycle.
+\end{featurebox}
+
+\begin{featurebox}{blue}{F-07 \quad Irrigation Scheduling Engine \quad \saathibadge}
+Daily irrigation requirement in mm computed using FAO-56 Penman-Monteith evapotranspiration, calibrated with 1-km temperature, humidity, and wind (from M1/M2) and soil moisture deficit (M4). Output: ``Irrigate 35 mm tomorrow morning. Next required: Oct 7.''
+
+\textbf{Impact:} 15--25\% water saving per season. In UP where groundwater depletion is critical, this is both economic and environmental.
+\end{featurebox}
+
+\begin{featurebox}{blue}{F-08 \quad 7-Day Extended Forecast \quad \saathibadge}
+Full 7-day hyperlocal forecast at 1-km resolution — temperature, humidity, rainfall probability, wind, and solar radiation. Enables weekly farm planning.
+
+\textbf{Impact:} Farmers can plan labour booking, equipment hire, and market trips a week in advance.
+\end{featurebox}
+
+\begin{featurebox}{rose}{F-09 \quad \textbf{Weather-Triggered Fertiliser Alert} \quad \saathibadge\quad\newbadge}
+The platform monitors the 7-day precipitation forecast for each panchayat. When an optimal fertiliser application window is detected — soil is moist enough for uptake but rain is 4--7 days away (preventing runoff) — an automatic SMS/push alert is sent.
+
+\textbf{Example Message (Hindi):}
+\begin{mdframed}[backgroundcolor=cardBg,linecolor=primaryGreen,linewidth=1pt,roundcorner=4pt]
+\textit{``मालीहाबाद: आपके क्षेत्र में 6 दिन बाद वर्षा की संभावना है। DAP/यूरिया डालने का यह उत्तम समय है। 3 अक्टूबर से पहले डालें। भारी बारिश से 48 घंटे पहले खाद डालने से बचें।''}\\[4pt]
+\textit{(Translation: Malihabad: Rain expected in 6 days in your region. This is the optimal time to apply DAP/Urea. Apply before Oct 3. Avoid application within 48 hours of heavy rainfall.)}
+\end{mdframed}
+
+\textbf{Impact:} Prevents ₹2,000--8,000/acre loss per season from nutrient runoff caused by fertiliser application immediately before heavy rain. Also prevents the opposite — applying in too-dry soil where uptake is poor.\\
+\textbf{Monetisation:} Agri-input companies (IFFCO, Coromandel) can sponsor targeted fertiliser alerts as precision advertising — revenue neutral for the farmer.
+\end{featurebox}
+
+\begin{featurebox}{blue}{F-10 \quad Pesticide/Spray Timing Advisor \quad \saathibadge}
+Checks rainfall forecast before recommending pesticide or fungicide spray. Spraying within 4 hours of rain = 100\% chemical washoff = wasted input. System sends alert only when a dry window of 6+ hours is confirmed.
+
+\textbf{Impact:} Saves ₹500--1,500/acre per spray event. Reduces chemical load on soil and water bodies.
+\end{featurebox}
+
+\begin{featurebox}{blue}{F-11 \quad Crop Stage Tracking (Growth Calendar) \quad \saathibadge}
+NDVI/EVI time series from Sentinel-2 tracks crop growth stage (emergence, tillering, booting, heading, maturity) and maps to Growing Degree Day (GDD) accumulation. Farmer receives: ``Your wheat is at tillering stage. 47 GDD accumulated. Top-dress nitrogen now.''
+
+\textbf{Impact:} Prevents split-dose misapplication — one of the top causes of poor yield in wheat and paddy.
+\end{featurebox}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{LARGE FEATURES — Kisan Pro (₹89/month)}
+\textit{Strategic intelligence — protect the entire season, not just tomorrow}
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{featurebox}{purple}{F-12 \quad Extreme Weather Hazard Alerts (48--72h Advance) \quad \probadge}
+Model 9 detects anomalous atmospheric events against 30-year ERA5 climatology baselines:
+\begin{itemize}[leftmargin=*,noitemsep]
+  \item \textbf{Heatwave:} Temperature $>$ 95th percentile for 3+ consecutive days
+  \item \textbf{Cold Wave / Frost Risk:} T $<$ 4°C during Rabi season (wheat, mustard, potato)
+  \item \textbf{Prolonged Dry Spell:} Zero rainfall $>$ 7 days during Kharif
+  \item \textbf{Waterlogging Risk:} Cumulative rainfall $>$ field capacity + impermeable layer detected
+  \item \textbf{Loo (hot dry wind):} Wind speed + temperature + humidity index during May--June
+\end{itemize}
+
+\textbf{Impact:} A 48-hour advance frost alert allows a mango farmer in Malihabad to apply protective smoke, cover young shoots, or arrange supplemental heating — preventing 60--100\% crop loss that would otherwise occur overnight.
+\end{featurebox}
+
+\begin{featurebox}{purple}{F-13 \quad Crop Yield Forecast \quad \probadge}
+End-of-season yield estimate (quintals/hectare) computed using cumulative weather anomalies, vegetation stress index, and irrigation history — calibrated against district-level CCE (Crop Cutting Experiment) data (Model 7).
+
+\textbf{Impact:} Farmers can forward-sell at better prices if yield looks good. FPOs can negotiate bulk procurement contracts. Insurance companies get objective pre-harvest yield estimates.
+\end{featurebox}
+
+\begin{featurebox}{purple}{F-14 \quad Flood \& Waterlogging Risk Map \quad \probadge}
+TWI (Topographic Wetness Index) + DEM depression analysis identifies 1-km cells at risk of waterlogging when M3 precipitation forecast crosses field-capacity thresholds. Generates 24--72 hour inundation risk maps per panchayat (Model 8).
+
+\textbf{Impact:} Paddy farmers in low-lying fields can pre-open drainage channels and prevent root asphyxiation. Saves 15--40\% yield in high-risk years.
+\end{featurebox}
+
+\begin{featurebox}{rose}{F-15 \quad Hindi Voice Advisory (IVR Phone Call) \quad \probadge\quad\newbadge}
+For farmers who cannot read SMS, an automated IVR (Interactive Voice Response) outbound call delivers the same advisory in spoken Hindi. Delivery triggered automatically when a critical alert is issued.
+
+\textbf{Example call script:} \textit{``Namaste! Yeh Kisaan Ki Yash ki taraf se ek zaroori sandesh hai. Kal aapke kshetra mein tez barish hone ki sambhavana hai. Kripya aaj hi apni fasal ki kutti kaaten. Dhanyavaad.''}
+
+\textbf{Impact:} Extends reach to illiterate and elderly farmers — the demographic most financially vulnerable to crop loss.
+\end{featurebox}
+
+\begin{featurebox}{purple}{F-16 \quad PMFBY Insurance Report Auto-Generation \quad \probadge}
+Verified M1/M9 weather event records (hailstorm, flood, drought) are formatted into structured crop damage evidence reports compatible with PMFBY (Pradhan Mantri Fasal Bima Yojana) claim submission requirements.
+
+\textbf{Impact:} Eliminates the need for contested field inspections. Objective, timestamped, satellite-verified evidence accelerates insurance claim settlement from months to days.
+\end{featurebox}
+
+\begin{featurebox}{purple}{F-17 \quad Conformal Prediction Intervals \quad \probadge}
+Every temperature and rainfall forecast comes with scientifically computed uncertainty bounds (90\% conformal prediction intervals): ``Temperature: 28.4°C [27.5°C — 29.3°C]''. Bounds are honestly withheld when calibration data is insufficient — system abstains rather than fabricates confidence.
+
+\textbf{Impact:} Farmers and agronomists can see how confident the system is. High uncertainty = decision deferred. Low uncertainty = act now.
+\end{featurebox}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{ENTERPRISE FEATURES — FPO / Business (₹499/month)}
+\textit{Portfolio-level intelligence for Farmer Producer Organisations, cooperatives, and agri-businesses}
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{featurebox}{amber}{F-18 \quad Multi-Farm Dashboard \quad \bizzbadge}
+Aggregate view of all enrolled farms in the FPO — panchayat-level heatmaps of soil moisture, yield forecast, and risk alerts. Export to Excel or PDF for management meetings.
+
+\textbf{Impact:} An FPO managing 500 farmer members can see at a glance which blocks need emergency intervention vs.\ which are performing well.
+\end{featurebox}
+
+\begin{featurebox}{amber}{F-19 \quad REST API Access \quad \bizzbadge}
+Full programmatic access to all 10 model outputs via documented REST API endpoints. Enables integration with ERP systems, procurement platforms, and custom dashboards.
+
+\textbf{Impact:} Agri-input companies, seed companies, and rural banks can embed live farm intelligence into their own workflows.
+\end{featurebox}
+
+\begin{featurebox}{amber}{F-20 \quad e-NAM Price Signal Integration \quad \bizzbadge\quad\newbadge}
+Yield forecast (M7) is cross-referenced with real-time e-NAM (National Agricultural Market) commodity prices to generate optimal harvest-timing recommendations: ``Harvest within next 10 days to capture current high-price window before new-season arrivals depress market.''
+
+\textbf{Impact:} Farmers sell at peak prices instead of distress-selling during harvest glut. 10--25\% income uplift on market-connected farms.
+\end{featurebox}
+
+\begin{featurebox}{amber}{F-21 \quad Carbon Credit Verification Reports \quad \bizzbadge\quad\newbadge}
+Precision irrigation scheduling (M6) + verified soil moisture data (M4) enable measurement of water savings and reduced groundwater extraction. Formatted as Verra/Gold Standard carbon credit methodology-compatible MRV reports.
+
+\textbf{Impact:} An FPO managing 1,000 acres can potentially earn ₹5--15 lakh/year in voluntary carbon market credits — additional income stream on top of crop revenue.
+\end{featurebox}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{MASTER DECISION ENGINE — M10 (All Tiers)}
+\textit{The brain of the platform — synthesises all 9 upstream models into one actionable advisory}
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[colback=lightBg,colframe=primaryGreen,arc=8pt,boxrule=1.8pt,
+  title={\bfseries\color{white} F-22 \quad Master Agricultural Decision Advisory (M10)},
+  coltitle=white, fonttitle=\large]
+
+The Decision Intelligence Engine (Model 10) aggregates outputs from M1 through M9 into a single, prioritised advisory per panchayat, delivered in plain Hindi. It uses a rule engine + expected-loss minimisation framework.
+
+\vspace{6pt}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\small
+\begin{tabular}{|p{2.8cm}|p{3cm}|p{4cm}|p{3cm}|}
+\hline
+\rowcolor{primaryGreen}
+\textbf{\color{white}Action} & \textbf{\color{white}Status} & \textbf{\color{white}Trigger Condition} & \textbf{\color{white}Urgency} \\
+\hline
+Irrigate & RECOMMENDED & Soil moisture < threshold, no rain in 5 days & LOW \\
+\hline
+Irrigate & PROHIBITED & Rain forecast in 24h & NONE \\
+\hline
+Spray Pesticide & CONDITIONAL & Dry window > 6h confirmed & MODERATE \\
+\hline
+Apply Fertiliser & RECOMMENDED & Rain in 5--7 days, optimal uptake window & HIGH \\
+\hline
+Apply Fertiliser & PROHIBITED & Rain in $<$ 48h & HIGH \\
+\hline
+Sow Crop & CONDITIONAL & Soil temperature > threshold, moisture OK & MODERATE \\
+\hline
+Harvest & CRITICAL & Rain forecast → crop loss if delayed & CRITICAL \\
+\hline
+Prepare Drainage & CRITICAL & Waterlogging risk > 70\% in 24h & CRITICAL \\
+\hline
+Frost Protection & CRITICAL & T < 4°C forecast in 24h during sensitive stage & CRITICAL \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{6pt}
+\textbf{Impact:} Replaces the need for a personal agronomist. Every farmer gets the equivalent of a trained crop scientist making decisions for their field — at the cost of less than one cup of tea per day.
+\end{tcolorbox}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{IMPACT SUMMARY}
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{starbox}
+\begin{center}
+{\large\bfseries\color{primaryGreen} Projected Impact at Scale (50,000 Farmers, Year 1)}
+\end{center}
+\vspace{6pt}
+\begin{multicols}{2}
+\textbf{Economic Impact:}
+\begin{itemize}[leftmargin=*,noitemsep]
+  \item ₹4,000 -- ₹12,000 saved per farmer per year
+  \item ₹500 -- ₹1,500 saved per spray event avoided
+  \item ₹2,000 -- ₹8,000/acre saved from timed fertiliser application
+  \item 8 -- 15\% crop loss prevented via early hazard alerts
+  \item 10 -- 25\% income uplift from optimal market timing
+  \item ₹5 -- ₹15 lakh/year potential carbon credit income per FPO
+\end{itemize}
+
+\columnbreak
+
+\textbf{Environmental Impact:}
+\begin{itemize}[leftmargin=*,noitemsep]
+  \item 15 -- 25\% reduction in irrigation water usage
+  \item 20\% reduction in fertiliser nutrient runoff
+  \item 30\% reduction in over-irrigation events
+  \item Measurable N₂O emission reduction (precision N timing)
+  \item Groundwater depletion slowdown in UP aquifer
+  \item Satellite-verified PMFBY claims → reduced fraud
+\end{itemize}
+\end{multicols}
+\end{starbox}
+
+\vspace{8pt}
+
+\begin{impactbox}
+\textbf{Fertiliser Alert Feature Alone — Back-of-Envelope Impact:}\\[4pt]
+UP produces approx.\ 60 million metric tonnes of food grain annually. Industry data suggests 10--15\% of applied fertiliser is lost to runoff due to mistimed application. At ₹25,000/MT fertiliser cost, even a 5\% improvement in application efficiency across 50,000 farmers with average 2 acres each = \textbf{₹15 crore annual input savings} — and corresponding soil/water quality improvement.
+\end{impactbox}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{FEATURE SUMMARY TABLE}
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|c|p{6.2cm}|c|c|}
+\hline
+\rowcolor{primaryGreen}
+\textbf{\color{white}ID} & \textbf{\color{white}Feature} & \textbf{\color{white}Tier} & \textbf{\color{white}New?} \\
+\hline
+F-01 & Hyperlocal 1-km Temperature Forecast & Free & -- \\
+F-02 & Daily Rain Yes/No Alert & Free & -- \\
+F-03 & 3-Day Basic Weather Forecast & Free & -- \\
+F-04 & WhatsApp \& SMS Advisory Delivery & Free & -- \\
+F-05 & Panchayat-Level Location Tagging & Free & -- \\
+\hline
+F-06 & Soil Moisture Status & ₹49 & -- \\
+F-07 & Irrigation Scheduling Engine & ₹49 & -- \\
+F-08 & 7-Day Extended Forecast & ₹49 & -- \\
+\rowcolor{rose!20}
+F-09 & \textbf{Weather-Triggered Fertiliser Alert} & ₹49 & \textbf{NEW} \\
+F-10 & Pesticide / Spray Timing Advisor & ₹49 & -- \\
+F-11 & Crop Stage Growth Calendar (GDD) & ₹49 & -- \\
+\hline
+F-12 & Extreme Weather Hazard Alerts (48--72h) & ₹89 & -- \\
+F-13 & Crop Yield Forecast & ₹89 & -- \\
+F-14 & Flood \& Waterlogging Risk Map & ₹89 & -- \\
+\rowcolor{rose!20}
+F-15 & \textbf{Hindi Voice Advisory (IVR)} & ₹89 & \textbf{NEW} \\
+F-16 & PMFBY Insurance Report Auto-Generation & ₹89 & -- \\
+F-17 & Conformal Prediction Intervals & ₹89 & -- \\
+\hline
+F-18 & Multi-Farm FPO Dashboard & ₹499 & -- \\
+F-19 & REST API Access & ₹499 & -- \\
+\rowcolor{rose!20}
+F-20 & \textbf{e-NAM Price Signal Integration} & ₹499 & \textbf{NEW} \\
+\rowcolor{rose!20}
+F-21 & \textbf{Carbon Credit Verification Reports} & ₹499 & \textbf{NEW} \\
+\hline
+F-22 & Master Agricultural Decision Advisory (M10) & All Tiers & -- \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+{\color{sectionBar}\rule{0.6\linewidth}{1.5pt}}\\[10pt]
+{\large\bfseries\color{primaryGreen} किसान की यश — जब विज्ञान खेत तक आता है}\\
+{\normalsize\color{deepTeal}\itshape When science reaches the field — that is the farmer's glory.}\\[8pt]
+\href{https://kisaankiyash.vercel.app}{\color{primaryGreen}\textbf{kisaankiyash.vercel.app}}
+\end{center}
+
+\end{document}
