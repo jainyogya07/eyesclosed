@@ -100,3 +100,9 @@ def get_panchayat(id: str):
             detail=f"Panchayat '{id}' not found."
         )
     return panchayat
+
+@router.get("/digital-twin/{panchayat_code}")
+def get_digital_twin(panchayat_code: str):
+    from backend.app.services.intelligence_engine import intelligence_engine
+    return intelligence_engine.compute_digital_twin_state(panchayat_code)
+
