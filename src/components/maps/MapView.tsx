@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Thermometer,
   CloudRain,
@@ -9,7 +9,8 @@ import {
   Sparkles,
   Info,
   ChevronRight,
-  ShieldCheck
+  ShieldCheck,
+  Maximize2
 } from 'lucide-react';
 import { ScientificDrawer } from '../common/ScientificDrawer';
 
@@ -83,18 +84,18 @@ export const MapView: React.FC<MapViewProps> = ({
         return `hsl(${220 - ratio * 180}, 85%, 62%)`;
       }
       case 'rain': {
-        if (cell.rain_mm < 0.5) return 'rgba(226, 232, 240, 0.45)';
+        if (cell.rain_mm < 0.5) return 'rgba(226, 232, 240, 0.55)';
         const intensity = Math.min(1, cell.rain_mm / 14);
-        return `rgba(2, 132, 199, ${0.35 + intensity * 0.6})`;
+        return `rgba(2, 132, 199, ${0.4 + intensity * 0.55})`;
       }
       case 'wind': {
         const intensity = Math.min(1, cell.wind_kmh / 25);
-        return `rgba(56, 189, 248, ${0.25 + intensity * 0.65})`;
+        return `rgba(56, 189, 248, ${0.35 + intensity * 0.6})`;
       }
       case 'risk': {
-        if (cell.flood_risk === 'HIGH') return 'rgba(220, 38, 38, 0.8)';
-        if (cell.flood_risk === 'MODERATE') return 'rgba(217, 119, 6, 0.7)';
-        return 'rgba(16, 185, 129, 0.35)';
+        if (cell.flood_risk === 'HIGH') return 'rgba(220, 38, 38, 0.85)';
+        if (cell.flood_risk === 'MODERATE') return 'rgba(217, 119, 6, 0.75)';
+        return 'rgba(16, 185, 129, 0.4)';
       }
     }
   };
@@ -103,46 +104,60 @@ export const MapView: React.FC<MapViewProps> = ({
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
-      {/* Map Container: ~70vh high-impact viewport */}
+      {/* Map Viewport Box with Holographic Overlays */}
       <div
-        className="glass-panel-elevated"
+        className="cinematic-glass-elevated"
         style={{
           position: 'relative',
-          minHeight: '68vh',
-          background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+          minHeight: '70vh',
           borderRadius: 'var(--radius-xl)',
-          border: '1.5px solid var(--border-card)',
+          border: '2px solid rgba(255, 255, 255, 0.85)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: 'var(--shadow-lg)'
+          boxShadow: '0 25px 60px -15px rgba(0,0,0,0.3)',
+          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.92) 100%)',
+          color: 'white'
         }}
       >
-        {/* Floating Minimal Controls (Top Overlay) */}
+        {/* Subtle satellite scanline backdrop */}
         <div
           style={{
             position: 'absolute',
-            top: '16px',
-            left: '16px',
-            right: '16px',
+            inset: 0,
+            backgroundImage: 'url(/assets/cinematic/satellite_grid.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            opacity: 0.18,
+            pointerEvents: 'none'
+          }}
+        />
+
+        {/* Floating Minimal Controls (Top Overlay) */}
+        <div
+          style={{
+            position: 'relative',
             zIndex: 10,
+            padding: '18px 20px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: '10px'
+            gap: '12px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'rgba(15, 23, 42, 0.65)',
+            backdropFilter: 'blur(12px)'
           }}
         >
           {/* Metric Selector Pills */}
           <div
-            className="glass-panel"
             style={{
               display: 'flex',
-              gap: '4px',
+              gap: '6px',
               padding: '4px',
-              background: 'rgba(255, 255, 255, 0.92)',
+              background: 'rgba(255, 255, 255, 0.1)',
               borderRadius: 'var(--radius-full)',
-              boxShadow: 'var(--shadow-md)'
+              border: '1px solid rgba(255, 255, 255, 0.15)'
             }}
           >
             <button
@@ -151,18 +166,18 @@ export const MapView: React.FC<MapViewProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '6px 14px',
+                padding: '8px 16px',
                 borderRadius: 'var(--radius-full)',
                 border: 'none',
                 background: activeMetric === 'temp' ? 'var(--color-atmosphere-blue)' : 'transparent',
-                color: activeMetric === 'temp' ? 'white' : 'var(--text-secondary)',
-                fontWeight: 700,
-                fontSize: '0.8rem',
+                color: 'white',
+                fontWeight: 800,
+                fontSize: '0.85rem',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
             >
-              <Thermometer size={15} />
+              <Thermometer size={16} />
               <span>तापमान (Temp)</span>
             </button>
 
@@ -172,18 +187,18 @@ export const MapView: React.FC<MapViewProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '6px 14px',
+                padding: '8px 16px',
                 borderRadius: 'var(--radius-full)',
                 border: 'none',
                 background: activeMetric === 'rain' ? 'var(--color-atmosphere-blue)' : 'transparent',
-                color: activeMetric === 'rain' ? 'white' : 'var(--text-secondary)',
-                fontWeight: 700,
-                fontSize: '0.8rem',
+                color: 'white',
+                fontWeight: 800,
+                fontSize: '0.85rem',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
             >
-              <CloudRain size={15} />
+              <CloudRain size={16} />
               <span>वर्षा (Rain)</span>
             </button>
 
@@ -193,18 +208,18 @@ export const MapView: React.FC<MapViewProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '6px 14px',
+                padding: '8px 16px',
                 borderRadius: 'var(--radius-full)',
                 border: 'none',
                 background: activeMetric === 'wind' ? 'var(--color-atmosphere-blue)' : 'transparent',
-                color: activeMetric === 'wind' ? 'white' : 'var(--text-secondary)',
-                fontWeight: 700,
-                fontSize: '0.8rem',
+                color: 'white',
+                fontWeight: 800,
+                fontSize: '0.85rem',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
             >
-              <Wind size={15} />
+              <Wind size={16} />
               <span>हवा (Wind)</span>
             </button>
 
@@ -214,70 +229,59 @@ export const MapView: React.FC<MapViewProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '6px 14px',
+                padding: '8px 16px',
                 borderRadius: 'var(--radius-full)',
                 border: 'none',
                 background: activeMetric === 'risk' ? 'var(--color-hazard-crimson)' : 'transparent',
-                color: activeMetric === 'risk' ? 'white' : 'var(--text-secondary)',
-                fontWeight: 700,
-                fontSize: '0.8rem',
+                color: 'white',
+                fontWeight: 800,
+                fontSize: '0.85rem',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
             >
-              <AlertTriangle size={15} />
+              <AlertTriangle size={16} />
               <span>जोखिम (Risk)</span>
             </button>
           </div>
 
           {/* Grid Metadata Chip */}
           <div
-            className="glass-panel"
             style={{
-              padding: '6px 12px',
+              padding: '6px 14px',
               borderRadius: 'var(--radius-full)',
-              background: 'rgba(255, 255, 255, 0.92)',
-              fontSize: '0.74rem',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              fontSize: '0.78rem',
               fontFamily: 'var(--font-mono)',
-              color: 'var(--text-secondary)',
-              boxShadow: 'var(--shadow-sm)'
+              color: '#38bdf8'
             }}
           >
-            GRID: 1000m × 1000m • EPSG:32644 UTM 44N
+            GRID: 1000m × 1000m • UTM 44N • TIME: {selectedHorizon}
           </div>
         </div>
 
-        {/* The 1-km Precision Grid Canvas */}
+        {/* 1-km Precision Grid Stage */}
         <div
           style={{
             flex: 1,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '70px 20px 20px 20px',
+            padding: '2rem 1.5rem',
             position: 'relative'
           }}
         >
-          {/* Subtle background terrain contour lines */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              opacity: 0.1,
-              backgroundImage: 'radial-gradient(#0f172a 1px, transparent 1px)',
-              backgroundSize: '24px 24px',
-              pointerEvents: 'none'
-            }}
-          />
-
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(8, 1fr)',
-              gap: '8px',
+              gap: '10px',
               width: '100%',
-              maxWidth: '820px',
-              aspectRatio: '8/6'
+              maxWidth: '860px',
+              aspectRatio: '8/6',
+              position: 'relative',
+              zIndex: 2
             }}
           >
             {CELLS.map((cell) => {
@@ -294,32 +298,33 @@ export const MapView: React.FC<MapViewProps> = ({
                     position: 'relative',
                     aspectRatio: '1/1',
                     background: getCellColor(cell),
-                    borderRadius: 'var(--radius-sm)',
+                    borderRadius: 'var(--radius-md)',
                     border: isSelected
-                      ? '3px solid #0f172a'
+                      ? '3px solid #38bdf8'
                       : isHovered
-                      ? '2px solid var(--color-atmosphere-blue)'
-                      : '1px solid rgba(255,255,255,0.7)',
+                      ? '2px solid white'
+                      : '1px solid rgba(255,255,255,0.4)',
                     cursor: 'pointer',
                     boxShadow: isSelected
-                      ? '0 0 16px rgba(2, 132, 199, 0.4)'
+                      ? '0 0 25px rgba(56, 189, 248, 0.8)'
                       : isHovered
-                      ? '0 2px 8px rgba(0,0,0,0.1)'
+                      ? '0 0 15px rgba(255,255,255,0.5)'
                       : 'none',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-                    transform: isSelected || isHovered ? 'scale(1.05)' : 'scale(1)',
+                    transition: 'all 0.15s ease',
+                    transform: isSelected || isHovered ? 'scale(1.08)' : 'scale(1)',
                     zIndex: isSelected ? 5 : isHovered ? 4 : 1
                   }}
                 >
                   <span
                     style={{
-                      fontSize: 'clamp(0.68rem, 1.2vw, 0.85rem)',
-                      fontWeight: 700,
-                      color: activeMetric === 'rain' && cell.rain_mm > 5 ? 'white' : '#0f172a'
+                      fontSize: 'clamp(0.72rem, 1.2vw, 0.95rem)',
+                      fontWeight: 800,
+                      color: '#ffffff',
+                      textShadow: '0 1px 4px rgba(0,0,0,0.8)'
                     }}
                   >
                     {activeMetric === 'temp' && `${cell.temp_c}°`}
@@ -334,68 +339,67 @@ export const MapView: React.FC<MapViewProps> = ({
         </div>
       </div>
 
-      {/* DRAWER / DETAILS PANEL (Only shown when user clicks/inspects a cell) */}
+      {/* DRAWER / DETAILS PANEL (Opens when user clicks/inspects a cell) */}
       {inspected && (
         <div
-          className="glass-panel-elevated"
+          className="cinematic-glass-elevated"
           style={{
-            marginTop: '1.5rem',
-            padding: '24px',
-            background: 'white',
+            marginTop: '2rem',
+            padding: '28px',
             borderRadius: 'var(--radius-xl)',
-            border: '1.5px solid var(--border-card)',
-            boxShadow: 'var(--shadow-lg)'
+            border: '2px solid rgba(255, 255, 255, 0.9)',
+            boxShadow: '0 25px 60px -15px rgba(0,0,0,0.2)'
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span className="badge badge-frozen">चयनित 1-किमी सेल (SELECTED CELL)</span>
-              <span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
                 {inspected.id} • ऊँचाई: {inspected.elevation_m}m MSL
               </span>
             </div>
 
-            <span style={{ fontSize: '0.78rem', color: 'var(--color-earth-emerald)', fontWeight: 700 }}>
-              समय: {selectedHorizon}
+            <span style={{ fontSize: '0.82rem', color: 'var(--color-earth-deep)', fontWeight: 800 }}>
+              FORECAST HORIZON: {selectedHorizon}
             </span>
           </div>
 
-          {/* Key 4 Data Points in this Selected Cell */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', background: 'var(--color-atmosphere-subtle)' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>तापमान (Temperature)</div>
-              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)' }}>
+          {/* 4 Data Cards for this Cell */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+            <div className="card-hover-tilt" style={{ padding: '16px', borderRadius: 'var(--radius-lg)', background: 'var(--color-atmosphere-subtle)' }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>तापमान</div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)' }}>
                 {inspected.temp_c}°C
               </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Model 1 Downscaled</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Model 1 Downscaled</div>
             </div>
 
-            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', background: 'var(--color-atmosphere-subtle)' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>वर्षा संभावना (Rain Prob)</div>
-              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)' }}>
+            <div className="card-hover-tilt" style={{ padding: '16px', borderRadius: 'var(--radius-lg)', background: 'var(--color-atmosphere-subtle)' }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>वर्षा संभावना</div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)' }}>
                 {inspected.rain_prob_pct}%
               </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>M3 Hurdle Occurrence</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>M3 Hurdle Occurrence</div>
             </div>
 
-            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', background: 'var(--bg-surface-subtle)' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>अनुमानित मात्रा (Expected)</div>
-              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+            <div className="card-hover-tilt" style={{ padding: '16px', borderRadius: 'var(--radius-lg)', background: 'var(--bg-surface-subtle)' }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>अनुमानित वर्षा</div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                 {inspected.rain_mm} mm
               </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>अनिश्चितता: ±1.2 mm</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>अनिश्चितता: ±1.2 mm</div>
             </div>
 
-            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', background: inspected.flood_risk === 'HIGH' ? 'var(--color-hazard-subtle)' : 'var(--color-earth-subtle)' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>जोखिम स्तर (Risk Level)</div>
-              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: inspected.flood_risk === 'HIGH' ? 'var(--color-hazard-crimson)' : 'var(--color-earth-emerald)' }}>
+            <div className="card-hover-tilt" style={{ padding: '16px', borderRadius: 'var(--radius-lg)', background: inspected.flood_risk === 'HIGH' ? 'var(--color-hazard-subtle)' : 'var(--color-earth-subtle)' }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>जोखिम स्तर</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: inspected.flood_risk === 'HIGH' ? 'var(--color-hazard-crimson)' : 'var(--color-earth-emerald)' }}>
                 {inspected.flood_risk}
               </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{inspected.advisory}</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{inspected.advisory}</div>
             </div>
           </div>
 
-          {/* Progressive Disclosure: [Why this forecast?] */}
+          {/* Progressive Disclosure Drawer */}
           <ScientificDrawer
             title="इस ग्रिड सेल का पूर्वानुमान कैसे तैयार हुआ? (Why this forecast?)"
             whyExplanation={

@@ -15,7 +15,8 @@ import {
   Menu,
   Activity,
   Droplets,
-  CloudSun
+  CloudSun,
+  Sparkles
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -40,44 +41,48 @@ export const Navbar: React.FC = () => {
     <header
       style={{
         position: 'sticky',
-        top: 0,
+        top: '10px',
         zIndex: 100,
-        background: 'rgba(252, 251, 249, 0.92)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        borderBottom: '1px solid var(--border-subtle)',
-        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)'
+        maxWidth: '1320px',
+        margin: '0 auto',
+        padding: '0 1rem'
       }}
     >
-      {/* Truthfulness Warning Banner when live backend is requested but offline */}
+      {/* Live backend offline warning banner if applicable */}
       {dataMode === 'live' && backendUnavailable && (
         <div
           style={{
             background: '#fee2e2',
-            borderBottom: '1px solid #ef4444',
+            border: '1px solid #ef4444',
             padding: '6px 16px',
+            borderRadius: 'var(--radius-full)',
             fontSize: '0.8rem',
             fontWeight: 700,
             color: '#991b1b',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px'
+            gap: '8px',
+            marginBottom: '8px',
+            boxShadow: '0 4px 15px rgba(239, 68, 68, 0.2)'
           }}
         >
           <span>🔴 Live service unavailable — showing verified demonstration data</span>
         </div>
       )}
 
+      {/* Floating Frosted Glass Capsule Bar */}
       <div
+        className="cinematic-glass-elevated"
         style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '0.85rem 1.5rem',
+          borderRadius: 'var(--radius-full)',
+          padding: '0.65rem 1.25rem',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          gap: '1rem'
+          gap: '1rem',
+          border: '1.5px solid rgba(255, 255, 255, 0.85)',
+          boxShadow: '0 12px 30px -8px rgba(0, 0, 0, 0.08)'
         }}
       >
         {/* Left: Kisaan Ki Yash Logo */}
@@ -91,28 +96,30 @@ export const Navbar: React.FC = () => {
             color: 'inherit'
           }}
         >
-          <KisanIntelligenceCore size="sm" state="PROCESSING" />
+          <div style={{ filter: 'drop-shadow(0 2px 8px rgba(16, 185, 129, 0.35))' }}>
+            <KisanIntelligenceCore size="sm" state="PROCESSING" />
+          </div>
           <div>
             <div style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '6px' }}>
               Kisaan Ki Yash
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-earth-emerald)' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-earth-deep)' }}>
                 (किसान की यश)
               </span>
             </div>
-            <div style={{ fontSize: '0.64rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
-              CLIMATE INTELLIGENCE
+            <div style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
+              CLIMATE INTELLIGENCE CASCADE
             </div>
           </div>
         </Link>
 
-        {/* Center: ONLY Home, Weather, My Farm, Advice */}
+        {/* Center: ONLY 4 Links (Home, My Farm, Weather, Advice) */}
         <nav
           className="desktop-nav"
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '4px',
-            background: 'var(--bg-surface-subtle)',
+            gap: '6px',
+            background: 'rgba(241, 245, 243, 0.85)',
             padding: '4px',
             borderRadius: 'var(--radius-full)'
           }}
@@ -121,14 +128,14 @@ export const Navbar: React.FC = () => {
             to="/"
             end
             style={({ isActive }) => ({
-              padding: '6px 14px',
+              padding: '7px 16px',
               borderRadius: 'var(--radius-full)',
               textDecoration: 'none',
               background: isActive ? 'white' : 'transparent',
               color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-              fontWeight: isActive ? 700 : 500,
+              fontWeight: isActive ? 800 : 600,
               fontSize: '0.85rem',
-              boxShadow: isActive ? 'var(--shadow-sm)' : 'none',
+              boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
               transition: 'all 0.15s ease'
             })}
           >
@@ -138,14 +145,14 @@ export const Navbar: React.FC = () => {
           <NavLink
             to="/my-farm"
             style={({ isActive }) => ({
-              padding: '6px 14px',
+              padding: '7px 16px',
               borderRadius: 'var(--radius-full)',
               textDecoration: 'none',
-              background: isActive ? 'white' : 'transparent',
-              color: isActive ? 'var(--color-earth-emerald)' : 'var(--text-secondary)',
-              fontWeight: isActive ? 700 : 500,
+              background: isActive ? 'var(--color-earth-deep)' : 'transparent',
+              color: isActive ? 'white' : 'var(--text-secondary)',
+              fontWeight: isActive ? 800 : 600,
               fontSize: '0.85rem',
-              boxShadow: isActive ? 'var(--shadow-sm)' : 'none',
+              boxShadow: isActive ? '0 4px 12px rgba(6, 78, 59, 0.3)' : 'none',
               transition: 'all 0.15s ease'
             })}
           >
@@ -155,14 +162,14 @@ export const Navbar: React.FC = () => {
           <NavLink
             to="/weather"
             style={({ isActive }) => ({
-              padding: '6px 14px',
+              padding: '7px 16px',
               borderRadius: 'var(--radius-full)',
               textDecoration: 'none',
-              background: isActive ? 'white' : 'transparent',
-              color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-              fontWeight: isActive ? 700 : 500,
+              background: isActive ? 'var(--color-atmosphere-blue)' : 'transparent',
+              color: isActive ? 'white' : 'var(--text-secondary)',
+              fontWeight: isActive ? 800 : 600,
               fontSize: '0.85rem',
-              boxShadow: isActive ? 'var(--shadow-sm)' : 'none',
+              boxShadow: isActive ? '0 4px 12px rgba(2, 132, 199, 0.3)' : 'none',
               transition: 'all 0.15s ease'
             })}
           >
@@ -172,14 +179,14 @@ export const Navbar: React.FC = () => {
           <NavLink
             to="/advice"
             style={({ isActive }) => ({
-              padding: '6px 14px',
+              padding: '7px 16px',
               borderRadius: 'var(--radius-full)',
               textDecoration: 'none',
-              background: isActive ? 'white' : 'transparent',
-              color: isActive ? 'var(--color-atmosphere-blue)' : 'var(--text-secondary)',
-              fontWeight: isActive ? 700 : 500,
+              background: isActive ? 'var(--color-solar-amber)' : 'transparent',
+              color: isActive ? 'white' : 'var(--text-secondary)',
+              fontWeight: isActive ? 800 : 600,
               fontSize: '0.85rem',
-              boxShadow: isActive ? 'var(--shadow-sm)' : 'none',
+              boxShadow: isActive ? '0 4px 12px rgba(217, 119, 6, 0.3)' : 'none',
               transition: 'all 0.15s ease'
             })}
           >
@@ -193,12 +200,12 @@ export const Navbar: React.FC = () => {
           <button
             onClick={() => setLanguage(language === 'hi' ? 'en' : 'hi')}
             style={{
-              padding: '5px 10px',
+              padding: '6px 12px',
               borderRadius: 'var(--radius-full)',
-              border: '1px solid var(--border-card)',
+              border: '1px solid rgba(203, 213, 225, 0.8)',
               background: 'white',
-              fontSize: '0.78rem',
-              fontWeight: 700,
+              fontSize: '0.8rem',
+              fontWeight: 800,
               cursor: 'pointer',
               color: 'var(--text-primary)'
             }}
@@ -210,21 +217,21 @@ export const Navbar: React.FC = () => {
           <button
             onClick={() => setViewMode(viewMode === 'simple' ? 'scientific' : 'simple')}
             style={{
-              padding: '5px 12px',
+              padding: '6px 14px',
               borderRadius: 'var(--radius-full)',
-              border: viewMode === 'scientific' ? '1.5px solid var(--color-quantum-violet)' : '1px solid var(--border-card)',
-              background: viewMode === 'scientific' ? 'rgba(109, 40, 217, 0.08)' : 'white',
+              border: viewMode === 'scientific' ? '1.5px solid var(--color-quantum-violet)' : '1px solid rgba(203, 213, 225, 0.8)',
+              background: viewMode === 'scientific' ? 'rgba(124, 58, 237, 0.12)' : 'white',
               color: viewMode === 'scientific' ? 'var(--color-quantum-violet)' : 'var(--text-secondary)',
-              fontSize: '0.78rem',
-              fontWeight: 700,
+              fontSize: '0.8rem',
+              fontWeight: 800,
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '4px'
+              gap: '6px'
             }}
           >
-            <ShieldCheck size={14} />
-            {viewMode === 'scientific' ? 'Scientific' : 'Farmer'}
+            <ShieldCheck size={15} />
+            <span>{viewMode === 'scientific' ? 'Scientific' : 'Farmer'}</span>
           </button>
 
           {/* Explore Dropdown */}
@@ -235,14 +242,14 @@ export const Navbar: React.FC = () => {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '4px',
-                padding: '6px 12px',
+                gap: '6px',
+                padding: '6px 14px',
                 borderRadius: 'var(--radius-full)',
-                border: '1px solid var(--border-card)',
+                border: '1px solid rgba(203, 213, 225, 0.8)',
                 background: 'white',
                 color: 'var(--text-primary)',
                 fontSize: '0.82rem',
-                fontWeight: 600,
+                fontWeight: 700,
                 cursor: 'pointer'
               }}
             >
@@ -252,23 +259,22 @@ export const Navbar: React.FC = () => {
 
             {exploreOpen && (
               <div
-                className="glass-panel-elevated"
+                className="cinematic-glass-elevated"
                 style={{
                   position: 'absolute',
-                  top: 'calc(100% + 8px)',
+                  top: 'calc(100% + 10px)',
                   right: 0,
-                  width: '240px',
-                  background: 'white',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '8px',
-                  boxShadow: 'var(--shadow-xl)',
+                  width: '260px',
+                  borderRadius: 'var(--radius-xl)',
+                  padding: '10px',
+                  boxShadow: '0 20px 50px rgba(0,0,0,0.18)',
                   zIndex: 200,
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '4px'
                 }}
               >
-                <div style={{ padding: '6px 10px', fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
+                <div style={{ padding: '6px 12px', fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
                   {language === 'hi' ? 'वैज्ञानिक इन्फ्रास्ट्रक्चर' : 'SCIENTIFIC INFRASTRUCTURE'}
                 </div>
 
@@ -278,19 +284,19 @@ export const Navbar: React.FC = () => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px',
-                    padding: '8px 10px',
-                    borderRadius: 'var(--radius-sm)',
+                    gap: '12px',
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-md)',
                     textDecoration: 'none',
                     color: 'var(--text-primary)',
-                    fontSize: '0.85rem',
-                    fontWeight: 600
+                    fontSize: '0.88rem',
+                    fontWeight: 700
                   }}
                 >
-                  <Layers size={16} color="var(--color-quantum-violet)" />
+                  <Layers size={18} color="var(--color-quantum-violet)" />
                   <div>
-                    <div>Digital Twin</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>3D What-If Sandbox</div>
+                    <div>3D Digital Twin</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>What-If Simulation Sandbox</div>
                   </div>
                 </Link>
 
@@ -300,19 +306,19 @@ export const Navbar: React.FC = () => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px',
-                    padding: '8px 10px',
-                    borderRadius: 'var(--radius-sm)',
+                    gap: '12px',
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-md)',
                     textDecoration: 'none',
                     color: 'var(--text-primary)',
-                    fontSize: '0.85rem',
-                    fontWeight: 600
+                    fontSize: '0.88rem',
+                    fontWeight: 700
                   }}
                 >
-                  <Cpu size={16} color="var(--color-atmosphere-blue)" />
+                  <Cpu size={18} color="var(--color-atmosphere-blue)" />
                   <div>
                     <div>Model Lab</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>M1–M10 Registry</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>M1–M10 Cryptographic Registry</div>
                   </div>
                 </Link>
 
@@ -322,19 +328,19 @@ export const Navbar: React.FC = () => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px',
-                    padding: '8px 10px',
-                    borderRadius: 'var(--radius-sm)',
+                    gap: '12px',
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-md)',
                     textDecoration: 'none',
                     color: 'var(--text-primary)',
-                    fontSize: '0.85rem',
-                    fontWeight: 600
+                    fontSize: '0.88rem',
+                    fontWeight: 700
                   }}
                 >
-                  <ShieldCheck size={16} color="var(--color-earth-emerald)" />
+                  <ShieldCheck size={18} color="var(--color-earth-deep)" />
                   <div>
                     <div>Validation & Metrics</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>Locked Pilot Verification</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>Locked Pilot AWS Telemetry</div>
                   </div>
                 </Link>
 
@@ -344,19 +350,19 @@ export const Navbar: React.FC = () => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px',
-                    padding: '8px 10px',
-                    borderRadius: 'var(--radius-sm)',
+                    gap: '12px',
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-md)',
                     textDecoration: 'none',
                     color: 'var(--text-primary)',
-                    fontSize: '0.85rem',
-                    fontWeight: 600
+                    fontSize: '0.88rem',
+                    fontWeight: 700
                   }}
                 >
-                  <Database size={16} color="var(--color-solar-amber)" />
+                  <Database size={18} color="var(--color-solar-amber)" />
                   <div>
                     <div>Data Center</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>Ecosystem & Ingestion</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>Multimodal Satellite Ecosystem</div>
                   </div>
                 </Link>
 
@@ -368,15 +374,15 @@ export const Navbar: React.FC = () => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px',
-                    padding: '8px 10px',
-                    borderRadius: 'var(--radius-sm)',
+                    gap: '12px',
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-md)',
                     textDecoration: 'none',
                     color: 'var(--text-secondary)',
-                    fontSize: '0.85rem'
+                    fontSize: '0.88rem'
                   }}
                 >
-                  <Info size={16} />
+                  <Info size={18} />
                   <div>About & Principles</div>
                 </Link>
               </div>
