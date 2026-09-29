@@ -11,7 +11,6 @@ import {
   AlertCircle,
   Clock
 } from 'lucide-react';
-import { StatusBadge } from '../components/common/StatusBadge';
 
 interface DataSourceItem {
   id: string;
@@ -98,88 +97,87 @@ const DATA_SOURCES: DataSourceItem[] = [
     resolution: '250m spatial resolution',
     quality: 'Machine-learning pedotransfer estimation',
     notes: 'Supplies clay, sand, silt fractions and organic carbon for hydraulic conductivity and field capacity.'
+  },
+  {
+    id: 'lst',
+    name: 'Satellite Land Surface Temperature (MODIS / Landsat)',
+    category: 'Thermal Infrared',
+    agency: 'NASA LP DAAC / USGS',
+    status: 'MISSING_PLANNED',
+    coverage: 'Pilot study region',
+    cadence: 'Daily (MODIS 1km) / 16-day (Landsat 100m)',
+    resolution: '100m–1000m thermal',
+    quality: 'Flagged LST_AVAILABLE = False in Model 2 Pilot',
+    notes: 'Intentionally excluded in July 2025 pilot due to monsoon cloud occlusion; planned for dry season.'
   }
 ];
 
 export const DataCenterPage: React.FC = () => {
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return <span className="badge badge-frozen"><CheckCircle2 size={11} /> VERIFIED & INGESTED</span>;
+      case 'PARTIAL':
+        return <span className="badge badge-validating"><Clock size={11} /> SPECIFIED & IN PIPELINE</span>;
+      case 'MISSING_PLANNED':
+      default:
+        return <span className="badge badge-unavailable">FUTURE PHASE EXTENSION</span>;
+    }
+  };
+
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2.5rem 1.5rem 6rem 1.5rem', backgroundColor: 'var(--farmora-dark)', minHeight: 'calc(100vh - 120px)' }}>
+    <div style={{ maxWidth: '1360px', margin: '0 auto', padding: '2rem' }}>
       {/* Header */}
       <div style={{ marginBottom: '2.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <StatusBadge status="frozen" label="DATA INGESTION & PIPELINE STATUS" />
-          <span className="badge badge-pilot">MULTIMODAL SATELLITE ECOSYSTEM</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+          <span className="badge badge-frozen">Data Governance & Honesty</span>
+          <span className="badge badge-pilot">Multi-Modal Telemetry Catalog</span>
         </div>
-        <h1 style={{ fontSize: '2.6rem', fontWeight: 800, color: 'var(--farmora-light)', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Database size={32} color="var(--farmora-lime)" />
-          Multimodal Data Center & Sensor Lineage
+        <h1 style={{ fontSize: '2.4rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Database size={32} color="var(--color-atmosphere-blue)" />
+          Multi-Modal Geospatial & Sensor Data Catalog
         </h1>
-        <p style={{ color: 'var(--farmora-platinum)', fontSize: '1.02rem', maxWidth: '780px' }}>
-          Real-time catalog of satellite constellations, numerical atmospheric models, and ground in-situ Automatic Weather Stations powering Kisaan Ki Yash.
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+          Transparent audit of all ground sensors, satellite missions, and numerical model boundary conditions. Zero fabricated inputs.
         </p>
       </div>
 
-      {/* Data Source Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '1.5rem' }}>
-        {DATA_SOURCES.map((source) => (
+      {/* Data Cards List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '3rem' }}>
+        {DATA_SOURCES.map((ds) => (
           <div
-            key={source.id}
-            className="farmora-glass-elevated card-hover-tilt"
+            key={ds.id}
+            className="glass-panel"
             style={{
               padding: '24px',
+              background: 'white',
               borderRadius: 'var(--radius-xl)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between'
+              border: ds.status === 'AVAILABLE' ? '1.5px solid var(--border-glow-emerald)' : '1px solid var(--border-subtle)',
+              boxShadow: 'var(--shadow-sm)'
             }}
           >
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px', marginBottom: '12px' }}>
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '3px 10px',
-                    borderRadius: 'var(--radius-full)',
-                    background: source.status === 'AVAILABLE' ? 'rgba(182, 178, 67, 0.15)' : 'rgba(152, 105, 36, 0.2)',
-                    color: source.status === 'AVAILABLE' ? 'var(--farmora-lime)' : 'var(--farmora-wheat)',
-                    fontSize: '0.72rem',
-                    fontWeight: 800,
-                    fontFamily: 'var(--font-mono)'
-                  }}
-                >
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: source.status === 'AVAILABLE' ? '#B6B243' : '#986924' }} />
-                  {source.status}
-                </span>
-
-                <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--farmora-wheat)' }}>
-                  {source.cadence}
-                </span>
-              </div>
-
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--farmora-light)', marginBottom: '4px' }}>
-                {source.name}
-              </h3>
-              <div style={{ fontSize: '0.78rem', color: 'var(--farmora-lime)', fontFamily: 'var(--font-mono)', marginBottom: '12px' }}>
-                {source.agency} • {source.category}
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.84rem', marginBottom: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--farmora-platinum)' }}>Resolution:</span>
-                  <strong style={{ color: 'var(--farmora-light)' }}>{source.resolution}</strong>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '12px' }}>
+              <div>
+                <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--color-atmosphere-blue)', fontWeight: 700 }}>
+                  {ds.category.toUpperCase()} • {ds.agency}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--farmora-platinum)' }}>Coverage:</span>
-                  <strong style={{ color: 'var(--farmora-wheat)', textAlign: 'right', maxWidth: '220px' }}>{source.coverage}</strong>
-                </div>
+                <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', marginTop: '2px' }}>
+                  {ds.name}
+                </h3>
               </div>
+              {getStatusBadge(ds.status)}
             </div>
 
-            <div style={{ background: 'rgba(12, 13, 5, 0.75)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(182, 178, 67, 0.2)', fontSize: '0.8rem', color: 'var(--farmora-platinum)', lineHeight: 1.5 }}>
-              {source.notes}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', background: 'var(--bg-surface-subtle)', padding: '14px', borderRadius: 'var(--radius-md)', marginBottom: '14px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}>
+              <div><strong>COVERAGE:</strong> {ds.coverage}</div>
+              <div><strong>CADENCE:</strong> {ds.cadence}</div>
+              <div><strong>SPATIAL RES:</strong> {ds.resolution}</div>
+              <div><strong>DATA QUALITY:</strong> {ds.quality}</div>
             </div>
+
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+              <strong>Operational Role:</strong> {ds.notes}
+            </p>
           </div>
         ))}
       </div>

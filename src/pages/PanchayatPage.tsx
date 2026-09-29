@@ -15,7 +15,6 @@ import {
   Clock,
   ArrowRight
 } from 'lucide-react';
-import { StatusBadge } from '../components/common/StatusBadge';
 
 export const PanchayatPage: React.FC = () => {
   const { language, location, selectedCrop } = useApp();
@@ -34,79 +33,115 @@ export const PanchayatPage: React.FC = () => {
 
   if (loading || !twin) {
     return (
-      <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--farmora-platinum)', backgroundColor: 'var(--farmora-dark)', minHeight: '100vh' }}>
+      <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)' }}>
         Loading Panchayat intelligence data...
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2.5rem 1.5rem 6rem 1.5rem', backgroundColor: 'var(--farmora-dark)', minHeight: 'calc(100vh - 120px)' }}>
+    <div style={{ maxWidth: '1360px', margin: '0 auto', padding: '2rem' }}>
       {/* Panchayat Header */}
       <div style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <StatusBadge status="frozen" label="PANCHAYAT ADMINISTRATION" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+          <span className="badge badge-frozen">Panchayat Administration</span>
           <span className="badge badge-pilot">M1–M3 FROZEN PILOT</span>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h1 style={{ fontSize: '2.4rem', fontWeight: 800, color: 'var(--farmora-light)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <MapPin size={28} color="var(--farmora-lime)" />
+            <h1 style={{ fontSize: '2.2rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <MapPin size={28} color="var(--color-atmosphere-blue)" />
               {twin.panchayat_name}
             </h1>
-            <p style={{ color: 'var(--farmora-platinum)', fontSize: '0.95rem' }}>
-              Block: {twin.block_name} • District: {twin.district_name}, {twin.state_name} • Cultivated Area: <strong style={{ color: 'var(--farmora-wheat)' }}>{twin.total_cultivated_area_ha} Ha</strong> ({twin.active_farmers_count} registered plots)
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+              Block: {twin.block_name} • District: {twin.district_name}, {twin.state_name} • Cultivated Area: <strong>{twin.total_cultivated_area_ha} Hectares</strong> ({twin.active_farmers_count} registered plots)
             </p>
           </div>
 
-          <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--farmora-wheat)' }}>
-            UPDATED: {new Date(twin.last_updated_utc).toLocaleTimeString()} IST
+          <div style={{ background: 'var(--bg-surface-subtle)', padding: '8px 14px', borderRadius: 'var(--radius-md)', fontSize: '0.78rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
+            DOMINANT CROP: <strong>{selectedCrop}</strong>
           </div>
         </div>
       </div>
 
-      {/* Panchayat Vitals Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
-        <div className="farmora-glass-elevated" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>MEAN CANOPY TEMP</div>
-          <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--farmora-lime)', marginTop: '4px' }}>
-            {twin.weather.prediction.temperature_c}°C
-          </div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)' }}>M1 Downscaled Grid</div>
+      {/* Main Grid: Left 1-km Map, Right Panchayat Multi-Layer Side Panel */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '2rem', marginBottom: '2.5rem' }}>
+        <div>
+          <MapView />
         </div>
 
-        <div className="farmora-glass-elevated" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>MEAN SOIL MOISTURE</div>
-          <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--farmora-lime)', marginTop: '4px' }}>
-            {twin.soil.prediction.root_zone_sm_vwc_pct}%
-          </div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)' }}>Root-zone 5–40 cm</div>
-        </div>
+        {/* Side Panel: Multi-Layer Village Status */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="glass-panel" style={{ padding: '20px' }}>
+            <h3 style={{ fontSize: '1.15rem', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Layers size={18} color="var(--color-atmosphere-blue)" />
+              {language === 'hi' ? 'गाँव की लाइव स्थिति (Multi-Layer)' : 'Live Panchayat Condition'}
+            </h3>
 
-        <div className="farmora-glass-elevated" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>48h RAIN EXPECTATION</div>
-          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#38bdf8', marginTop: '4px' }}>
-            {twin.precipitation.prediction.expected_rainfall_mm} mm
-          </div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)' }}>M3 Hurdle Expected Sum</div>
-        </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-sm)' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Thermometer size={16} color="var(--color-atmosphere-blue)" />
+                  {language === 'hi' ? 'तापमान (M1/M2)' : 'Air Temperature'}
+                </span>
+                <strong style={{ fontSize: '0.95rem', color: 'var(--text-primary)' }}>{twin.weather.prediction.temperature_c}°C</strong>
+              </div>
 
-        <div className="farmora-glass-elevated" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>FLOOD VULNERABLE AREA</div>
-          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f87171', marginTop: '4px' }}>
-            {twin.flood.prediction.vulnerable_area_ha} Ha
-          </div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)' }}>Level: {twin.flood.prediction.risk_level}</div>
-        </div>
-      </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-sm)' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <CloudRain size={16} color="var(--color-atmosphere-blue)" />
+                  {language === 'hi' ? 'वर्षा अनुमान (M3)' : 'Rainfall Forecast'}
+                </span>
+                <strong style={{ fontSize: '0.95rem', color: 'var(--color-atmosphere-blue)' }}>{twin.precipitation.prediction.expected_rainfall_mm} mm (84%)</strong>
+              </div>
 
-      {/* Map Integration */}
-      <div style={{ marginTop: '2rem' }}>
-        <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--farmora-light)', marginBottom: '14px' }}>
-          Panchayat 1-km Precision Operational Grid
-        </h3>
-        <MapView />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-sm)' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Droplets size={16} color="var(--color-earth-emerald)" />
+                  {language === 'hi' ? 'जमीन में नमी (40cm)' : 'Root-Zone Moisture'}
+                </span>
+                <strong style={{ fontSize: '0.95rem', color: 'var(--color-earth-emerald)' }}>{twin.soil.prediction.root_zone_sm_vwc_pct}% VWC</strong>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-sm)' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Sprout size={16} color="var(--color-earth-emerald)" />
+                  {language === 'hi' ? 'फसल की अवस्था' : 'Crop Stage'}
+                </span>
+                <strong style={{ fontSize: '0.95rem', color: 'var(--text-primary)' }}>{twin.crop.prediction.phenology_stage.replace('_', ' ')}</strong>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-sm)' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Activity size={16} color="var(--color-earth-emerald)" />
+                  {language === 'hi' ? 'जलभराव जोखिम' : 'Inundation Risk'}
+                </span>
+                <span className="badge badge-frozen" style={{ fontSize: '0.72rem' }}>{twin.flood.prediction.risk_level}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* "क्या बदल रहा है?" Timeline */}
+          <div className="glass-panel" style={{ padding: '20px' }}>
+            <h3 style={{ fontSize: '1.15rem', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Clock size={18} color="var(--color-solar-amber)" />
+              {language === 'hi' ? 'क्या बदल रहा है? (Panchayat Trends)' : 'What is changing in the Panchayat?'}
+            </h3>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+              <div style={{ padding: '8px 12px', background: 'var(--color-atmosphere-subtle)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--color-atmosphere-blue)' }}>
+                <strong>आज शाम:</strong> पश्चिमी विक्षोभ के चलते शाम 4 बजे से रात 10 बजे के बीच 12.4 मिमी बारिश की प्रबल संभावना।
+              </div>
+              <div style={{ padding: '8px 12px', background: 'var(--color-earth-subtle)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--color-earth-emerald)' }}>
+                <strong>कल सुबह:</strong> मिट्टी में पर्याप्त नमी रहने से धान के खेतों में पानी का स्तर अनुकूल रहेगा।
+              </div>
+              <div style={{ padding: '8px 12px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--border-card)' }}>
+                <strong>अगले 3 दिन:</strong> तापमान सामान्य से 1°C कम रहेगा, कीटनाशक छिड़काव के लिए परसों का दिन सबसे उपयुक्त होगा।
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

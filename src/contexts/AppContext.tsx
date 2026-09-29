@@ -23,6 +23,9 @@ interface AppContextType {
   setSelectedCrop: (crop: string) => void;
   speakText: (text: string) => void;
   isSpeaking: boolean;
+  isSignedIn: boolean;
+  signIn: () => void;
+  signOut: () => void;
 }
 
 const defaultLocation: LocationInfo = {
@@ -42,6 +45,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [location, setLocation] = useState<LocationInfo>(defaultLocation);
   const [selectedCrop, setSelectedCrop] = useState<string>('Paddy (धान - बासमती)');
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(() => sessionStorage.getItem('kisaan-signed-in') === 'true');
+
+  const signIn = () => {
+    sessionStorage.setItem('kisaan-signed-in', 'true');
+    setIsSignedIn(true);
+  };
+
+  const signOut = () => {
+    sessionStorage.removeItem('kisaan-signed-in');
+    setIsSignedIn(false);
+  };
 
   const speakText = (text: string) => {
     if (!('speechSynthesis' in window)) return;
@@ -71,7 +85,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         selectedCrop,
         setSelectedCrop,
         speakText,
-        isSpeaking
+        isSpeaking,
+        isSignedIn,
+        signIn,
+        signOut
       }}
     >
       {children}

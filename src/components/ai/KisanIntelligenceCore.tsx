@@ -30,46 +30,46 @@ export const KisanIntelligenceCore: React.FC<KisanIntelligenceCoreProps> = ({
     }
   }, [size]);
 
-  // Color & Energy Config per State tuned to Farmora Palette
+  // Color & Energy Config per State
   const theme = useMemo(() => {
     switch (state) {
       case 'IDLE':
         return {
-          coreGradient: ['#B6B243', '#658665'], // Electric Lime & Sage
-          ringStroke: 'rgba(182, 178, 67, 0.45)',
-          outerGlow: 'rgba(182, 178, 67, 0.35)',
+          coreGradient: ['#10b981', '#06b6d4'],
+          ringStroke: 'rgba(16, 185, 129, 0.45)',
+          outerGlow: 'rgba(6, 182, 212, 0.25)',
           speedSec: '4s',
-          statusText: 'Core Ready • 1km Grid'
+          statusText: 'Core Idle'
         };
       case 'THINKING':
         return {
-          coreGradient: ['#38bdf8', '#B6B243'],
-          ringStroke: 'rgba(56, 189, 248, 0.65)',
-          outerGlow: 'rgba(56, 189, 248, 0.4)',
+          coreGradient: ['#06b6d4', '#3b82f6'],
+          ringStroke: 'rgba(59, 130, 246, 0.65)',
+          outerGlow: 'rgba(59, 130, 246, 0.4)',
           speedSec: '2.5s',
-          statusText: 'Inferring Microclimate'
+          statusText: 'Inferring Parameters'
         };
       case 'PROCESSING':
         return {
-          coreGradient: ['#B6B243', '#D7CE93'],
-          ringStroke: 'rgba(182, 178, 67, 0.75)',
-          outerGlow: 'rgba(182, 178, 67, 0.55)',
+          coreGradient: ['#10b981', '#14b8a6'],
+          ringStroke: 'rgba(20, 184, 166, 0.7)',
+          outerGlow: 'rgba(16, 185, 129, 0.5)',
           speedSec: '1.8s',
-          statusText: 'Downscaling NWP Grid'
+          statusText: 'Processing NWP Grid'
         };
       case 'FORECASTING':
         return {
-          coreGradient: ['#B6B243', '#38bdf8'],
-          ringStroke: 'rgba(182, 178, 67, 0.8)',
-          outerGlow: 'rgba(182, 178, 67, 0.6)',
+          coreGradient: ['#3b82f6', '#6366f1'],
+          ringStroke: 'rgba(99, 102, 241, 0.75)',
+          outerGlow: 'rgba(99, 102, 241, 0.45)',
           speedSec: '1.2s',
-          statusText: 'M1–M10 Active Cascade'
+          statusText: 'Downscaling 1-km Weather'
         };
       case 'ANALYZING':
         return {
-          coreGradient: ['#D7CE93', '#986924'],
-          ringStroke: 'rgba(215, 206, 147, 0.7)',
-          outerGlow: 'rgba(152, 105, 36, 0.4)',
+          coreGradient: ['#8b5cf6', '#06b6d4'],
+          ringStroke: 'rgba(139, 92, 246, 0.7)',
+          outerGlow: 'rgba(139, 92, 246, 0.4)',
           speedSec: '2s',
           statusText: 'Agronomic Evaluation'
         };
@@ -87,28 +87,28 @@ export const KisanIntelligenceCore: React.FC<KisanIntelligenceCoreProps> = ({
           ringStroke: 'rgba(239, 68, 68, 0.85)',
           outerGlow: 'rgba(239, 68, 68, 0.55)',
           speedSec: '0.9s',
-          statusText: 'Severe Inundation Hazard'
+          statusText: 'Severe Hazard Alert'
         };
       case 'SUCCESS':
         return {
-          coreGradient: ['#B6B243', '#10b981'],
-          ringStroke: 'rgba(182, 178, 67, 0.85)',
-          outerGlow: 'rgba(182, 178, 67, 0.5)',
+          coreGradient: ['#10b981', '#059669'],
+          ringStroke: 'rgba(16, 185, 129, 0.8)',
+          outerGlow: 'rgba(16, 185, 129, 0.45)',
           speedSec: '3s',
           statusText: 'Certified Decision Ready'
         };
       case 'ABSTAINED':
         return {
-          coreGradient: ['#AEAEAD', '#5C4F2D'],
-          ringStroke: 'rgba(174, 174, 173, 0.5)',
-          outerGlow: 'rgba(174, 174, 173, 0.2)',
+          coreGradient: ['#94a3b8', '#64748b'],
+          ringStroke: 'rgba(148, 163, 184, 0.5)',
+          outerGlow: 'rgba(148, 163, 184, 0.2)',
           speedSec: '6s',
           statusText: 'Abstained (IMD Fallback)'
         };
       case 'OFFLINE':
         return {
-          coreGradient: ['#78716c', '#0C0D05'],
-          ringStroke: 'rgba(120, 113, 108, 0.3)',
+          coreGradient: ['#64748b', '#334155'],
+          ringStroke: 'rgba(100, 116, 139, 0.3)',
           outerGlow: 'transparent',
           speedSec: '0s',
           statusText: 'System Standby'
@@ -136,7 +136,7 @@ export const KisanIntelligenceCore: React.FC<KisanIntelligenceCoreProps> = ({
           width: px,
           height: px,
           position: 'relative',
-          filter: `drop-shadow(0 0 ${px * 0.16}px ${theme.outerGlow})`
+          filter: `drop-shadow(0 0 ${px * 0.15}px ${theme.outerGlow})`
         }}
       >
         <svg
@@ -237,7 +237,7 @@ export const KisanIntelligenceCore: React.FC<KisanIntelligenceCoreProps> = ({
             r={coreR}
             fill={theme.coreGradient[0]}
             style={{
-              filter: `drop-shadow(0 0 10px ${theme.coreGradient[0]})`
+              boxShadow: `0 0 10px ${theme.coreGradient[0]}`
             }}
           />
           {/* Inner Light Glint */}
@@ -255,19 +255,15 @@ export const KisanIntelligenceCore: React.FC<KisanIntelligenceCoreProps> = ({
         <div
           className="kisan-core-label"
           style={{
-            marginTop: '8px',
+            marginTop: '6px',
             fontSize: size === 'hero' ? '0.85rem' : '0.72rem',
             fontFamily: "'JetBrains Mono', monospace",
-            fontWeight: 700,
+            fontWeight: 500,
             letterSpacing: '0.05em',
-            color: 'var(--farmora-wheat)',
+            color: 'var(--text-secondary)',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
-            background: 'rgba(12, 13, 5, 0.7)',
-            padding: '3px 10px',
-            borderRadius: '9999px',
-            border: '1px solid rgba(182, 178, 67, 0.25)'
+            gap: '5px'
           }}
         >
           <span
@@ -276,8 +272,7 @@ export const KisanIntelligenceCore: React.FC<KisanIntelligenceCoreProps> = ({
               height: 6,
               borderRadius: '50%',
               backgroundColor: theme.coreGradient[0],
-              display: 'inline-block',
-              boxShadow: `0 0 6px ${theme.coreGradient[0]}`
+              display: 'inline-block'
             }}
           />
           {theme.statusText}

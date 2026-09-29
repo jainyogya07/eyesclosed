@@ -1,51 +1,161 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
-import { Sprout, Compass, Sun, ShieldCheck } from 'lucide-react';
-import { StatusBadge } from '../components/common/StatusBadge';
+import {
+  Sprout,
+  AlertCircle,
+  Calendar,
+  Activity,
+  Layers,
+  Sparkles,
+  Info,
+  TrendingUp
+} from 'lucide-react';
 
 export const AgriculturePage: React.FC = () => {
-  const { selectedCrop } = useApp();
+  const { language, selectedCrop, setSelectedCrop } = useApp();
+  const [demoActive, setDemoActive] = useState(true);
+
+  const crops = [
+    'Paddy (धान - बासमती PB-1509)',
+    'Wheat (गेहूं - HD-2967)',
+    'Mango (दशहरी आम - मलिहाबाद)',
+    'Mustard (सरसों - पूसा बोल्ड)'
+  ];
 
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2.5rem 1.5rem 6rem 1.5rem', backgroundColor: 'var(--farmora-dark)', minHeight: 'calc(100vh - 120px)' }}>
-      <div style={{ marginBottom: '2.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <StatusBadge status="frozen" label="PHENOLOGY & YIELD SIMULATION" />
-          <span className="badge badge-pilot">M5 & M7 BIOPHYSICAL MODELS</span>
+    <div style={{ maxWidth: '1360px', margin: '0 auto', padding: '2rem' }}>
+      {/* Header */}
+      <div style={{ marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+          <span className="badge badge-unavailable">Model 5 & Model 7 (Future Training)</span>
+          <span className="badge badge-pilot">SPECIFICATION & SIMULATION ONLY</span>
         </div>
-        <h1 style={{ fontSize: '2.6rem', fontWeight: 800, color: 'var(--farmora-light)', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Sprout size={32} color="var(--farmora-lime)" />
-          Crop Phenology & Agronomic Dynamics
-        </h1>
-        <p style={{ color: 'var(--farmora-platinum)', fontSize: '1.02rem', maxWidth: '780px' }}>
-          Growing Degree Day (GDD) tracking, physiological developmental milestones, and Sentinel-2 red-edge chlorophyll dynamics.
-        </p>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 style={{ fontSize: '2.2rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Sprout size={28} color="var(--color-earth-emerald)" />
+              {language === 'hi' ? 'फसल अवस्था व स्वास्थ्य (Crop Intelligence)' : 'Crop State & Phenology Intelligence'}
+            </h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+              Phenological tracking using Sentinel-2 multispectral vegetation indices and accumulated thermal Growing Degree Days (GDD).
+            </p>
+          </div>
+
+          {/* Crop Selector */}
+          <div style={{ background: 'white', border: '1px solid var(--border-card)', borderRadius: 'var(--radius-md)', padding: '6px 12px' }}>
+            <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', display: 'block' }}>
+              SELECT CROP / फसल चुनें:
+            </span>
+            <select
+              value={selectedCrop}
+              onChange={(e) => setSelectedCrop(e.target.value)}
+              style={{
+                border: 'none',
+                outline: 'none',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                color: 'var(--text-primary)',
+                background: 'transparent',
+                cursor: 'pointer'
+              }}
+            >
+              {crops.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div className="farmora-glass-elevated" style={{ padding: '28px', borderRadius: 'var(--radius-xl)' }}>
-        <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--farmora-light)', marginBottom: '14px' }}>
-          Active Crop: {selectedCrop}
-        </h3>
-        <p style={{ color: 'var(--farmora-platinum)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '18px' }}>
-          Thermal time accumulation (GDD) currently stands at <strong>840 degree-days</strong> since sowing. The crop is traversing its critical reproductive phase, where extreme heat (&gt;35°C) or prolonged root inundation can reduce final grain fill by up to 24%.
-        </p>
+      {/* Truth in Science Callout Banner */}
+      <div
+        className="glass-panel"
+        style={{
+          padding: '16px 20px',
+          background: 'var(--color-solar-subtle)',
+          borderLeft: '4px solid var(--color-solar-amber)',
+          marginBottom: '2.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '14px'
+        }}
+      >
+        <AlertCircle size={22} color="var(--color-solar-amber)" style={{ flexShrink: 0 }} />
+        <div style={{ fontSize: '0.88rem', color: 'var(--text-primary)' }}>
+          <strong>Scientific Status Notice:</strong> Model 5 (Phenology) and Model 7 (Yield) are currently in specification stage and awaiting active GPU training queue slots. Below values represent a <strong>pilot simulation</strong> conditioned on Sentinel-2 optical bands and historical DAC&FW crop calendars.
+        </div>
+      </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
-          <div style={{ padding: '14px', background: 'rgba(12, 13, 5, 0.75)', borderRadius: '8px', border: '1px solid rgba(182, 178, 67, 0.25)' }}>
-            <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)' }}>PHENOLOGICAL STAGE</div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--farmora-lime)', marginTop: '4px' }}>Flowering / Anthesis</div>
+      {/* Main Crop Analytics Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+        <div className="glass-panel" style={{ padding: '22px' }}>
+          <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>PHENOLOGICAL STAGE</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-earth-emerald)', marginTop: '4px' }}>
+            FLOWERING & HEADING
           </div>
-
-          <div style={{ padding: '14px', background: 'rgba(12, 13, 5, 0.75)', borderRadius: '8px', border: '1px solid rgba(182, 178, 67, 0.25)' }}>
-            <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)' }}>WATER STRESS SENSITIVITY</div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#f87171', marginTop: '4px' }}>High (Ky = 1.15)</div>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+            बाली निकलने की अवस्था (Critical water window)
           </div>
-
-          <div style={{ padding: '14px', background: 'rgba(12, 13, 5, 0.75)', borderRadius: '8px', border: '1px solid rgba(182, 178, 67, 0.25)' }}>
-            <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)' }}>PROJECTED HARVEST</div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>42 Days Remaining</div>
+          <div style={{ marginTop: '14px', background: 'var(--bg-surface-subtle)', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ width: '74%', height: '100%', background: 'var(--color-earth-emerald)' }} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+            <span>Sowing (Day 0)</span>
+            <span>Maturity (Day 115)</span>
           </div>
         </div>
+
+        <div className="glass-panel" style={{ padding: '22px' }}>
+          <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>THERMAL GDD ACCUMULATION</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)', marginTop: '4px' }}>
+            1,380.4 °C-Days
+          </div>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+            Target Maturity: 1,850.0 °C-Days (74.6% complete)
+          </div>
+          <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--color-earth-emerald)', marginTop: '8px' }}>
+            Base Temp (Tbase): 10.0°C (Kharif standard)
+          </div>
+        </div>
+
+        <div className="glass-panel" style={{ padding: '22px' }}>
+          <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>CHLOROPHYLL VIGOR (NDRE)</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>
+            0.82 (High Vigor)
+          </div>
+          <div style={{ fontSize: '0.85rem', color: 'var(--color-earth-emerald)', marginTop: '4px', fontWeight: 600 }}>
+            +6.8% vs 5-Year Historical Benchmark
+          </div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '8px' }}>
+            Source: Sentinel-2 Red-Edge Band 5/7
+          </div>
+        </div>
+
+        <div className="glass-panel" style={{ padding: '22px' }}>
+          <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>PROJECTED HARVEST YIELD</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-earth-emerald)', marginTop: '4px' }}>
+            4.35 Tons / Ha
+          </div>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+            Interval: [3.95 – 4.70 Tons/Ha]
+          </div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '8px' }}>
+            Estimated Harvest: 25 Oct – 05 Nov 2025
+          </div>
+        </div>
+      </div>
+
+      {/* Agronomic Advisory Guide */}
+      <div className="glass-panel" style={{ padding: '24px', background: 'white', borderRadius: 'var(--radius-xl)' }}>
+        <h3 style={{ fontSize: '1.2rem', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Calendar size={18} color="var(--color-earth-emerald)" />
+          {language === 'hi' ? 'वर्तमान अवस्था के लिए कृषि सलाह' : 'Agronomic Guidance for Current Stage'}
+        </h3>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+          धान की बाली निकलते समय (Heading Stage) खेत में नमी की कमी नहीं होनी चाहिए। हालांकि आज रात 12.4 मिमी बारिश होने के कारण ट्यूबवेल से अतिरिक्त सिंचाई की आवश्यकता नहीं है। बारिश के 24 घंटे बाद हल्की यूरिया खाद का छिड़काव किया जा सकता है।
+        </p>
       </div>
     </div>
   );

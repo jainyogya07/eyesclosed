@@ -1,160 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import { predictionProvider } from '../../providers';
 import { ModelStatus } from '../../types/contracts';
-import { StatusBadge, StatusVariant } from '../common/StatusBadge';
 import {
   Cpu,
   Lock,
+  GitBranch,
   ShieldCheck,
-  ChevronDown,
-  ChevronUp,
-  Search,
-  Database,
-  Sliders,
-  Layers,
-  FileCode,
   AlertCircle,
-  ExternalLink
+  Database,
+  Search,
+  CheckCircle,
+  Clock,
+  Layers
 } from 'lucide-react';
-
-interface ModelDetailSpec {
-  purpose: string;
-  data: string;
-  method: string;
-  validation: string;
-  limitations: string;
-}
-
-const MODEL_SPECS: Record<string, ModelDetailSpec> = {
-  M01: {
-    purpose: 'Downscale coarse 12-km numerical weather predictions to 1000m x 1000m resolution over complex terrain.',
-    data: 'NCMRWF GFS 12km NWP + Copernicus GLO-30 DEM + In-situ IMD AWS ground telemetry (Amausi, BKT, Mohanlalganj).',
-    method: 'Topographically-conditioned gradient boosted regression incorporating elevation lapse rates, aspect, and solar irradiance.',
-    validation: 'Locked test station AWS_LKO_05: MAE 0.4083°C, RMSE 0.5233°C, R² 0.9827. 39.89% error reduction over raw NWP.',
-    limitations: 'Calibrated exclusively on the 72-hour Lucknow July pilot dataset. Not yet validated across high-relief Himalayan or coastal zones.'
-  },
-  M02: {
-    purpose: 'Microclimate surface temperature refinement incorporating canopy density and land cover indices.',
-    data: 'M1 predictions + Landsat/Sentinel-2 NDVI/NDRE vegetation proxies + ground AWS telemetry.',
-    method: 'Residual refinement tree with spatial regularization and conformal uncertainty bounds.',
-    validation: 'Locked test station AWS_LKO_05: MAE 0.4113°C. Did not improve upon M1 baseline (+0.0030°C difference). M1 remains active baseline.',
-    limitations: 'Limited canopy variation in the 72h pilot area. Retained as frozen scientific experiment demonstrating zero-leakage honesty.'
-  },
-  M03: {
-    purpose: 'Hyperlocal hourly precipitation downscaling with two-stage occurrence and intensity estimation.',
-    data: 'NCMRWF coarse precipitation + IMD AWS tipping bucket ground telemetry + topographic wetness index.',
-    method: 'Two-stage Hurdle formulation (Binary logistic occurrence + log-normal / gamma intensity regression).',
-    validation: 'Locked test station AWS_LKO_05: Expected Hurdle RMSE 0.9725 mm/h (15.0% error reduction vs raw NWP 1.1438 mm/h). MAE 0.7535 mm/h.',
-    limitations: 'Pilot dataset contains only 8 rainy hours in locked test. Defensible for pilot feasibility; requires monsoon expansion before production.'
-  },
-  M04: {
-    purpose: 'Root-zone (0-30cm) soil moisture estimation combining Sentinel-1 SAR and pedological profiles.',
-    data: 'Sentinel-1 C-band SAR (VV/VH backscatter) + SoilGrids 250m sand/silt/clay fractions + M3 rainfall.',
-    method: 'Water Cloud Model inversion + Random Forest regression estimating Volumetric Water Content (VWC %).',
-    validation: 'Architecture specified. Awaiting active training slot.',
-    limitations: 'SAR repeat cycle is 12 days; interpolated using physical soil water balance.'
-  },
-  M05: {
-    purpose: 'Crop growth stage (phenology) detection and leaf chlorophyll nitrogen status.',
-    data: 'Sentinel-2 Multispectral MSI (RedEdge, NIR) + thermal accumulation (Growing Degree Days).',
-    method: 'Time-series curve fitting of NDVI/EVI and thermal GDD tracking against physiological milestones.',
-    validation: 'Architecture specified. Awaiting active training slot.',
-    limitations: 'Cloud cover during peak monsoon requires SAR backscatter cross-calibration.'
-  },
-  M06: {
-    purpose: 'Hyperlocal evapotranspiration (ET) and net irrigation crop water demand.',
-    data: 'FAO-56 Penman-Monteith physical equations driven by M1 temperature, radiation, humidity, and M5 crop coefficients.',
-    method: 'Deterministic physical thermodynamic engine calculating reference ETo and crop-adjusted ETc.',
-    validation: 'Calibrated against standard FAO-56 irrigation tables for Paddy and Mango.',
-    limitations: 'Requires canal scheduling and groundwater pump flow telemetry for closed-loop balance.'
-  },
-  M07: {
-    purpose: 'Mid-season and pre-harvest crop yield estimation at Panchayat cluster resolution.',
-    data: 'Integrated seasonal GDD + cumulative ET + Sentinel-2 biophysical vegetation index time-series.',
-    method: 'Hybrid biophysical process-guided machine learning (WOFOST-ML bridge).',
-    validation: 'Specification stage.',
-    limitations: 'Requires multi-year historical crop cutting experiments (CCE) ground truth.'
-  },
-  M08: {
-    purpose: 'Micro-topographic inundation and pluvial flash-flood susceptibility mapping.',
-    data: 'Copernicus 30m DEM + Topographic Wetness Index (TWI) + M3 short-duration rainfall shock.',
-    method: '2D hydrodynamic shallow-water physical overland flow proxy routing.',
-    validation: 'Specification stage.',
-    limitations: 'Drainage culvert and localized canal embankment micro-features require centimeter RTK survey.'
-  },
-  M09: {
-    purpose: 'Extreme agricultural climatological hazard early warning (heatwave, frost, convective storm).',
-    data: 'Long-term IMD 30-year climatology + downscaled M1/M3 ensemble forecasts.',
-    method: 'Extreme Value Theory (EVT) Generalized Pareto Distribution anomaly detection.',
-    validation: 'Prototype climatological threshold engine.',
-    limitations: 'Extreme events are rare by definition; uncertainty intervals widen at 99th percentile.'
-  },
-  M10: {
-    purpose: 'Master agricultural decision intelligence: converting complex physics into unequivocal vernacular action.',
-    data: 'Causal multi-model synthesis combining M1 through M9 outputs + energy & chemical cost models.',
-    method: 'Constrained agronomic decision rules with automated Conformal Prediction abstention gate.',
-    validation: 'Operational prototype delivering verified vernacular cards (e.g. "Hold Irrigation Today").',
-    limitations: 'Advisories are decision-support recommendations; final on-field execution is with the farmer.'
-  }
-};
 
 export const ModelLab: React.FC = () => {
   const [models, setModels] = useState<ModelStatus[]>([]);
   const [loading, setLoading] = useState(true);
-  const [expandedModelId, setExpandedModelId] = useState<string | null>('M01');
-  const [filterQuery, setFilterQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    async function loadModels() {
+    async function loadData() {
       setLoading(true);
       const data = await predictionProvider.getModelCatalog();
       setModels(data);
       setLoading(false);
     }
-    loadModels();
+    loadData();
   }, []);
 
-  const filteredModels = models.filter(
-    (m) =>
-      m.model_id.toLowerCase().includes(filterQuery.toLowerCase()) ||
-      m.full_name.toLowerCase().includes(filterQuery.toLowerCase()) ||
-      m.code_name.toLowerCase().includes(filterQuery.toLowerCase()) ||
-      m.status.toLowerCase().includes(filterQuery.toLowerCase())
-  );
-
-  const getStatusVariant = (status: string): StatusVariant => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'FROZEN':
-        return 'frozen';
       case 'PILOT':
-      case 'VALIDATING':
-        return 'pilot';
-      case 'PRODUCTION':
-        return 'live';
+      case 'FROZEN_PILOT':
+        return <span className="badge badge-frozen"><Lock size={11} /> FROZEN PILOT</span>;
+      case 'DATA_AUDIT':
+        return <span className="badge badge-pilot"><Clock size={11} /> DATA AUDIT IN PROGRESS</span>;
+      case 'NOT_AVAILABLE':
       default:
-        return 'prototype';
+        return <span className="badge badge-unavailable">NOT YET AVAILABLE</span>;
     }
   };
 
-  return (
-    <section style={{ maxWidth: '1280px', margin: '0 auto', padding: '2.5rem 1.5rem 6rem 1.5rem', backgroundColor: 'var(--farmora-dark)', minHeight: 'calc(100vh - 120px)' }}>
-      {/* Top Header */}
-      <div style={{ marginBottom: '2.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <StatusBadge status="frozen" label="RESEARCH BENCHMARK & REGISTRY" />
-          <span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', color: 'var(--farmora-wheat)' }}>
-            10-MODEL HYPERLOCAL STACK
-          </span>
-        </div>
+  const filteredModels = models.filter(
+    (m) =>
+      m.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      m.model_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      m.code_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
+  return (
+    <section style={{ maxWidth: '1280px', margin: '0 auto', padding: '3rem 2rem' }}>
+      {/* Header */}
+      <div style={{ marginBottom: '2.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+          <span className="badge badge-frozen">100-Agent Orchestration & MLOps</span>
+          <span className="badge badge-frozen">Leave-One-Station-Out Protocol</span>
+        </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h1 style={{ fontSize: '2.6rem', fontWeight: 800, color: 'var(--farmora-light)', letterSpacing: '-0.025em', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Cpu size={32} color="var(--farmora-lime)" />
-              Intelligence Stack (M1–M10 Registry)
-            </h1>
-            <p style={{ color: 'var(--farmora-platinum)', fontSize: '1.02rem', maxWidth: '720px' }}>
-              Cryptographic integrity records, locked pilot verification metrics, and architectural specifications for every layer of the cascade.
+            <h2 style={{ fontSize: '2.2rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Cpu size={28} color="var(--color-atmosphere-blue)" />
+              Model Intelligence Lab (M1–M10)
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+              Transparent cryptographic artifact registry tracking the 10 sequential climate and agronomic decision models.
             </p>
           </div>
 
@@ -164,176 +75,204 @@ export const ModelLab: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '8px 16px',
-              borderRadius: 'var(--radius-full)',
-              background: 'rgba(251, 251, 251, 0.05)',
-              border: '1px solid rgba(182, 178, 67, 0.25)',
-              width: '240px'
+              background: 'white',
+              border: '1px solid var(--border-card)',
+              borderRadius: 'var(--radius-md)',
+              padding: '8px 14px',
+              boxShadow: 'var(--shadow-sm)'
             }}
           >
-            <Search size={16} color="var(--farmora-platinum)" />
+            <Search size={16} color="var(--text-muted)" />
             <input
               type="text"
-              placeholder="Filter M1–M10..."
-              value={filterQuery}
-              onChange={(e) => setFilterQuery(e.target.value)}
+              placeholder="Filter M1–M10 models..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               style={{
-                background: 'none',
                 border: 'none',
-                color: 'var(--farmora-light)',
-                fontSize: '0.85rem',
                 outline: 'none',
-                width: '100%'
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.85rem',
+                color: 'var(--text-primary)',
+                width: '180px'
               }}
             />
           </div>
         </div>
       </div>
 
-      {loading ? (
-        <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--farmora-platinum)' }}>
-          Loading cryptographic model registry...
+      {/* Single-Active Training Queue Invariant Callout */}
+      <div
+        className="glass-panel"
+        style={{
+          padding: '16px 20px',
+          background: 'white',
+          borderLeft: '4px solid var(--color-earth-emerald)',
+          marginBottom: '2rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '1rem'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <ShieldCheck size={24} color="var(--color-earth-emerald)" />
+          <div>
+            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              Strict Single-Active Training Invariant: ENFORCED
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+              Master Orchestrator limits active training slots to exactly 1 model at a time. Zero test set leakage allowed.
+            </div>
+          </div>
         </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {filteredModels.map((model) => {
-            const isExpanded = expandedModelId === model.model_id;
-            const spec = MODEL_SPECS[model.model_id];
+        <div style={{ display: 'flex', gap: '8px', fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ color: 'var(--color-earth-emerald)', fontWeight: 600 }}>Frozen Pilots: M01, M02, M03</span>
+          <span style={{ color: 'var(--text-muted)' }}>|</span>
+          <span style={{ color: 'var(--color-solar-amber)', fontWeight: 600 }}>Next Active Slot: M04 Soil Moisture</span>
+        </div>
+      </div>
 
-            return (
-              <div
-                key={model.model_id}
-                className="farmora-glass-elevated"
-                style={{
-                  borderRadius: 'var(--radius-xl)',
-                  overflow: 'hidden',
-                  border: isExpanded ? '1.5px solid var(--farmora-lime)' : '1px solid rgba(182, 178, 67, 0.25)',
-                  boxShadow: isExpanded ? '0 0 25px rgba(182, 178, 67, 0.15)' : 'none',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                {/* Header Bar */}
-                <div
-                  onClick={() => setExpandedModelId(isExpanded ? null : model.model_id)}
-                  style={{
-                    padding: '20px 24px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    background: isExpanded ? 'rgba(182, 178, 67, 0.08)' : 'transparent'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <div
+      {/* Model Cards Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '1.5rem' }}>
+        {filteredModels.map((m: ModelStatus) => {
+          const isPilotOrFrozen = m.status === 'FROZEN' || m.status === 'PILOT';
+          const isValidating = m.status === 'VALIDATING';
+
+          return (
+            <div
+              key={m.model_id}
+              className="glass-panel-elevated"
+              style={{
+                padding: '24px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                border: isPilotOrFrozen
+                  ? '1.5px solid var(--color-earth-light)'
+                  : isValidating
+                  ? '1.5px solid var(--color-atmosphere-light)'
+                  : '1px solid var(--border-subtle)',
+                opacity: m.status === 'NOT_AVAILABLE' ? 0.75 : 1
+              }}
+            >
+              <div>
+                {/* Card Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                  <div>
+                    <span
                       style={{
-                        padding: '6px 14px',
-                        borderRadius: 'var(--radius-md)',
-                        background: 'rgba(12, 13, 5, 0.8)',
-                        border: '1.5px solid var(--farmora-lime)',
                         fontFamily: 'var(--font-mono)',
-                        fontWeight: 900,
-                        fontSize: '1.05rem',
-                        color: 'var(--farmora-lime)'
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        color: 'var(--color-atmosphere-blue)'
                       }}
                     >
-                      {model.model_id}
-                    </div>
-
-                    <div>
-                      <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--farmora-light)' }}>
-                        {model.full_name}
-                      </h3>
-                      <div style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontFamily: 'var(--font-mono)' }}>
-                        CODE: {model.code_name} • VER: {model.version} • HASH: {model.checksum_sha256 ? `${model.checksum_sha256.substring(0, 12)}...` : 'LOCKED'}
-                      </div>
-                    </div>
+                      {m.model_id} • STAGE {m.stage_order}
+                    </span>
+                    <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {m.full_name}
+                    </h3>
                   </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                    <StatusBadge
-                      status={getStatusVariant(model.status)}
-                      label={model.status}
-                    />
-                    {isExpanded ? <ChevronUp size={20} color="var(--farmora-lime)" /> : <ChevronDown size={20} color="var(--farmora-platinum)" />}
-                  </div>
+                  {getStatusBadge(m.status)}
                 </div>
 
-                {/* Expanded Details */}
-                {isExpanded && (
-                  <div style={{ padding: '0 24px 24px 24px', borderTop: '1px solid rgba(182, 178, 67, 0.15)' }}>
-                    {spec && (
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginTop: '1.25rem' }}>
-                        <div style={{ background: 'rgba(12, 13, 5, 0.8)', padding: '14px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(182, 178, 67, 0.2)' }}>
-                          <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)', fontWeight: 800, textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>
-                            CORE PURPOSE
-                          </div>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--farmora-platinum)', lineHeight: 1.5 }}>
-                            {spec.purpose}
-                          </p>
-                        </div>
+                {/* Framework & Specs */}
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '16px', lineHeight: 1.5 }}>
+                  <div><strong>Framework:</strong> {m.framework}</div>
+                  <div><strong>Spatial Grid:</strong> {m.spatial_resolution}</div>
+                  <div><strong>Temporal Cadence:</strong> {m.temporal_cadence}</div>
+                </div>
 
-                        <div style={{ background: 'rgba(12, 13, 5, 0.8)', padding: '14px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(182, 178, 67, 0.2)' }}>
-                          <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)', fontWeight: 800, textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>
-                            TRAINING & INGESTION DATA
-                          </div>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--farmora-platinum)', lineHeight: 1.5 }}>
-                            {spec.data}
-                          </p>
-                        </div>
+                {/* Metric or Preview Notice */}
+                {m.benchmark_metric ? (
+                  <div
+                    style={{
+                      background: m.benchmark_metric.verified ? 'var(--color-earth-subtle)' : 'var(--color-atmosphere-subtle)',
+                      border: `1px solid ${m.benchmark_metric.verified ? 'var(--color-earth-light)' : 'var(--color-atmosphere-light)'}`,
+                      borderRadius: 'var(--radius-sm)',
+                      padding: '10px 14px',
+                      marginBottom: '14px',
+                      fontSize: '0.8rem'
+                    }}
+                  >
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                      {m.benchmark_metric.name.toUpperCase()}
+                    </div>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {m.benchmark_metric.value}
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      background: 'var(--bg-surface-subtle)',
+                      borderRadius: 'var(--radius-sm)',
+                      padding: '10px 14px',
+                      marginBottom: '14px',
+                      fontSize: '0.78rem',
+                      color: 'var(--text-muted)',
+                      fontStyle: 'italic'
+                    }}
+                  >
+                    Architecture specified • Awaiting active training slot
+                  </div>
+                )}
 
-                        <div style={{ background: 'rgba(12, 13, 5, 0.8)', padding: '14px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(182, 178, 67, 0.2)' }}>
-                          <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)', fontWeight: 800, textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>
-                            MATHEMATICAL / ML FORMULATION
-                          </div>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--farmora-platinum)', lineHeight: 1.5 }}>
-                            {spec.method}
-                          </p>
-                        </div>
-
-                        <div style={{ background: 'rgba(12, 13, 5, 0.8)', padding: '14px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(182, 178, 67, 0.3)' }}>
-                          <div style={{ fontSize: '0.72rem', color: 'var(--farmora-lime)', fontWeight: 800, textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>
-                            VERIFIED VALIDATION BASE
-                          </div>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--farmora-light)', lineHeight: 1.5, fontWeight: 600 }}>
-                            {spec.validation}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Scientific Metric from ModelStatus */}
-                    {model.benchmark_metric && (
-                      <div style={{ marginTop: '1.25rem' }}>
-                        <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--farmora-wheat)', fontWeight: 800, marginBottom: '8px' }}>
-                          LOCKED BENCHMARK METRIC:
-                        </div>
-                        <div
-                          style={{
-                            display: 'inline-block',
-                            padding: '10px 18px',
-                            background: 'rgba(22, 24, 10, 0.95)',
-                            borderRadius: '8px',
-                            border: '1px solid rgba(182, 178, 67, 0.4)'
-                          }}
-                        >
-                          <div style={{ fontSize: '0.7rem', color: 'var(--farmora-platinum)' }}>{model.benchmark_metric.name}</div>
-                          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--farmora-lime)', marginTop: '2px' }}>
-                            {model.benchmark_metric.value}
-                          </div>
-                          <div style={{ fontSize: '0.68rem', color: model.benchmark_metric.verified ? '#10b981' : '#f59e0b', marginTop: '4px' }}>
-                            {model.benchmark_metric.verified ? '✓ Verified on Locked Test Split' : 'Pending Verification'}
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                {/* Cryptographic SHA-256 Checksum */}
+                {m.checksum_sha256 && (
+                  <div
+                    style={{
+                      fontSize: '0.7rem',
+                      fontFamily: 'var(--font-mono)',
+                      background: 'var(--bg-surface-subtle)',
+                      padding: '6px 10px',
+                      borderRadius: 'var(--radius-sm)',
+                      color: 'var(--text-secondary)',
+                      wordBreak: 'break-all',
+                      marginBottom: '14px'
+                    }}
+                  >
+                    SHA-256: {m.checksum_sha256}
                   </div>
                 )}
               </div>
-            );
-          })}
-        </div>
-      )}
+
+              {/* Dependencies List */}
+              <div
+                style={{
+                  borderTop: '1px solid var(--border-subtle)',
+                  paddingTop: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  flexWrap: 'wrap',
+                  fontSize: '0.72rem',
+                  fontFamily: 'var(--font-mono)',
+                  color: 'var(--text-muted)'
+                }}
+              >
+                <span>Inputs:</span>
+                {m.dependencies.map((dep, idx) => (
+                  <span
+                    key={idx}
+                    style={{
+                      background: 'white',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      border: '1px solid var(--border-subtle)',
+                      color: 'var(--text-secondary)'
+                    }}
+                  >
+                    {dep}
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 };
