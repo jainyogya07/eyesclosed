@@ -196,10 +196,10 @@ export const MobileBottomNav: React.FC = () => {
             <div className="gluestack-sheet-header">
               <div>
                 <span className="gluestack-sheet-kicker">
-                  {location.panchayatName} · {hi ? 'अन्वेषण' : 'Navigation Hub'}
+                  {location.panchayatName} · {hi ? 'मौसम सेतु' : 'Mausam Setu Hub'}
                 </span>
                 <h3 className="gluestack-sheet-title">
-                  {hi ? 'कृषि सेवाएं एवं वैज्ञानिक टूल्स' : 'Agricultural Intelligence Suite'}
+                  {hi ? 'मौसम सेतु — कृषि सेवाएं व AI टूल्स' : 'Mausam Setu — Climate & Farm Suite'}
                 </h3>
               </div>
               <button

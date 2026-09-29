@@ -25,7 +25,7 @@ export const AboutPage: React.FC = () => {
         </div>
         <h1 style={{ fontSize: '2.4rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Info size={32} color="var(--color-atmosphere-blue)" />
-          {hi ? 'किसान की यश के बारे में' : 'About Kisaan Ki Yash'}
+          {hi ? 'मौसम सेतु के बारे में' : 'About Mausam Setu'}
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
           {hi
@@ -95,7 +95,7 @@ export const AboutPage: React.FC = () => {
           Conventional generative AI and uncalibrated neural networks frequently hallucinate high confidence even under severe out-of-distribution domain shift. In agricultural decision-making, a wrong prediction can bankrupt a smallholder farmer.
         </p>
         <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-          <strong>Kisaan Ki Yash enforces a strict Abstention Gate:</strong> If atmospheric chaos causes conformal prediction interval width to exceed safe operating bounds or input features violate physical constraints, the AI explicitly states: <em>"Prediction Withheld — High Atmospheric Volatility"</em> and seamlessly defers to official IMD district advisories.
+          <strong>Mausam Setu enforces a strict Abstention Gate:</strong> If atmospheric chaos causes conformal prediction interval width to exceed safe operating bounds or input features violate physical constraints, the AI explicitly states: <em>"Prediction Withheld — High Atmospheric Volatility"</em> and seamlessly defers to official IMD district advisories.
         </p>
       </div>
 

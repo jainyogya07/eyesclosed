@@ -19,7 +19,7 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="login-page">
       <section className="login-hero">
-        <div className="login-brand"><span><KisaanLogo size={34} /></span><strong>Kisaan Ki Yash</strong></div>
+        <div className="login-brand"><span><KisaanLogo size={34} /></span><strong>Mausam Setu</strong></div>
         <div className="login-hero-copy">
           <p className="login-eyebrow">Panchayat climate intelligence</p>
           <h1>Know what weather means for your <em>crops.</em></h1>

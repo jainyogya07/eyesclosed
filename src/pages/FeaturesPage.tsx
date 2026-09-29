@@ -232,7 +232,7 @@ export const FeaturesPage: React.FC = () => {
   return (
     <div className="features-page">
       <section className="features-hero">
-        <span className="eyebrow">{hi ? 'किसान की यश फीचर गाइड' : 'Kisaan Ki Yash Feature Guide'}</span>
+        <span className="eyebrow">{hi ? 'मौसम सेतु फीचर गाइड' : 'Mausam Setu Feature Guide'}</span>
         <h1>{hi ? 'आपके खेत के लिए हर सुविधा, एक साफ़ जगह पर।' : 'Every Farm Tool, in One Clear Place.'}</h1>
         <p>
           {hi

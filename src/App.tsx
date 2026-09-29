@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AppProvider } from './contexts/AppContext';
 import { Navbar } from './components/navigation/Navbar';
 import { MobileBottomNav } from './components/navigation/MobileBottomNav';
 import { Footer } from './components/navigation/Footer';
+import { LoadingScreen } from './components/common/LoadingScreen';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
@@ -27,7 +28,15 @@ const AppShell: React.FC = () => {
   const isHome = location.pathname === '/home' || location.pathname === '/';
 
   return (
-    <div className={`platform-shell ${isHome ? 'home-shell' : ''} ${isLogin ? 'login-shell' : ''}`} style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
+    <div
+      className={`platform-shell ${isHome ? 'home-shell' : ''} ${isLogin ? 'login-shell' : ''}`}
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'var(--bg-primary)'
+      }}
+    >
       {!isLogin && <Navbar />}
       <main className="app-main" style={{ flex: 1, paddingBottom: isLogin ? 0 : '3rem' }}>
         <Routes>
@@ -50,14 +59,22 @@ const AppShell: React.FC = () => {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
-      {!isLogin && <><Footer /><MobileBottomNav /></>}
+      {!isLogin && (
+        <>
+          <Footer />
+          <MobileBottomNav />
+        </>
+      )}
     </div>
   );
 };
 
 export const App: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+
   return (
     <AppProvider>
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       <BrowserRouter>
         <AppShell />
       </BrowserRouter>
