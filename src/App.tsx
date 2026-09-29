@@ -1,54 +1,93 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider } from './contexts/AppContext';
 import { Navbar } from './components/navigation/Navbar';
 import { MobileBottomNav } from './components/navigation/MobileBottomNav';
 import { Footer } from './components/navigation/Footer';
+import { SmoothScroll } from './components/common/SmoothScroll';
 
-// Pages
+// Primary Pages
 import { LandingPage } from './pages/LandingPage';
-import { DashboardPage } from './pages/DashboardPage';
+import { MyFarmPage } from './pages/MyFarmPage';
+import { AdvicePage } from './pages/AdvicePage';
 import { WeatherPage } from './pages/WeatherPage';
-import { PanchayatPage } from './pages/PanchayatPage';
-import { AgriculturePage } from './pages/AgriculturePage';
-import { IrrigationPage } from './pages/IrrigationPage';
-import { HazardsPage } from './pages/HazardsPage';
-import { DigitalTwinPage } from './pages/DigitalTwinPage';
-import { DecisionCenterPage } from './pages/DecisionCenterPage';
-import { ModelLabPage } from './pages/ModelLabPage';
-import { ValidationPage } from './pages/ValidationPage';
-import { DataCenterPage } from './pages/DataCenterPage';
-import { AboutPage } from './pages/AboutPage';
+
+// Lazy-loaded Advanced & Scientific Pages (Performance Optimization)
+const DigitalTwinPage = lazy(() =>
+  import('./pages/DigitalTwinPage').then((m) => ({ default: m.DigitalTwinPage }))
+);
+const ModelLabPage = lazy(() =>
+  import('./pages/ModelLabPage').then((m) => ({ default: m.ModelLabPage }))
+);
+const ValidationPage = lazy(() =>
+  import('./pages/ValidationPage').then((m) => ({ default: m.ValidationPage }))
+);
+const DataCenterPage = lazy(() =>
+  import('./pages/DataCenterPage').then((m) => ({ default: m.DataCenterPage }))
+);
+const AboutPage = lazy(() =>
+  import('./pages/AboutPage').then((m) => ({ default: m.AboutPage }))
+);
+const PanchayatPage = lazy(() =>
+  import('./pages/PanchayatPage').then((m) => ({ default: m.PanchayatPage }))
+);
+const IrrigationPage = lazy(() =>
+  import('./pages/IrrigationPage').then((m) => ({ default: m.IrrigationPage }))
+);
+const HazardsPage = lazy(() =>
+  import('./pages/HazardsPage').then((m) => ({ default: m.HazardsPage }))
+);
+const AgriculturePage = lazy(() =>
+  import('./pages/AgriculturePage').then((m) => ({ default: m.AgriculturePage }))
+);
 
 export const App: React.FC = () => {
   return (
     <AppProvider>
       <BrowserRouter>
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
-          <Navbar />
+        <SmoothScroll>
+          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
+            <Navbar />
 
-          <main style={{ flex: 1, paddingBottom: '3rem' }}>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/weather" element={<WeatherPage />} />
-              <Route path="/panchayat" element={<PanchayatPage />} />
-              <Route path="/agriculture" element={<AgriculturePage />} />
-              <Route path="/irrigation" element={<IrrigationPage />} />
-              <Route path="/hazards" element={<HazardsPage />} />
-              <Route path="/digital-twin" element={<DigitalTwinPage />} />
-              <Route path="/decision-center" element={<DecisionCenterPage />} />
-              <Route path="/model-lab" element={<ModelLabPage />} />
-              <Route path="/validation" element={<ValidationPage />} />
-              <Route path="/data-center" element={<DataCenterPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
+            <main style={{ flex: 1, paddingBottom: '2rem' }}>
+              <Suspense
+                fallback={
+                  <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    Loading climate intelligence module...
+                  </div>
+                }
+              >
+                <Routes>
+                  {/* Primary Human / Farmer Journey */}
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/my-farm" element={<MyFarmPage />} />
+                  <Route path="/dashboard" element={<MyFarmPage />} />
+                  <Route path="/advice" element={<AdvicePage />} />
+                  <Route path="/decision-center" element={<AdvicePage />} />
+                  <Route path="/weather" element={<WeatherPage />} />
 
-          <Footer />
-          <MobileBottomNav />
-        </div>
+                  {/* Progressive Scientific & Advanced Exploration */}
+                  <Route path="/digital-twin" element={<DigitalTwinPage />} />
+                  <Route path="/model-lab" element={<ModelLabPage />} />
+                  <Route path="/validation" element={<ValidationPage />} />
+                  <Route path="/data-center" element={<DataCenterPage />} />
+                  <Route path="/about" element={<AboutPage />} />
+
+                  {/* Supporting Regional Deep Dives */}
+                  <Route path="/panchayat" element={<PanchayatPage />} />
+                  <Route path="/irrigation" element={<IrrigationPage />} />
+                  <Route path="/hazards" element={<HazardsPage />} />
+                  <Route path="/agriculture" element={<AgriculturePage />} />
+
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </Suspense>
+            </main>
+
+            <Footer />
+            <MobileBottomNav />
+          </div>
+        </SmoothScroll>
       </BrowserRouter>
     </AppProvider>
   );

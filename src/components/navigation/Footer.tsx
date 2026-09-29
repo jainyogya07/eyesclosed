@@ -40,11 +40,10 @@ export const Footer: React.FC = () => {
             Core Modules
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem' }}>
-            <Link to="/decision-center" style={{ textDecoration: 'none', color: 'var(--text-secondary)' }}>Agricultural Decision Center (M10)</Link>
-            <Link to="/weather" style={{ textDecoration: 'none', color: 'var(--text-secondary)' }}>1-km Downscaled Weather (M1/M2/M3)</Link>
-            <Link to="/panchayat" style={{ textDecoration: 'none', color: 'var(--text-secondary)' }}>Panchayat Digital Twin</Link>
-            <Link to="/irrigation" style={{ textDecoration: 'none', color: 'var(--text-secondary)' }}>FAO-56 Irrigation Engine (M6)</Link>
-            <Link to="/digital-twin" style={{ textDecoration: 'none', color: 'var(--text-secondary)' }}>What-If Scenario Sandbox</Link>
+            <Link to="/my-farm" style={{ textDecoration: 'none', color: 'var(--text-secondary)' }}>My Farm (1-Screen Farmer Mode)</Link>
+            <Link to="/advice" style={{ textDecoration: 'none', color: 'var(--text-secondary)' }}>Farm Action Advice (M10)</Link>
+            <Link to="/weather" style={{ textDecoration: 'none', color: 'var(--text-secondary)' }}>1-km Downscaled Weather (M1/M3)</Link>
+            <Link to="/digital-twin" style={{ textDecoration: 'none', color: 'var(--text-secondary)' }}>3D What-If Scenario Sandbox</Link>
           </div>
         </div>
 

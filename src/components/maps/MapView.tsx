@@ -1,40 +1,44 @@
 import React, { useState } from 'react';
 import {
-  Layers,
   Thermometer,
   CloudRain,
-  Droplets,
+  Wind,
   AlertTriangle,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
-  Info
+  Droplets,
+  Layers,
+  Sparkles,
+  Info,
+  ChevronRight,
+  ShieldCheck
 } from 'lucide-react';
+import { ScientificDrawer } from '../common/ScientificDrawer';
 
-interface GridCell {
+export interface GridCell {
   id: string;
   x: number;
   y: number;
   elevation_m: number;
   temp_c: number;
   rain_mm: number;
+  rain_prob_pct: number;
+  wind_kmh: number;
   soil_vwc: number;
   flood_risk: string;
   advisory: string;
 }
 
-// Deterministic 8x6 Grid Cells representing 1km x 1km cells in Lucknow / Malihabad belt
+// Deterministic 8x6 Grid Cells representing 1km x 1km cells in Lucknow / Malihabad cluster
 const CELLS: GridCell[] = [];
 for (let r = 0; r < 6; r++) {
   for (let c = 0; c < 8; c++) {
     const elev = 120 + Math.round(Math.sin(r * 0.8) * 6 + Math.cos(c * 0.8) * 8);
-    // Lapse rate effect: higher elevation has slightly lower temperature
-    const temp = +(28.8 - (elev - 120) * 0.0065 - (r === 2 && c === 3 ? 0.8 : 0)).toFixed(2);
-    // Localized rainfall hotspot in sectors (2,3) and (3,4)
+    const temp = +(28.8 - (elev - 120) * 0.0065 - (r === 2 && c === 3 ? 0.8 : 0)).toFixed(1);
     const distToCenter = Math.hypot(r - 2.5, c - 3.5);
-    const rain = distToCenter < 1.8 ? +(14.2 - distToCenter * 4.5).toFixed(1) : +(0.2 + (r % 2) * 0.4).toFixed(1);
-    const soil = +(24 + rain * 0.8 + (elev < 122 ? 5 : 0)).toFixed(1);
-    const isFlood = elev < 122 && rain > 8.0;
+    const rain = distToCenter < 1.8 ? +(12.4 - distToCenter * 3.8).toFixed(1) : +(0.4 + (r % 2) * 0.3).toFixed(1);
+    const rainProb = distToCenter < 1.8 ? Math.round(84 - distToCenter * 10) : Math.round(15 + (r + c) * 3);
+    const wind = Math.round(12 + Math.sin(c * 0.5) * 5 + r * 1.2);
+    const soil = +(24 + rain * 0.7 + (elev < 122 ? 5 : 0)).toFixed(1);
+    const isFlood = elev < 122 && rain > 6.0;
 
     CELLS.push({
       id: `UTM44N_${440 + c}_${2965 + r}`,
@@ -43,42 +47,54 @@ for (let r = 0; r < 6; r++) {
       elevation_m: elev,
       temp_c: temp,
       rain_mm: rain,
+      rain_prob_pct: rainProb,
+      wind_kmh: wind,
       soil_vwc: soil,
       flood_risk: isFlood ? 'HIGH' : rain > 5 ? 'MODERATE' : 'LOW',
-      advisory: isFlood ? 'Clear field drainage outlets' : rain > 5 ? 'Do not spray pesticides' : 'Standard cultivation'
+      advisory: isFlood ? 'जलभराव जोखिम — जल निकासी मार्ग खोलें' : rain > 5 ? 'सिंचाई रोकें — पर्याप्त वर्षा' : 'सामान्य कृषि कार्य उपयुक्त'
     });
   }
 }
 
-type LayerMode = 'temp' | 'rain' | 'soil' | 'flood';
+export type MapMetricMode = 'temp' | 'rain' | 'wind' | 'risk';
 
-export const MapView: React.FC = () => {
-  const [activeLayer, setActiveLayer] = useState<LayerMode>('temp');
-  const [selectedCell, setSelectedCell] = useState<GridCell>(CELLS[19]); // Center cell
+interface MapViewProps {
+  activeMetric?: MapMetricMode;
+  onSelectMetric?: (mode: MapMetricMode) => void;
+  selectedHorizon?: string;
+}
+
+export const MapView: React.FC<MapViewProps> = ({
+  activeMetric: propActiveMetric,
+  onSelectMetric,
+  selectedHorizon = 'Now'
+}) => {
+  const [internalMetric, setInternalMetric] = useState<MapMetricMode>('temp');
+  const activeMetric = propActiveMetric || internalMetric;
+  const handleSelectMetric = onSelectMetric || setInternalMetric;
+
+  const [selectedCell, setSelectedCell] = useState<GridCell | null>(CELLS[19]); // Center default cell
   const [hoveredCell, setHoveredCell] = useState<GridCell | null>(null);
 
   const getCellColor = (cell: GridCell): string => {
-    switch (activeLayer) {
+    switch (activeMetric) {
       case 'temp': {
-        // Temperature range 27.5 to 29.5
         const ratio = Math.max(0, Math.min(1, (cell.temp_c - 27.5) / 2.0));
-        return `hsl(${220 - ratio * 180}, 85%, 62%)`; // Blue (cool) to Red/Orange (warm)
+        return `hsl(${220 - ratio * 180}, 85%, 62%)`;
       }
       case 'rain': {
-        // Rain 0 to 15 mm
-        if (cell.rain_mm < 0.5) return 'rgba(226, 232, 240, 0.4)';
+        if (cell.rain_mm < 0.5) return 'rgba(226, 232, 240, 0.45)';
         const intensity = Math.min(1, cell.rain_mm / 14);
-        return `rgba(2, 132, 199, ${0.3 + intensity * 0.65})`;
+        return `rgba(2, 132, 199, ${0.35 + intensity * 0.6})`;
       }
-      case 'soil': {
-        // Soil VWC 20 to 38%
-        const ratio = Math.max(0, Math.min(1, (cell.soil_vwc - 20) / 18));
-        return `hsl(${140 - ratio * 80}, 75%, ${55 - ratio * 15}%)`;
+      case 'wind': {
+        const intensity = Math.min(1, cell.wind_kmh / 25);
+        return `rgba(56, 189, 248, ${0.25 + intensity * 0.65})`;
       }
-      case 'flood': {
-        if (cell.flood_risk === 'HIGH') return 'rgba(220, 38, 38, 0.75)';
-        if (cell.flood_risk === 'MODERATE') return 'rgba(217, 119, 6, 0.65)';
-        return 'rgba(16, 185, 129, 0.25)';
+      case 'risk': {
+        if (cell.flood_risk === 'HIGH') return 'rgba(220, 38, 38, 0.8)';
+        if (cell.flood_risk === 'MODERATE') return 'rgba(217, 119, 6, 0.7)';
+        return 'rgba(16, 185, 129, 0.35)';
       }
     }
   };
@@ -86,315 +102,328 @@ export const MapView: React.FC = () => {
   const inspected = hoveredCell || selectedCell;
 
   return (
-    <section style={{ maxWidth: '1280px', margin: '0 auto', padding: '3rem 2rem' }}>
-      {/* Title */}
-      <div style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-          <span className="badge badge-frozen">EPSG:32644 Metric UTM 44N</span>
-          <span className="badge badge-pilot">1000m × 1000m Grid Cells</span>
-        </div>
-        <h2 style={{ fontSize: '2.2rem', color: 'var(--text-primary)' }}>
-          1-km Geospatial Analysis Grid (1 किमी स्थानिक विश्लेषण)
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-          Interactive raster layer inspection across Malihabad Mango & Paddy clusters. Click any cell to inspect micro-elevation and downscaled forecasts.
-        </p>
-      </div>
-
-      {/* Map Layout: Left Control & Layer Grid, Right Cell Inspector HUD */}
+    <div style={{ position: 'relative', width: '100%' }}>
+      {/* Map Container: ~70vh high-impact viewport */}
       <div
+        className="glass-panel-elevated"
         style={{
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 0.8fr',
-          gap: '2rem',
-          alignItems: 'start'
+          position: 'relative',
+          minHeight: '68vh',
+          background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+          borderRadius: 'var(--radius-xl)',
+          border: '1.5px solid var(--border-card)',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: 'var(--shadow-lg)'
         }}
       >
-        {/* Left Map View Canvas Box */}
+        {/* Floating Minimal Controls (Top Overlay) */}
         <div
-          className="glass-panel-elevated"
           style={{
-            padding: '24px',
-            background: 'white',
-            borderRadius: 'var(--radius-xl)'
+            position: 'absolute',
+            top: '16px',
+            left: '16px',
+            right: '16px',
+            zIndex: 10,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '10px'
           }}
         >
-          {/* Top Layer Toggles */}
+          {/* Metric Selector Pills */}
           <div
+            className="glass-panel"
             style={{
               display: 'flex',
-              gap: '8px',
-              marginBottom: '1.5rem',
-              flexWrap: 'wrap',
-              borderBottom: '1px solid var(--border-subtle)',
-              paddingBottom: '1rem'
+              gap: '4px',
+              padding: '4px',
+              background: 'rgba(255, 255, 255, 0.92)',
+              borderRadius: 'var(--radius-full)',
+              boxShadow: 'var(--shadow-md)'
             }}
           >
             <button
-              onClick={() => setActiveLayer('temp')}
+              onClick={() => handleSelectMetric('temp')}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '8px 14px',
-                borderRadius: 'var(--radius-md)',
-                border: activeLayer === 'temp' ? '1.5px solid var(--color-atmosphere-blue)' : '1px solid var(--border-card)',
-                background: activeLayer === 'temp' ? 'var(--color-atmosphere-subtle)' : 'white',
-                color: activeLayer === 'temp' ? 'var(--color-atmosphere-blue)' : 'var(--text-secondary)',
-                fontWeight: 600,
-                fontSize: '0.85rem',
-                cursor: 'pointer'
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                border: 'none',
+                background: activeMetric === 'temp' ? 'var(--color-atmosphere-blue)' : 'transparent',
+                color: activeMetric === 'temp' ? 'white' : 'var(--text-secondary)',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
               }}
             >
-              <Thermometer size={16} />
-              M1 Temperature (T2m)
+              <Thermometer size={15} />
+              <span>तापमान (Temp)</span>
             </button>
 
             <button
-              onClick={() => setActiveLayer('rain')}
+              onClick={() => handleSelectMetric('rain')}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '8px 14px',
-                borderRadius: 'var(--radius-md)',
-                border: activeLayer === 'rain' ? '1.5px solid var(--color-atmosphere-blue)' : '1px solid var(--border-card)',
-                background: activeLayer === 'rain' ? 'var(--color-atmosphere-subtle)' : 'white',
-                color: activeLayer === 'rain' ? 'var(--color-atmosphere-blue)' : 'var(--text-secondary)',
-                fontWeight: 600,
-                fontSize: '0.85rem',
-                cursor: 'pointer'
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                border: 'none',
+                background: activeMetric === 'rain' ? 'var(--color-atmosphere-blue)' : 'transparent',
+                color: activeMetric === 'rain' ? 'white' : 'var(--text-secondary)',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
               }}
             >
-              <CloudRain size={16} />
-              M3 Precipitation (mm)
+              <CloudRain size={15} />
+              <span>वर्षा (Rain)</span>
             </button>
 
             <button
-              onClick={() => setActiveLayer('soil')}
+              onClick={() => handleSelectMetric('wind')}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '8px 14px',
-                borderRadius: 'var(--radius-md)',
-                border: activeLayer === 'soil' ? '1.5px solid var(--color-earth-emerald)' : '1px solid var(--border-card)',
-                background: activeLayer === 'soil' ? 'var(--color-earth-subtle)' : 'white',
-                color: activeLayer === 'soil' ? 'var(--color-earth-emerald)' : 'var(--text-secondary)',
-                fontWeight: 600,
-                fontSize: '0.85rem',
-                cursor: 'pointer'
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                border: 'none',
+                background: activeMetric === 'wind' ? 'var(--color-atmosphere-blue)' : 'transparent',
+                color: activeMetric === 'wind' ? 'white' : 'var(--text-secondary)',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
               }}
             >
-              <Droplets size={16} />
-              M4 Soil Moisture (%)
+              <Wind size={15} />
+              <span>हवा (Wind)</span>
             </button>
 
             <button
-              onClick={() => setActiveLayer('flood')}
+              onClick={() => handleSelectMetric('risk')}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '8px 14px',
-                borderRadius: 'var(--radius-md)',
-                border: activeLayer === 'flood' ? '1.5px solid var(--color-hazard-crimson)' : '1px solid var(--border-card)',
-                background: activeLayer === 'flood' ? 'var(--color-hazard-subtle)' : 'white',
-                color: activeLayer === 'flood' ? 'var(--color-hazard-crimson)' : 'var(--text-secondary)',
-                fontWeight: 600,
-                fontSize: '0.85rem',
-                cursor: 'pointer'
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                border: 'none',
+                background: activeMetric === 'risk' ? 'var(--color-hazard-crimson)' : 'transparent',
+                color: activeMetric === 'risk' ? 'white' : 'var(--text-secondary)',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
               }}
             >
-              <AlertTriangle size={16} />
-              M8 Inundation Risk
+              <AlertTriangle size={15} />
+              <span>जोखिम (Risk)</span>
             </button>
           </div>
 
-          {/* 1-km Grid Visualizer Box */}
+          {/* Grid Metadata Chip */}
           <div
+            className="glass-panel"
             style={{
-              position: 'relative',
-              background: '#f8fafc',
-              border: '1px solid var(--border-card)',
-              borderRadius: 'var(--radius-lg)',
-              padding: '16px',
-              boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)'
+              padding: '6px 12px',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(255, 255, 255, 0.92)',
+              fontSize: '0.74rem',
+              fontFamily: 'var(--font-mono)',
+              color: 'var(--text-secondary)',
+              boxShadow: 'var(--shadow-sm)'
             }}
           >
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(8, 1fr)',
-                gap: '6px'
-              }}
-            >
-              {CELLS.map((cell) => {
-                const isSelected = selectedCell?.id === cell.id;
-                const isHovered = hoveredCell?.id === cell.id;
-
-                return (
-                  <div
-                    key={cell.id}
-                    onClick={() => setSelectedCell(cell)}
-                    onMouseEnter={() => setHoveredCell(cell)}
-                    onMouseLeave={() => setHoveredCell(null)}
-                    style={{
-                      aspectRatio: '1/1',
-                      background: getCellColor(cell),
-                      borderRadius: 'var(--radius-sm)',
-                      border: isSelected
-                        ? '2.5px solid var(--text-primary)'
-                        : isHovered
-                        ? '2px solid var(--color-atmosphere-blue)'
-                        : '1px solid rgba(255,255,255,0.6)',
-                      boxShadow: isSelected ? '0 0 10px rgba(0,0,0,0.2)' : 'none',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      transition: 'transform 0.15s ease, border 0.15s ease',
-                      transform: isHovered || isSelected ? 'scale(1.06)' : 'scale(1)',
-                      zIndex: isSelected ? 2 : 1
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: '0.65rem',
-                        fontWeight: 700,
-                        color: activeLayer === 'rain' && cell.rain_mm > 8 ? 'white' : 'var(--text-primary)',
-                        fontFamily: 'var(--font-mono)'
-                      }}
-                    >
-                      {activeLayer === 'temp'
-                        ? `${cell.temp_c}°`
-                        : activeLayer === 'rain'
-                        ? `${cell.rain_mm}m`
-                        : activeLayer === 'soil'
-                        ? `${cell.soil_vwc}%`
-                        : cell.flood_risk[0]}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Grid Coordinates Stamp */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '0.68rem',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--text-muted)',
-                marginTop: '12px'
-              }}
-            >
-              <span>EASTING: 440,000m E</span>
-              <span>8 KM × 6 KM ANALYSIS EXTENT</span>
-              <span>NORTHING: 2,971,000m N</span>
-            </div>
+            GRID: 1000m × 1000m • EPSG:32644 UTM 44N
           </div>
         </div>
 
-        {/* Right Cell Inspector HUD */}
+        {/* The 1-km Precision Grid Canvas */}
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '70px 20px 20px 20px',
+            position: 'relative'
+          }}
+        >
+          {/* Subtle background terrain contour lines */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: 0.1,
+              backgroundImage: 'radial-gradient(#0f172a 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+              pointerEvents: 'none'
+            }}
+          />
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(8, 1fr)',
+              gap: '8px',
+              width: '100%',
+              maxWidth: '820px',
+              aspectRatio: '8/6'
+            }}
+          >
+            {CELLS.map((cell) => {
+              const isSelected = selectedCell?.id === cell.id;
+              const isHovered = hoveredCell?.id === cell.id;
+
+              return (
+                <div
+                  key={cell.id}
+                  onClick={() => setSelectedCell(cell)}
+                  onMouseEnter={() => setHoveredCell(cell)}
+                  onMouseLeave={() => setHoveredCell(null)}
+                  style={{
+                    position: 'relative',
+                    aspectRatio: '1/1',
+                    background: getCellColor(cell),
+                    borderRadius: 'var(--radius-sm)',
+                    border: isSelected
+                      ? '3px solid #0f172a'
+                      : isHovered
+                      ? '2px solid var(--color-atmosphere-blue)'
+                      : '1px solid rgba(255,255,255,0.7)',
+                    cursor: 'pointer',
+                    boxShadow: isSelected
+                      ? '0 0 16px rgba(2, 132, 199, 0.4)'
+                      : isHovered
+                      ? '0 2px 8px rgba(0,0,0,0.1)'
+                      : 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                    transform: isSelected || isHovered ? 'scale(1.05)' : 'scale(1)',
+                    zIndex: isSelected ? 5 : isHovered ? 4 : 1
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 'clamp(0.68rem, 1.2vw, 0.85rem)',
+                      fontWeight: 700,
+                      color: activeMetric === 'rain' && cell.rain_mm > 5 ? 'white' : '#0f172a'
+                    }}
+                  >
+                    {activeMetric === 'temp' && `${cell.temp_c}°`}
+                    {activeMetric === 'rain' && `${cell.rain_mm}m`}
+                    {activeMetric === 'wind' && `${cell.wind_kmh}k`}
+                    {activeMetric === 'risk' && (cell.flood_risk === 'HIGH' ? '⚠️' : '✓')}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* DRAWER / DETAILS PANEL (Only shown when user clicks/inspects a cell) */}
+      {inspected && (
         <div
           className="glass-panel-elevated"
           style={{
+            marginTop: '1.5rem',
             padding: '24px',
             background: 'white',
             borderRadius: 'var(--radius-xl)',
-            border: '1.5px solid var(--border-card)'
+            border: '1.5px solid var(--border-card)',
+            boxShadow: 'var(--shadow-lg)'
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '12px' }}>
-            <div>
-              <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--color-atmosphere-blue)', fontWeight: 700 }}>
-                1-KM CELL INSPECTOR
-              </div>
-              <h4 style={{ fontSize: '1.2rem', color: 'var(--text-primary)' }}>
-                {inspected.id}
-              </h4>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="badge badge-frozen">चयनित 1-किमी सेल (SELECTED CELL)</span>
+              <span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+                {inspected.id} • ऊँचाई: {inspected.elevation_m}m MSL
+              </span>
             </div>
-            <span className="badge badge-frozen">UTM Zone 44N</span>
+
+            <span style={{ fontSize: '0.78rem', color: 'var(--color-earth-emerald)', fontWeight: 700 }}>
+              समय: {selectedHorizon}
+            </span>
           </div>
 
-          {/* Cell Metric Specs */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-            <div style={{ background: 'var(--bg-surface-subtle)', padding: '12px', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                ELEVATION (DEM)
-              </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                {inspected.elevation_m} meters
-              </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                Copernicus GLO-30
-              </div>
-            </div>
-
-            <div style={{ background: 'var(--bg-surface-subtle)', padding: '12px', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                TEMPERATURE (M1)
-              </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)' }}>
+          {/* Key 4 Data Points in this Selected Cell */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', background: 'var(--color-atmosphere-subtle)' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>तापमान (Temperature)</div>
+              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)' }}>
                 {inspected.temp_c}°C
               </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                ±0.74°C Conformal bound
-              </div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Model 1 Downscaled</div>
             </div>
 
-            <div style={{ background: 'var(--bg-surface-subtle)', padding: '12px', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                PRECIPITATION (M3)
+            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', background: 'var(--color-atmosphere-subtle)' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>वर्षा संभावना (Rain Prob)</div>
+              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)' }}>
+                {inspected.rain_prob_pct}%
               </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)' }}>
-                {inspected.rain_mm} mm/h
-              </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                Hurdle Regressor
-              </div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>M3 Hurdle Occurrence</div>
             </div>
 
-            <div style={{ background: 'var(--bg-surface-subtle)', padding: '12px', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                ROOT ZONE VWC (M4)
+            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', background: 'var(--bg-surface-subtle)' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>अनुमानित मात्रा (Expected)</div>
+              <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                {inspected.rain_mm} mm
               </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-earth-emerald)' }}>
-                {inspected.soil_vwc}%
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>अनिश्चितता: ±1.2 mm</div>
+            </div>
+
+            <div style={{ padding: '14px', borderRadius: 'var(--radius-md)', background: inspected.flood_risk === 'HIGH' ? 'var(--color-hazard-subtle)' : 'var(--color-earth-subtle)' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>जोखिम स्तर (Risk Level)</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: inspected.flood_risk === 'HIGH' ? 'var(--color-hazard-crimson)' : 'var(--color-earth-emerald)' }}>
+                {inspected.flood_risk}
               </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                Sentinel-1 SAR C-Band
-              </div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{inspected.advisory}</div>
             </div>
           </div>
 
-          {/* Cell Specific Advisory */}
-          <div
-            style={{
-              padding: '14px',
-              borderRadius: 'var(--radius-md)',
-              background: inspected.flood_risk === 'HIGH' ? 'var(--color-hazard-subtle)' : 'var(--color-earth-subtle)',
-              border: `1px solid ${inspected.flood_risk === 'HIGH' ? 'var(--color-hazard-light)' : 'var(--color-earth-light)'}`,
-              marginBottom: '1rem'
+          {/* Progressive Disclosure: [Why this forecast?] */}
+          <ScientificDrawer
+            title="इस ग्रिड सेल का पूर्वानुमान कैसे तैयार हुआ? (Why this forecast?)"
+            whyExplanation={
+              <div>
+                यह सेल मलिहाबाद फल पट्टी में स्थित है। डिजिटल भूभाग मॉडल (DEM) के अनुसार इसकी ऊंचाई 124m है। 
+                मॉडल 1 (M1) ने सतही तापमान पर ऊंचाई व स्थानीय ढलान का भौतिक लैप्स-रेट (Lapse Rate) प्रभाव लागू किया है, 
+                जबकि मॉडल 3 (M3) ने वर्षा के लिए टू-स्टेज हर्डल फॉर्मूलेशन का उपयोग किया है।
+              </div>
+            }
+            evidenceContent={
+              <div>
+                IMD AWS LKO 05 स्टेशन के साथ परीक्षण में मॉडल 1 का MAE 0.4083°C प्राप्त हुआ (कच्चे NWP की तुलना में 39.89% सुधार)। 
+                हर्डल वर्षा मॉडल का RMSE 0.9725 है।
+              </div>
+            }
+            scientificDetails={{
+              modelProvenance: 'Model 1 (UTM 44N Downscaling) + Model 3 (Expected Hurdle Precipitation)',
+              uncertainty: 'Conformal interval [3.6 mm, 6.0 mm] at 90% coverage level',
+              stationValidation: 'Locked AWS_LKO_05 pilot data',
+              metrics: {
+                'M1 MAE': '0.4083°C',
+                'M3 RMSE': '0.9725',
+                'Raw NWP RMSE': '1.1438'
+              }
             }}
-          >
-            <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', fontWeight: 700, color: inspected.flood_risk === 'HIGH' ? 'var(--color-hazard-crimson)' : 'var(--color-earth-emerald)', marginBottom: '4px' }}>
-              PLOT LEVEL ADVISORY
-            </div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-              {inspected.advisory}
-            </div>
-          </div>
-
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Info size={14} />
-            Analysis coordinates reprojected on-the-fly to WGS84 EPSG:4326 for interchange.
-          </div>
+          />
         </div>
-      </div>
-    </section>
+      )}
+    </div>
   );
 };
