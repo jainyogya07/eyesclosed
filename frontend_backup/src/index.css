@@ -1,0 +1,266 @@
+/* =====================================================================
+   Kisaan Ki Yash — Cinematic Agritech Design System 2.0
+   Theme: Cinematic Earth Observation & Atmospheric Agricultural Depth
+   Colors: Lush Emerald, Solar Amber, Atmospheric Sky, Rich Earth, Obsidian Glass
+   ===================================================================== */
+
+:root {
+  /* Rich Surface & Environmental Canvas */
+  --bg-primary: #0f172a;
+  --bg-canvas-light: #f5f4f0;      /* Warm golden-mist off-white */
+  --bg-canvas-warm: #faf8f5;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-subtle: #f1f5f3;
+
+  /* Frosted Glassmorphism Tokens */
+  --glass-light: rgba(255, 255, 255, 0.82);
+  --glass-light-border: rgba(255, 255, 255, 0.7);
+  --glass-dark: rgba(15, 23, 42, 0.85);
+  --glass-dark-border: rgba(255, 255, 255, 0.12);
+  --glass-emerald: rgba(6, 78, 59, 0.88);
+
+  /* Deep Nature & Agro Colors */
+  --color-earth-deep: #064e3b;     /* Deep forest canopy */
+  --color-earth-emerald: #059669;  /* Vibrant agricultural green */
+  --color-earth-light: #10b981;   /* Fresh shoot neon-emerald */
+  --color-earth-subtle: #ecfdf5;
+
+  /* Atmospheric & Space */
+  --color-atmosphere-deep: #0c4a6e;
+  --color-atmosphere-blue: #0284c7; /* Sky observation */
+  --color-atmosphere-light: #38bdf8;
+  --color-atmosphere-subtle: #f0f9ff;
+
+  /* Solar Energy & Harvest Amber */
+  --color-solar-deep: #78350f;
+  --color-solar-amber: #d97706;   /* Golden hour sunlight */
+  --color-solar-light: #fbbf24;
+  --color-solar-subtle: #fffbeb;
+
+  /* Hazard & Warning Crimson */
+  --color-hazard-crimson: #dc2626;
+  --color-hazard-light: #ef4444;
+  --color-hazard-subtle: #fef2f2;
+
+  /* Digital Twin & Quantum Violet */
+  --color-quantum-violet: #7c3aed;
+  --color-quantum-light: #a78bfa;
+
+  /* Typography */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-inverse: #f8fafc;
+
+  /* Borders & Glows */
+  --border-subtle: rgba(226, 232, 240, 0.9);
+  --border-card: rgba(203, 213, 225, 0.8);
+  --glow-emerald: 0 0 35px rgba(16, 185, 129, 0.3);
+  --glow-blue: 0 0 35px rgba(2, 132, 199, 0.3);
+  --glow-amber: 0 0 35px rgba(245, 158, 11, 0.35);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* Fonts */
+  --font-display: 'Manrope', 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-canvas-light);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+/* ==============================================================
+   Cinematic Glassmorphism Utility Classes
+   ============================================================== */
+.cinematic-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.08), 0 0 20px rgba(16, 185, 129, 0.05);
+}
+
+.cinematic-glass-elevated {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.12), 0 0 30px rgba(16, 185, 129, 0.08);
+}
+
+.cinematic-glass-dark {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #f8fafc;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+}
+
+.cinematic-glass-dark h1,
+.cinematic-glass-dark h2,
+.cinematic-glass-dark h3,
+.cinematic-glass-dark h4 {
+  color: #ffffff;
+}
+
+/* Hover Tilt & Lift */
+.card-hover-tilt {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+.card-hover-tilt:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 35px -8px rgba(15, 23, 42, 0.15), var(--glow-emerald);
+}
+
+/* ==============================================================
+   Cinematic Motion Keyframes
+   ============================================================== */
+@keyframes kenBurnsSlow {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.06) translate(-1%, -1%); }
+  100% { transform: scale(1) translate(0, 0); }
+}
+
+@keyframes godRaysMove {
+  0%, 100% { opacity: 0.35; transform: rotate(0deg); }
+  50% { opacity: 0.65; transform: rotate(2deg); }
+}
+
+@keyframes pulseGlowEmerald {
+  0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+  50% { box-shadow: 0 0 35px rgba(16, 185, 129, 0.55); }
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes radarSweepScan {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes audioWaveBar {
+  0%, 100% { height: 4px; }
+  50% { height: 22px; }
+}
+
+@keyframes kisanSpinClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes kisanSpinCounter {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes kisanBreathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes kisanPulse {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+/* Badge System */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge-pilot {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.badge-frozen {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.badge-validating {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.badge-unavailable {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.badge-critical {
+  background: var(--color-hazard-subtle);
+  color: var(--color-hazard-crimson);
+  border: 1px solid #fca5a5;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Responsive queries */
+@media (max-width: 960px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
+}

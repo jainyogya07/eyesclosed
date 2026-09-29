@@ -1,94 +1,56 @@
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
 import { AppProvider } from './contexts/AppContext';
-import { Navbar } from './components/navigation/Navbar';
-import { MobileBottomNav } from './components/navigation/MobileBottomNav';
-import { Footer } from './components/navigation/Footer';
-import { SmoothScroll } from './components/common/SmoothScroll';
-
-// Primary Pages
-import { LandingPage } from './pages/LandingPage';
-import { MyFarmPage } from './pages/MyFarmPage';
-import { AdvicePage } from './pages/AdvicePage';
-import { WeatherPage } from './pages/WeatherPage';
-
-// Lazy-loaded Advanced & Scientific Pages (Performance Optimization)
-const DigitalTwinPage = lazy(() =>
-  import('./pages/DigitalTwinPage').then((m) => ({ default: m.DigitalTwinPage }))
-);
-const ModelLabPage = lazy(() =>
-  import('./pages/ModelLabPage').then((m) => ({ default: m.ModelLabPage }))
-);
-const ValidationPage = lazy(() =>
-  import('./pages/ValidationPage').then((m) => ({ default: m.ValidationPage }))
-);
-const DataCenterPage = lazy(() =>
-  import('./pages/DataCenterPage').then((m) => ({ default: m.DataCenterPage }))
-);
-const AboutPage = lazy(() =>
-  import('./pages/AboutPage').then((m) => ({ default: m.AboutPage }))
-);
-const PanchayatPage = lazy(() =>
-  import('./pages/PanchayatPage').then((m) => ({ default: m.PanchayatPage }))
-);
-const IrrigationPage = lazy(() =>
-  import('./pages/IrrigationPage').then((m) => ({ default: m.IrrigationPage }))
-);
-const HazardsPage = lazy(() =>
-  import('./pages/HazardsPage').then((m) => ({ default: m.HazardsPage }))
-);
-const AgriculturePage = lazy(() =>
-  import('./pages/AgriculturePage').then((m) => ({ default: m.AgriculturePage }))
-);
 
 export const App: React.FC = () => {
   return (
     <AppProvider>
-      <BrowserRouter>
-        <SmoothScroll>
-          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
-            <Navbar />
-
-            <main style={{ flex: 1, paddingBottom: '2rem' }}>
-              <Suspense
-                fallback={
-                  <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    Loading climate intelligence module...
-                  </div>
-                }
-              >
-                <Routes>
-                  {/* Primary Human / Farmer Journey */}
-                  <Route path="/" element={<LandingPage />} />
-                  <Route path="/my-farm" element={<MyFarmPage />} />
-                  <Route path="/dashboard" element={<MyFarmPage />} />
-                  <Route path="/advice" element={<AdvicePage />} />
-                  <Route path="/decision-center" element={<AdvicePage />} />
-                  <Route path="/weather" element={<WeatherPage />} />
-
-                  {/* Progressive Scientific & Advanced Exploration */}
-                  <Route path="/digital-twin" element={<DigitalTwinPage />} />
-                  <Route path="/model-lab" element={<ModelLabPage />} />
-                  <Route path="/validation" element={<ValidationPage />} />
-                  <Route path="/data-center" element={<DataCenterPage />} />
-                  <Route path="/about" element={<AboutPage />} />
-
-                  {/* Supporting Regional Deep Dives */}
-                  <Route path="/panchayat" element={<PanchayatPage />} />
-                  <Route path="/irrigation" element={<IrrigationPage />} />
-                  <Route path="/hazards" element={<HazardsPage />} />
-                  <Route path="/agriculture" element={<AgriculturePage />} />
-
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </Suspense>
-            </main>
-
-            <Footer />
-            <MobileBottomNav />
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#0f172a',
+          color: '#f8fafc',
+          fontFamily: "'Inter', sans-serif",
+          textAlign: 'center',
+          padding: '2rem'
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '600px',
+            padding: '2.5rem',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '24px',
+            backdropFilter: 'blur(16px)'
+          }}
+        >
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌾</div>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.75rem' }}>
+            Kisaan Ki Yash (किसान की यश)
+          </h1>
+          <p style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+            Frontend UI has been cleared and reset as requested. All previous code and assets are safely backed up in <code>frontend_backup/</code>.
+          </p>
+          <div
+            style={{
+              padding: '8px 16px',
+              borderRadius: '9999px',
+              background: 'rgba(16, 185, 129, 0.15)',
+              border: '1px solid rgba(16, 185, 129, 0.3)',
+              color: '#34d399',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              display: 'inline-block'
+            }}
+          >
+            READY FOR NEW UI ARCHITECTURE
           </div>
-        </SmoothScroll>
-      </BrowserRouter>
+        </div>
+      </div>
     </AppProvider>
   );
 };
