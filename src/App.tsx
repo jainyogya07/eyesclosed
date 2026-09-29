@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AppProvider } from './contexts/AppContext';
+import { LivePredictionProvider } from './providers/LivePredictionProvider';
 import { Navbar } from './components/navigation/Navbar';
 import { MobileBottomNav } from './components/navigation/MobileBottomNav';
 import { Footer } from './components/navigation/Footer';
@@ -74,10 +75,12 @@ export const App: React.FC = () => {
 
   return (
     <AppProvider>
-      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
-      <BrowserRouter>
-        <AppShell />
-      </BrowserRouter>
+      <LivePredictionProvider>
+        {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+        <BrowserRouter>
+          <AppShell />
+        </BrowserRouter>
+      </LivePredictionProvider>
     </AppProvider>
   );
 };

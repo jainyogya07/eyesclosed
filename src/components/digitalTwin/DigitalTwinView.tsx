@@ -71,26 +71,58 @@ export const DigitalTwinView: React.FC = () => {
 
   return (
     <section style={{ maxWidth: '1280px', margin: '0 auto', padding: '3rem 2rem' }}>
-      {/* Title & Panchayat Header */}
-      <div style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-          <span className="badge badge-frozen">Panchayat Digital Twin</span>
-          <span className="badge" style={{ background: 'rgba(217, 119, 6, 0.1)', color: '#b45309', border: '1px solid rgba(217, 119, 6, 0.3)', fontWeight: 700 }}>
-            PILOT DATA + SIMULATED SCENARIO
-          </span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
-          <div>
-            <h2 style={{ fontSize: '2.2rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <MapPin size={28} color="var(--color-atmosphere-blue)" />
-              {twinState.panchayat_name}
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-              Block: {twinState.block_name} • District: {twinState.district_name}, {twinState.state_name} • Cultivated Area: {twinState.total_cultivated_area_ha} Ha ({twinState.active_farmers_count} registered plots)
-            </p>
+      {/* Title & Panchayat Header Banner with Ambient Satellite Loop */}
+      <div
+        style={{
+          position: 'relative',
+          padding: '1.75rem 2rem',
+          borderRadius: 'var(--radius-xl)',
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 249, 255, 0.9) 100%)',
+          border: '1.5px solid rgba(186, 230, 253, 0.8)',
+          boxShadow: '0 10px 30px -5px rgba(2, 132, 199, 0.08)',
+          marginBottom: '2rem',
+          overflow: 'hidden'
+        }}
+      >
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            position: 'absolute',
+            right: '-40px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            height: '160%',
+            opacity: 0.16,
+            pointerEvents: 'none',
+            mixBlendMode: 'multiply'
+          }}
+        >
+          <source src="/assets/videos/earth_rotation.mp4" type="video/mp4" />
+        </video>
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <span className="badge badge-frozen">Panchayat Digital Twin</span>
+            <span className="badge" style={{ background: 'rgba(217, 119, 6, 0.1)', color: '#b45309', border: '1px solid rgba(217, 119, 6, 0.3)', fontWeight: 700 }}>
+              PILOT DATA + SIMULATED SCENARIO
+            </span>
           </div>
-          <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-            STATE TIMESTAMP: {new Date(twinState.last_updated_utc).toLocaleTimeString()} UTC
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <h2 style={{ fontSize: '2.2rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <MapPin size={28} color="var(--color-atmosphere-blue)" />
+                {twinState.panchayat_name}
+              </h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+                Block: {twinState.block_name} • District: {twinState.district_name}, {twinState.state_name} • Cultivated Area: {twinState.total_cultivated_area_ha} Ha ({twinState.active_farmers_count} registered plots)
+              </p>
+            </div>
+            <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+              STATE TIMESTAMP: {new Date(twinState.last_updated_utc).toLocaleTimeString()} UTC
+            </div>
           </div>
         </div>
       </div>

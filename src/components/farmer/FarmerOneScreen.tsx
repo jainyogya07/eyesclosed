@@ -39,10 +39,34 @@ export const FarmerOneScreen: React.FC = () => {
         background: 'linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)',
         border: '2px solid #86efac',
         boxShadow: '0 20px 35px -10px rgba(5, 150, 105, 0.15)',
-        position: 'relative'
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
-      {/* Top Banner Tag & Crop Switcher */}
+      {/* Living Paddy Field Ambient Video Overlay */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          opacity: 0.10,
+          pointerEvents: 'none',
+          mixBlendMode: 'multiply',
+          zIndex: 0
+        }}
+      >
+        <source src="/assets/videos/rice_field.mp4" type="video/mp4" />
+      </video>
+
+      {/* Main Content Layer */}
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        {/* Top Banner Tag & Crop Switcher */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span
@@ -219,7 +243,7 @@ export const FarmerOneScreen: React.FC = () => {
             </div>
             <div style={{ background: '#ecfdf5', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid #a7f3d0' }}>
               <strong style={{ color: '#047857' }}>
-                {hi ? '2. मिट्टी नमी मॉडल (M2):' : '2. Soil Hydrology (M2):'}
+                {hi ? '2. मिट्टी नमी मॉडल (M4 प्रोटोटाइप):' : '2. Soil Hydrology (M4 Prototype):'}
               </strong>
               <div style={{ marginTop: '4px' }}>
                 {hi ? 'जड़ क्षेत्र में 31.4% नमी (फील्ड क्षमता 34% के करीब)।' : 'Root-zone moisture is sufficient at 31.4% VWC.'}
@@ -227,7 +251,7 @@ export const FarmerOneScreen: React.FC = () => {
             </div>
             <div style={{ background: '#fffbeb', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid #fde68a' }}>
               <strong style={{ color: '#b45309' }}>
-                {hi ? '3. फसल जल मांग (M3 ETc):' : '3. Crop Water Demand (M3 ETc):'}
+                {hi ? '3. फसल जल मांग (M6 प्रोटोटाइप):' : '3. Crop Water Demand (M6 Prototype):'}
               </strong>
               <div style={{ marginTop: '4px' }}>
                 {hi ? 'दैनिक वाष्पोत्सर्जन 5.8 मिमी/दिन (पर्याप्त मिट्टी नमी)।' : 'Daily evapotranspiration loss is 5.8 mm/day.'}
@@ -236,6 +260,7 @@ export const FarmerOneScreen: React.FC = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

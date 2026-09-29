@@ -25,6 +25,7 @@ interface SceneStep {
   captionEn: string;
   scaleKm: string;
   imageBg: string;
+  videoBg?: string;
   dataPoint: string;
 }
 
@@ -39,6 +40,7 @@ const SCENES: SceneStep[] = [
     captionEn: 'Global synoptic models see India at a coarse 25 km grid cell scale.',
     scaleKm: '25,000 km',
     imageBg: '/assets/cinematic/satellite_grid.jpg',
+    videoBg: '/assets/videos/earth_rotation.mp4',
     dataPoint: 'ECMWF IFS / GFS 0.25° Synoptic Grid'
   },
   {
@@ -51,6 +53,7 @@ const SCENES: SceneStep[] = [
     captionEn: 'Regional monsoon trough entering the Central Gangetic plains.',
     scaleKm: '500 km',
     imageBg: '/assets/cinematic/monsoon_clouds.jpg',
+    videoBg: '/assets/videos/clouds_loop_720p.mp4',
     dataPoint: 'Agro-Ecological Region 9.2'
   },
   {
@@ -87,6 +90,7 @@ const SCENES: SceneStep[] = [
     captionEn: '124m elevation, canal proximity, loamy alluvial soil texture.',
     scaleKm: '0.2 km',
     imageBg: '/assets/cinematic/farm_golden_hour.jpg',
+    videoBg: '/assets/videos/rice_field.mp4',
     dataPoint: 'Plot Elevation: 124.2m MSL'
   },
   {
@@ -99,6 +103,7 @@ const SCENES: SceneStep[] = [
     captionEn: 'Two-stage hurdle model forecasts 12.4 mm rainfall event with 84% probability.',
     scaleKm: 'Forecast',
     imageBg: '/assets/cinematic/monsoon_clouds.jpg',
+    videoBg: '/assets/videos/clouds_loop_720p.mp4',
     dataPoint: 'Expected Rain: 12.4mm ± 1.2mm (RMSE 0.9725)'
   },
   {
@@ -111,6 +116,7 @@ const SCENES: SceneStep[] = [
     captionEn: 'Paddy is in critical flowering phase; over-saturation triggers fungal collar rot.',
     scaleKm: '0–30 cm',
     imageBg: '/assets/cinematic/farm_golden_hour.jpg',
+    videoBg: '/assets/videos/field_irrigation.mp4',
     dataPoint: 'Soil VWC: 31.2% (Adequate)'
   },
   {
@@ -123,6 +129,7 @@ const SCENES: SceneStep[] = [
     captionEn: 'Trillions of calculations condensed into one crisp, money-saving action.',
     scaleKm: 'Action',
     imageBg: '/assets/cinematic/farm_golden_hour.jpg',
+    videoBg: '/assets/videos/rice_field.mp4',
     dataPoint: 'Direct Savings: ₹350–₹400 / Acre'
   }
 ];
@@ -176,18 +183,75 @@ export const HeroScrollStory: React.FC = () => {
             border: '1.5px solid rgba(182, 178, 67, 0.4)'
           }}
         >
-          {/* Background Photographic Image */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: `url(${currentScene.imageBg})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              transition: 'background-image 0.5s ease-in-out',
-              filter: 'contrast(115%) saturate(120%) brightness(0.7)'
-            }}
-          />
+          {/* Background Photographic Image or Seamless Local Cinematic Video */}
+          {currentScene.videoBg ? (
+            <video
+              key={currentScene.videoBg}
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                filter: 'contrast(115%) saturate(120%) brightness(0.75)'
+              }}
+            >
+              <source src={currentScene.videoBg} type="video/mp4" />
+            </video>
+          ) : (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: `url(${currentScene.imageBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                transition: 'background-image 0.5s ease-in-out',
+                filter: 'contrast(115%) saturate(120%) brightness(0.7)'
+              }}
+            />
+          )}
+
+          {/* Live Video Indicator Badge */}
+          {currentScene.videoBg && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '12px',
+                right: '12px',
+                zIndex: 4,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                background: 'rgba(15, 23, 42, 0.75)',
+                backdropFilter: 'blur(8px)',
+                padding: '4px 10px',
+                borderRadius: '999px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                fontSize: '0.65rem',
+                fontFamily: 'var(--font-mono)',
+                color: '#34d399',
+                fontWeight: 700,
+                letterSpacing: '0.04em'
+              }}
+            >
+              <span
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: '#10b981',
+                  boxShadow: '0 0 8px #10b981',
+                  animation: 'pulse 1.5s infinite'
+                }}
+              />
+              CINEMATIC LOCAL STREAM
+            </div>
+          )}
 
           {/* Radar Scanline & Laser Grid Effect */}
           <div

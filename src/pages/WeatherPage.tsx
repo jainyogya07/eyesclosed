@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { MapView } from '../components/maps/MapView';
 import { useApp } from '../contexts/AppContext';
+import { useLivePrediction } from '../providers/LivePredictionProvider';
+import { BackendStatusBar } from '../components/common/BackendStatusBar';
 import {
   CloudSun,
   ShieldCheck,
@@ -19,12 +21,25 @@ import {
 
 export const WeatherPage: React.FC = () => {
   const { language, location } = useApp();
+  const { data, backendStatus } = useLivePrediction();
   const hi = language === 'hi';
 
   const [selectedHorizon, setSelectedHorizon] = useState<string>('Now');
   const [techDrawerOpen, setTechDrawerOpen] = useState(false);
 
+  // Live model data (falls back to static demo when backend offline)
+  const liveTemp = data.weather?.prediction?.temperature_c;
+  const liveTempLower = data.weather?.prediction?.temperature_lower;
+  const liveTempUpper = data.weather?.prediction?.temperature_upper;
+  const liveHumidity = data.weather?.prediction?.humidity_pct;
+  const liveWind = data.weather?.prediction?.wind_speed_ms;
+  const liveRainProb = data.precipitation?.prediction?.rain_probability;
+  const liveRainMm = data.precipitation?.prediction?.expected_rainfall_mm;
+  const liveRainCat = data.precipitation?.prediction?.intensity_category;
+
   const horizons = ['Now', '+6h', '+12h', '+24h', '+48h', '+72h'];
+
+
 
   const hourlyForecast = [
     { time: '12:00 PM', temp: '33°C', rainMm: 0.0, icon: '☀️', adviceEn: 'Safe for spraying', adviceHi: 'छिड़काव के लिए सुरक्षित' },
@@ -87,6 +102,76 @@ export const WeatherPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Backend Status + Live Model Accuracy Strip */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <BackendStatusBar />
+      </div>
+
+      {/* Live M1/M2/M3 Data Cards */}
+      {(liveTemp !== undefined || backendStatus === 'offline') && (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+          gap: '12px',
+          marginBottom: '1.5rem',
+        }}>
+          <div className="glass-panel" style={{ padding: '14px 18px', borderRadius: 'var(--radius-lg)', background: 'white', border: '1.5px solid var(--border-card)' }}>
+            <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase' }}>
+              {hi ? 'तापमान (M1)' : 'Temperature (M1)'}
+            </div>
+            <div style={{ fontSize: '1.9rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>
+              {liveTemp !== undefined ? `${liveTemp.toFixed(1)}°C` : '33.2°C'}
+            </div>
+            {liveTempLower !== undefined && liveTempUpper !== undefined && (
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginTop: '4px' }}>
+                [{liveTempLower.toFixed(1)}, {liveTempUpper.toFixed(1)}]°C
+              </div>
+            )}
+          </div>
+
+          <div className="glass-panel" style={{ padding: '14px 18px', borderRadius: 'var(--radius-lg)', background: 'white', border: '1.5px solid var(--border-card)' }}>
+            <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase' }}>
+              {hi ? 'वर्षा संभावना (M3)' : 'Rain Probability (M3)'}
+            </div>
+            <div style={{ fontSize: '1.9rem', fontWeight: 900, color: liveRainProb && liveRainProb > 0.5 ? '#0284c7' : 'var(--text-primary)', lineHeight: 1 }}>
+              {liveRainProb !== undefined ? `${(liveRainProb * 100).toFixed(0)}%` : '12%'}
+            </div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginTop: '4px' }}>
+              {liveRainMm !== undefined ? `${liveRainMm.toFixed(1)} mm expected` : '~0 mm expected'}
+            </div>
+          </div>
+
+          <div className="glass-panel" style={{ padding: '14px 18px', borderRadius: 'var(--radius-lg)', background: 'white', border: '1.5px solid var(--border-card)' }}>
+            <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase' }}>
+              {hi ? 'हवा की गति' : 'Wind Speed'}
+            </div>
+            <div style={{ fontSize: '1.9rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>
+              {liveWind !== undefined ? `${liveWind.toFixed(1)}` : '2.8'} <span style={{ fontSize: '1rem', fontWeight: 400 }}>m/s</span>
+            </div>
+          </div>
+
+          <div className="glass-panel" style={{ padding: '14px 18px', borderRadius: 'var(--radius-lg)', background: 'white', border: '1.5px solid var(--border-card)' }}>
+            <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase' }}>
+              {hi ? 'नमी' : 'Humidity'}
+            </div>
+            <div style={{ fontSize: '1.9rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>
+              {liveHumidity !== undefined ? `${liveHumidity.toFixed(0)}%` : '72%'}
+            </div>
+          </div>
+
+          {liveRainCat && (
+            <div className="glass-panel" style={{ padding: '14px 18px', borderRadius: 'var(--radius-lg)', background: 'white', border: '1.5px solid var(--border-card)' }}>
+              <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase' }}>
+                {hi ? 'वर्षा श्रेणी' : 'Rain Category'}
+              </div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: liveRainCat === 'NONE' ? '#10b981' : liveRainCat === 'LIGHT' ? '#0284c7' : '#f59e0b', lineHeight: 1.2 }}>
+                {liveRainCat}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Hourly Action Strip */}
       <div

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { KisanIntelligenceCore } from '../ai/KisanIntelligenceCore';
 import { HyperlocalRainfallCard } from '../ai/HyperlocalRainfallCard';
+import { BackgroundVideoBackdrop } from './BackgroundVideoBackdrop';
 import { AIIntelligenceCoreState } from '../../types/contracts';
 import {
   ShieldCheck,
@@ -52,6 +53,13 @@ export const CinematicHero: React.FC<CinematicHeroProps> = ({ onNavigateTab }) =
         borderBottom: '1px solid var(--border-subtle)'
       }}
     >
+      {/* Cinematic Ambient Background Video Layer */}
+      <BackgroundVideoBackdrop
+        initialVideoId="rice_field"
+        defaultOpacity={0.20}
+        showControls={true}
+      />
+
       {/* Background Subtle Coordinate Grid Lines */}
       <div
         style={{

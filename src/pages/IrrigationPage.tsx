@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
+import { useLivePrediction } from '../providers/LivePredictionProvider';
+import { BackendStatusBar } from '../components/common/BackendStatusBar';
 import {
   Droplet,
   CheckCircle2,
@@ -14,17 +16,26 @@ import { FertilizerAlarmSystem } from '../components/farmer/FertilizerAlarmSyste
 
 export const IrrigationPage: React.FC = () => {
   const { language } = useApp();
+  const { data } = useLivePrediction();
+  const hi = language === 'hi';
   const [faoDrawerOpen, setFaoDrawerOpen] = useState(false);
 
-  // Physical FAO-56 Penman-Monteith values
-  const et0 = 4.85; // mm/day
-  const kc = 1.20;  // Flowering heading stage
-  const etc = +(et0 * kc).toFixed(2); // 5.82 mm/day
-  const rainForecast24h = 12.4; // mm
-  const netWaterBalance = +(rainForecast24h - etc).toFixed(2); // +6.58 mm surplus
-  const rootZoneMoisture = 31.4; // % VWC
-  const fieldCapacity = 34.0; // % VWC
-  const wiltingPoint = 13.5; // % VWC
+  // Live M6 FAO-56 values (fall back to static demo values when offline)
+  const irrData = data.irrigation?.prediction;
+  const soilData = data.soil?.prediction;
+
+  const et0 = irrData?.et0_mm_day ?? 4.85;
+  const kc = data.crop?.prediction?.crop_coefficient_kc ?? 1.20;
+  const etc = irrData?.etc_mm_day ?? +(et0 * kc).toFixed(2);
+  const netWaterBalance = irrData?.net_irrigation_demand_mm ?? 6.58;
+  const rootZoneMoisture = soilData?.root_zone_sm_vwc_pct ?? 31.4;
+  const fieldCapacity = soilData?.field_capacity_pct ?? 34.0;
+  const wiltingPoint = soilData?.wilting_point_pct ?? 13.5;
+  const irrigateToday = irrData?.irrigate_today ?? false;
+  const urgency = irrData?.urgency_level ?? 'NONE';
+  const advisoryEn = irrData?.advisory_en ?? 'No irrigation needed today. Rain surplus detected.';
+  const advisoryHi = irrData?.advisory_hi ?? 'आज सिंचाई की आवश्यकता नहीं। वर्षा अधिशेष है।';
+  const rainForecast24h = data.precipitation?.prediction?.expected_rainfall_mm ?? 12.4;
 
   return (
     <div style={{ maxWidth: '1360px', margin: '0 auto', padding: '2rem' }}>
