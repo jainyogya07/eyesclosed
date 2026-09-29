@@ -124,14 +124,7 @@ export const MapView: React.FC = () => {
       </div>
 
       {/* Map Layout: Left Control & Layer Grid, Right Cell Inspector HUD */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 0.8fr',
-          gap: '1.5rem',
-          alignItems: 'start'
-        }}
-      >
+      <div className="map-view-grid">
         {/* Left Map View Canvas Box */}
         <div
           className="glass-panel-elevated"
@@ -249,7 +242,7 @@ export const MapView: React.FC = () => {
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(8, 1fr)',
-                gap: '6px'
+                gap: '4px'
               }}
             >
               {CELLS.map((cell) => {
@@ -277,14 +270,16 @@ export const MapView: React.FC = () => {
                       flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      transition: 'transform 0.15s ease, border 0.15s ease',
-                      transform: isHovered || isSelected ? 'scale(1.06)' : 'scale(1)',
-                      zIndex: isSelected ? 2 : 1
+                      transition: 'transform 0.12s ease, border 0.12s ease',
+                      transform: isHovered || isSelected ? 'scale(1.05)' : 'scale(1)',
+                      zIndex: isSelected ? 2 : 1,
+                      touchAction: 'manipulation',
+                      WebkitTapHighlightColor: 'transparent'
                     }}
                   >
                     <span
                       style={{
-                        fontSize: '0.68rem',
+                        fontSize: 'clamp(0.55rem, 1.8vw, 0.7rem)',
                         fontWeight: 800,
                         color: activeLayer === 'rain' && cell.rain_mm > 8 ? 'white' : 'var(--text-primary)',
                         fontFamily: 'var(--font-mono)'

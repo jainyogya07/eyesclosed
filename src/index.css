@@ -78,7 +78,8 @@
 @media (max-width: 760px) { .farmer-hero { min-height: 255px; padding: 29px 23px; }.farmer-hero h1 { font-size: 2.35rem; }.hero-art { width: 205px; }.sun-orb { width: 78px; height: 78px; right: 34px; top: 43px; }.hill-back { width: 260px; height: 145px; }.hill-front { width: 255px; height: 125px; }.advisory-card { margin: -15px 6px 0; } }
 
 /* Imported visual language from the supplied PlantIQ UI source, adapted for Kisaan Ki Yash. */
-.plantiq-nav { position: absolute; width: 100%; background: transparent; border: 0; backdrop-filter: none; }.plantiq-nav .brand { color: #b8ec58; }.plantiq-nav .brand-mark { color: #0d1f0f; background: #a8e063; box-shadow: none; }.plantiq-nav .brand small { color: #c6d5c3; }.plantiq-nav .farmer-nav-links { background: transparent; }.plantiq-nav .farmer-nav-links a { color: #d7dfd6; }.plantiq-nav .farmer-nav-links a.active,.plantiq-nav .farmer-nav-links a:hover { color: #a8e063; background: transparent; box-shadow: none; }.plantiq-nav .nav-location { color: #d7dfd6; }.plantiq-nav .language-button { color: #a8e063; background: rgba(13,31,15,.32); border-color: #a8e063; }.plantiq-home { overflow: hidden; background: #0a1508; color: #fff; }.plantiq-hero { position: relative; min-height: 760px; display: flex; align-items: center; overflow: hidden; background-position: center; background-size: cover; }.plantiq-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(13,31,15,.78) 0%,rgba(13,31,15,.67) 45%,#0d1f0f 100%); }.plantiq-hero-content { position: relative; z-index: 2; width: min(1280px,100%); margin: 0 auto; padding: 180px 36px 75px; text-align: center; }.plantiq-location { display: inline-flex; gap: 6px; align-items: center; padding: 7px 11px; border: 1px solid rgba(168,224,99,.35); border-radius: 999px; color: #d8ecc1; background: rgba(13,31,15,.42); font-size: .75rem; font-weight: 800; }.plantiq-hero h1 { max-width: 970px; margin: 20px auto; color: #fff; font-size: clamp(3rem,7.2vw,6.6rem); line-height: .96; letter-spacing: -.075em; }.plantiq-hero h1 em,.plantiq-section-header em { color: #a8e063; font-style: normal; }.plantiq-hero p { max-width: 730px; margin: 0 auto; color: #d1d9cf; font-size: clamp(1.02rem,2vw,1.35rem); }.plantiq-hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 30px; }.plantiq-hero-actions button,.plantiq-hero-actions a,.plantiq-cta button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 21px; border-radius: 8px; font-family: inherit; font-size: .92rem; font-weight: 800; text-decoration: none; cursor: pointer; transition: transform .2s ease; }.plantiq-hero-actions button:hover,.plantiq-hero-actions a:hover,.plantiq-cta button:hover { transform: translateY(-3px); }.plantiq-primary { color: #0d1f0f; border: 0; background: #a8e063; }.plantiq-secondary { color: #a8e063; border: 1px solid #a8e063; background: rgba(13,31,15,.18); }.plantiq-device { position: relative; width: min(650px,100%); margin: 63px auto 0; }.plantiq-device img { display: block; width: 100%; max-height: 380px; object-fit: cover; border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,.5); }.health-bubble,.moisture-bubble { position: absolute; padding: 10px 14px; border-radius: 999px; font-size: .82rem; font-weight: 800; box-shadow: 0 9px 22px rgba(0,0,0,.24); }.health-bubble { top: 9%; right: 7%; color: #0d1f0f; background: #a8e063; }.moisture-bubble { bottom: 8%; left: 6%; color: #fff; background: #3184e8; }.plantiq-ticker { overflow: hidden; padding: 16px 0; color: #0d1f0f; background: #a8e063; white-space: nowrap; }.plantiq-ticker div { display: inline-flex; gap: 45px; min-width: max-content; padding-left: 100%; font-size: .86rem; font-weight: 800; animation: ticker-scroll 27s linear infinite; }.plantiq-container { width: min(1180px,calc(100% - 48px)); margin: 0 auto; }.plantiq-dark-section { padding: 110px 0; background: linear-gradient(180deg,#0d1f0f,#091609); }.plantiq-feature-section { padding: 110px 0; background: #0a1508; }.plantiq-section-header { max-width: 680px; margin: 0 auto 55px; text-align: center; }.plantiq-section-header h2 { color: #fff; font-size: clamp(2.4rem,5vw,4rem); }.plantiq-section-header p { margin-top: 12px; color: #97a598; font-size: 1rem; }.plantiq-steps,.plantiq-feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }.plantiq-steps article,.plantiq-feature-grid article { min-height: 240px; padding: 30px; border: 1px solid rgba(168,224,99,.2); border-radius: 17px; background: linear-gradient(135deg,rgba(168,224,99,.1),transparent); }.plantiq-steps b { display: block; margin-bottom: 20px; color: rgba(168,224,99,.25); font-family: var(--font-display); font-size: 3.5rem; line-height: 1; }.plantiq-steps h3,.plantiq-feature-grid h3 { color: #fff; font-size: 1.25rem; }.plantiq-steps p,.plantiq-feature-grid p { margin-top: 10px; color: #a6b3a4; font-size: .88rem; line-height: 1.6; }.plantiq-feature-grid article { min-height: 262px; }.plantiq-feature-grid article > span { display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: 22px; border-radius: 50%; color: #a8e063; background: rgba(168,224,99,.17); }.plantiq-feature-grid article svg { width: 27px; height: 27px; }.plantiq-all-features { display: flex; align-items: center; justify-content: center; gap: 7px; width: max-content; margin: 38px auto 0; color: #a8e063; font-size: .9rem; font-weight: 800; text-decoration: none; }.plantiq-cta { position: relative; padding: 110px 24px; overflow: hidden; text-align: center; color: #0d1f0f; background: linear-gradient(100deg,#a8e063,#7cb342); }.plantiq-cta:after { content: ''; position: absolute; left: 0; right: 0; bottom: -16px; height: 60px; background: #0a1508; clip-path: polygon(0 60%,4% 30%,8% 60%,12% 15%,16% 60%,20% 35%,25% 60%,30% 10%,34% 60%,40% 30%,45% 60%,50% 12%,54% 60%,60% 35%,66% 60%,72% 10%,76% 60%,82% 30%,88% 60%,94% 15%,100% 60%,100% 100%,0 100%); }.plantiq-cta > div { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }.plantiq-cta svg { color: #245228; }.plantiq-cta h2 { margin: 13px 0; color: #0d1f0f; font-size: clamp(2.25rem,5vw,4rem); }.plantiq-cta p { margin: 0 auto 26px; color: rgba(13,31,15,.76); font-size: 1.06rem; }.plantiq-cta button { border: 0; color: #a8e063; background: #0d1f0f; }
+.plantiq-nav { position: absolute; width: 100%; background: transparent; border: 0; backdrop-filter: none; }.plantiq-nav .brand { color: #b8ec58; }.plantiq-nav .brand-mark { color: #0d1f0f; background: #a8e063; box-shadow: none; }.plantiq-nav .brand small { color: #c6d5c3; }.plantiq-nav .farmer-nav-links { background: transparent; }.plantiq-nav .farmer-nav-links a { color: #d7dfd6; }.plantiq-nav .farmer-nav-links a.active,.plantiq-nav .farmer-nav-links a:hover { color: #a8e063; background: transparent; box-shadow: none; }.plantiq-nav .nav-location { color: #d7dfd6; }.plantiq-nav .language-button { color: #a8e063; background: rgba(13,31,15,.32); border-color: #a8e063; }.plantiq-home { overflow: hidden; background: #0a1508; color: #fff; }.plantiq-hero { position: relative; min-height: 760px; display: flex; align-items: center; overflow: hidden; background-position: center; background-size: cover; }.plantiq-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(13,31,15,.78) 0%,rgba(13,31,15,.67) 45%,#0d1f0f 100%); }.plantiq-hero-content { position: relative; z-index: 2; width: min(1280px,100%); margin: 0 auto; padding: 180px 36px 75px; text-align: center; }.plantiq-location { display: inline-flex; gap: 6px; align-items: center; padding: 7px 11px; border: 1px solid rgba(168,224,99,.35); border-radius: 999px; color: #d8ecc1; background: rgba(13,31,15,.42); font-size: .75rem; font-weight: 800; }.plantiq-hero h1 { max-width: 970px; margin: 20px auto; color: #fff; font-size: clamp(3rem,7.2vw,6.6rem); line-height: .96; letter-spacing: -.075em; }.plantiq-hero h1 em,.plantiq-section-header em { color: #a8e063; font-style: normal; }.plantiq-hero p { max-width: 730px; margin: 0 auto; color: #d1d9cf; font-size: clamp(1.02rem,2vw,1.35rem); }.plantiq-hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 30px; }.plantiq-hero-actions button,.plantiq-hero-actions a,.plantiq-cta button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 21px; border-radius: 8px; font-family: inherit; font-size: .92rem; font-weight: 800; text-decoration: none; cursor: pointer; transition: transform .2s ease; }.plantiq-hero-actions button:hover,.plantiq-hero-actions a:hover,.plantiq-cta button:hover { transform: translateY(-3px); }.plantiq-primary { color: #0d1f0f; border: 0; background: #a8e063; }.plantiq-secondary { color: #a8e063; border: 1px solid #a8e063; background: rgba(13,31,15,.18); }.plantiq-device { position: relative; width: min(650px,100%); margin: 63px auto 0; }.plantiq-device img { display: block; width: 100%; max-height: 380px; object-fit: cover; border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,.5); }.health-bubble,.moisture-bubble { position: absolute; padding: 10px 14px; border-radius: 999px; font-size: .82rem; font-weight: 800; box-shadow: 0 9px 22px rgba(0,0,0,.24); }.health-bubble { top: 9%; right: 7%; color: #0d1f0f; background: #a8e063; }.moisture-bubble { bottom: 8%; left: 6%; color: #fff; background: #3184e8; }.plantiq-ticker { overflow: hidden; padding: 14px 0; color: #0d1f0f; background: #a8e063; white-space: nowrap; contain: content; transform: translateZ(0); -webkit-transform: translateZ(0); }.plantiq-ticker div { display: inline-flex; gap: 36px; min-width: max-content; font-size: .86rem; font-weight: 800; will-change: transform; animation: ticker-scroll 28s linear infinite; }
+@keyframes ticker-scroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }.plantiq-container { width: min(1180px,calc(100% - 48px)); margin: 0 auto; }.plantiq-dark-section { padding: 110px 0; background: linear-gradient(180deg,#0d1f0f,#091609); }.plantiq-feature-section { padding: 110px 0; background: #0a1508; }.plantiq-section-header { max-width: 680px; margin: 0 auto 55px; text-align: center; }.plantiq-section-header h2 { color: #fff; font-size: clamp(2.4rem,5vw,4rem); }.plantiq-section-header p { margin-top: 12px; color: #97a598; font-size: 1rem; }.plantiq-steps,.plantiq-feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }.plantiq-steps article,.plantiq-feature-grid article { min-height: 240px; padding: 30px; border: 1px solid rgba(168,224,99,.2); border-radius: 17px; background: linear-gradient(135deg,rgba(168,224,99,.1),transparent); }.plantiq-steps b { display: block; margin-bottom: 20px; color: rgba(168,224,99,.25); font-family: var(--font-display); font-size: 3.5rem; line-height: 1; }.plantiq-steps h3,.plantiq-feature-grid h3 { color: #fff; font-size: 1.25rem; }.plantiq-steps p,.plantiq-feature-grid p { margin-top: 10px; color: #a6b3a4; font-size: .88rem; line-height: 1.6; }.plantiq-feature-grid article { min-height: 262px; }.plantiq-feature-grid article > span { display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: 22px; border-radius: 50%; color: #a8e063; background: rgba(168,224,99,.17); }.plantiq-feature-grid article svg { width: 27px; height: 27px; }.plantiq-all-features { display: flex; align-items: center; justify-content: center; gap: 7px; width: max-content; margin: 38px auto 0; color: #a8e063; font-size: .9rem; font-weight: 800; text-decoration: none; }.plantiq-cta { position: relative; padding: 110px 24px; overflow: hidden; text-align: center; color: #0d1f0f; background: linear-gradient(100deg,#a8e063,#7cb342); }.plantiq-cta:after { content: ''; position: absolute; left: 0; right: 0; bottom: -16px; height: 60px; background: #0a1508; clip-path: polygon(0 60%,4% 30%,8% 60%,12% 15%,16% 60%,20% 35%,25% 60%,30% 10%,34% 60%,40% 30%,45% 60%,50% 12%,54% 60%,60% 35%,66% 60%,72% 10%,76% 60%,82% 30%,88% 60%,94% 15%,100% 60%,100% 100%,0 100%); }.plantiq-cta > div { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }.plantiq-cta svg { color: #245228; }.plantiq-cta h2 { margin: 13px 0; color: #0d1f0f; font-size: clamp(2.25rem,5vw,4rem); }.plantiq-cta p { margin: 0 auto 26px; color: rgba(13,31,15,.76); font-size: 1.06rem; }.plantiq-cta button { border: 0; color: #a8e063; background: #0d1f0f; }
 @media (max-width: 760px) { .plantiq-nav { position: absolute; }.plantiq-nav .brand small,.plantiq-nav .farmer-nav-links,.plantiq-nav .nav-location { display: none; }.plantiq-nav .menu-button { color: #a8e063; }.plantiq-nav .mobile-menu { background: #0d1f0f; border-color: rgba(168,224,99,.2); }.plantiq-nav .mobile-menu a { color: #d7dfd6; }.plantiq-hero { min-height: 690px; background-position: 58% center; }.plantiq-hero-content { padding: 135px 19px 60px; }.plantiq-hero h1 { font-size: clamp(3rem,14vw,4.5rem); }.plantiq-hero p { font-size: 1rem; }.plantiq-device { margin-top: 47px; }.plantiq-device img { height: 220px; }.health-bubble,.moisture-bubble { padding: 8px 10px; font-size: .67rem; }.plantiq-dark-section,.plantiq-feature-section { padding: 75px 0; }.plantiq-container { width: min(100% - 30px,1180px); }.plantiq-steps,.plantiq-feature-grid { grid-template-columns: 1fr; }.plantiq-steps article,.plantiq-feature-grid article { min-height: 0; }.plantiq-section-header { margin-bottom: 32px; }.plantiq-cta { padding: 74px 22px; } }
 
 /* Use the full desktop canvas rather than the narrow reference max-width. */
@@ -315,17 +316,401 @@ h1, h2, h3, h4, h5, h6 {
 .platform-footer { margin-top: auto; padding: 50px max(24px,7vw) 20px; color: #c6d5c7; background: #0d2a1a; }.platform-footer-grid { display: grid; grid-template-columns: 1.45fr repeat(3,1fr); gap: 42px; max-width: 1440px; margin: 0 auto; }.platform-footer strong { color: #eaf5e8; font-family: var(--font-display); font-size: 1.2rem; }.platform-footer p { max-width: 290px; margin-top: 11px; color: #9fb4a2; font-size: .78rem; line-height: 1.65; }.footer-status { display: inline-flex; align-items: center; gap: 6px; margin-top: 17px; color: #c1ea86; font-size: .7rem; font-weight: 800; }.footer-status i { width: 7px; height: 7px; border-radius: 50%; background: #8ed052; box-shadow: 0 0 0 4px rgba(142,208,82,.12); }.platform-footer h3 { margin: 2px 0 14px; color: #eaf5e8; font-family: var(--font-body); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }.platform-footer a { display: block; width: max-content; margin: 8px 0; color: #aabcae; text-decoration: none; font-size: .76rem; }.platform-footer a:hover { color: #c1ea86; }.platform-footer-bottom { display: flex; justify-content: space-between; max-width: 1440px; margin: 38px auto 0; padding-top: 17px; border-top: 1px solid rgba(215,240,214,.14); color: #7f9a83; font-size: .68rem; }
 @media (max-width: 920px) { .platform-footer { padding: 38px 24px 90px; }.platform-footer-grid { grid-template-columns: repeat(2,1fr); gap: 28px 20px; }.platform-footer-bottom { display: block; margin-top: 28px; }.platform-footer-bottom span { display: block; margin-top: 5px; } }
 
-/* Shared motion: every page enters smoothly; cards respond to intent without distraction. */
-@keyframes route-enter { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+/* =====================================================================
+   Motion & Anti-Flicker GPU Compositing
+   Clean 60fps transitions without re-mounting 0-opacity flashes
+   ===================================================================== */
+*, *::before, *::after {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  overflow-x: hidden;
+  touch-action: manipulation;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-main {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.platform-shell:not(.home-shell):not(.login-shell) .glass-panel {
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.platform-shell:not(.home-shell):not(.login-shell) .glass-panel:hover {
+  transform: translateY(-2px);
+  border-color: rgba(5, 150, 105, 0.35);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.login-hero-copy { animation: hero-copy-enter .75s .12s cubic-bezier(.22,.8,.25,1) both; }
+.login-panel { animation: login-panel-enter .7s .12s cubic-bezier(.22,.8,.25,1) both; }
+
 @keyframes login-panel-enter { from { opacity: 0; transform: translateX(22px) scale(.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
 @keyframes hero-copy-enter { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
-.app-main > * { animation: route-enter .58s cubic-bezier(.22,.8,.25,1) both; }.platform-shell:not(.home-shell):not(.login-shell) .glass-panel { animation: route-enter .6s cubic-bezier(.22,.8,.25,1) both; transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease; }.platform-shell:not(.home-shell):not(.login-shell) .glass-panel:hover { transform: translateY(-3px); border-color: rgba(183,230,110,.42); box-shadow: 0 16px 32px rgba(0,0,0,.22); }.login-hero-copy { animation: hero-copy-enter .75s .12s cubic-bezier(.22,.8,.25,1) both; }.login-panel { animation: login-panel-enter .7s .12s cubic-bezier(.22,.8,.25,1) both; }.login-signal-card { animation: route-enter .7s .32s cubic-bezier(.22,.8,.25,1) both; }
-@media (prefers-reduced-motion: reduce) { .app-main > *,.platform-shell:not(.home-shell):not(.login-shell) .glass-panel,.login-hero-copy,.login-panel,.login-signal-card { animation: none !important; transition: none !important; } }
 
-/* Use the full working canvas for analytical pages instead of a narrow desktop column. */
-.platform-shell:not(.home-shell):not(.login-shell) .farmer-nav-inner { max-width: none; padding-left: clamp(20px,2vw,38px); padding-right: clamp(20px,2vw,38px); }.platform-shell:not(.home-shell):not(.login-shell) .app-main > div { width: 100% !important; max-width: none !important; margin-left: 0 !important; margin-right: 0 !important; padding-left: clamp(20px,2vw,38px) !important; padding-right: clamp(20px,2vw,38px) !important; }
-.kisaan-logo { display: block; overflow: visible; color: #258151; }.brand-mark { padding: 0 !important; overflow: hidden; background: transparent !important; box-shadow: none !important; }.agripilot-reference-nav .brand-mark { background: transparent !important; }.login-brand span { width: 39px; height: 39px; padding: 0; background: transparent; }.login-brand .kisaan-logo { color: #bde96d; }
-@media (max-width: 760px) { .platform-shell:not(.home-shell):not(.login-shell) .app-main > div { padding-left: 16px !important; padding-right: 16px !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .platform-shell:not(.home-shell):not(.login-shell) .glass-panel,
+  .login-hero-copy,
+  .login-panel {
+    animation: none !important;
+    transition: none !important;
+  }
+}
 
-/* The cinematic Home header follows the same full-width alignment as data pages. */
-.home-shell .agripilot-reference-nav .farmer-nav-inner { max-width: none; padding-left: clamp(20px,2vw,38px); padding-right: clamp(20px,2vw,38px); }.home-shell .plantiq-hero-content { padding-left: clamp(20px,3vw,54px); padding-right: clamp(20px,3vw,54px); }
+/* =====================================================================
+   Gluestack UI & UI Kitten Mobile Bottom Bar & Action Sheet
+   ===================================================================== */
+.gluestack-bottom-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 990;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-top: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+  padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 12px)) 8px;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.gluestack-bar-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 560px;
+  margin: 0 auto;
+  gap: 2px;
+}
+
+.gluestack-tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 12px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  flex: 1;
+  min-width: 0;
+}
+
+.gluestack-tab-item:active {
+  transform: scale(0.92);
+}
+
+.gluestack-tab-item.is-active {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+}
+
+.gluestack-tab-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+.gluestack-tab-dot {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #059669;
+}
+
+.gluestack-tab-label {
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* Gluestack Action Sheet */
+.gluestack-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  animation: gsFadeIn 0.18s ease-out;
+}
+
+.gluestack-sheet-panel {
+  background: #ffffff;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  padding: 12px 18px calc(28px + env(safe-area-inset-bottom, 16px));
+  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.18);
+  max-height: 86vh;
+  overflow-y: auto;
+  animation: gsSlideUp 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gluestack-sheet-handle-wrap {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 12px;
+}
+
+.gluestack-sheet-handle {
+  width: 42px;
+  height: 5px;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+.gluestack-sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.gluestack-sheet-kicker {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #059669;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.gluestack-sheet-title {
+  margin: 3px 0 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.gluestack-sheet-close {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.gluestack-sheet-lang-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 13px;
+  background: #f8fafc;
+  border-radius: 14px;
+  margin-bottom: 14px;
+}
+
+.gluestack-lang-pill-group {
+  display: flex;
+  gap: 3px;
+  background: #e2e8f0;
+  padding: 2px;
+  border-radius: 999px;
+}
+
+.gluestack-lang-pill {
+  border: none;
+  background: transparent;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gluestack-lang-pill.selected {
+  background: #059669;
+  color: #ffffff;
+}
+
+.gluestack-sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+}
+
+.gluestack-sheet-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.15s ease;
+}
+
+.gluestack-sheet-card:active {
+  transform: scale(0.97);
+  background: #f1f5f9;
+}
+
+.gluestack-sheet-card.active-sheet-card {
+  border-color: #059669;
+  background: #ecfdf5;
+}
+
+.gluestack-sheet-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gluestack-sheet-card-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.gluestack-sheet-card-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gluestack-sheet-card-desc {
+  font-size: 0.67rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gluestack-sheet-card-arrow {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+@keyframes gsFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes gsSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* =====================================================================
+   Responsive Grid System for Panchayat & Map View
+   ===================================================================== */
+.panchayat-main-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 2.5rem;
+}
+
+.map-view-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Full canvas sizing */
+.platform-shell:not(.home-shell):not(.login-shell) .farmer-nav-inner {
+  max-width: none;
+  padding-left: clamp(20px, 2vw, 38px);
+  padding-right: clamp(20px, 2vw, 38px);
+}
+
+.platform-shell:not(.home-shell):not(.login-shell) .app-main > div {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: clamp(20px, 2vw, 38px) !important;
+  padding-right: clamp(20px, 2vw, 38px) !important;
+}
+
+.kisaan-logo { display: block; overflow: visible; color: #258151; }
+.brand-mark { padding: 0 !important; overflow: hidden; background: transparent !important; box-shadow: none !important; }
+.agripilot-reference-nav .brand-mark { background: transparent !important; }
+.login-brand span { width: 39px; height: 39px; padding: 0; background: transparent; }
+.login-brand .kisaan-logo { color: #bde96d; }
+
+.home-shell .agripilot-reference-nav .farmer-nav-inner {
+  max-width: none;
+  padding-left: clamp(20px, 2vw, 38px);
+  padding-right: clamp(20px, 2vw, 38px);
+}
+
+.home-shell .plantiq-hero-content {
+  padding-left: clamp(20px, 3vw, 54px);
+  padding-right: clamp(20px, 3vw, 54px);
+}
+
+/* =====================================================================
+   Mobile Responsive Screen Rules (< 920px)
+   ===================================================================== */
+@media (max-width: 920px) {
+  .gluestack-bottom-bar {
+    display: flex !important;
+  }
+  .app-main {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 16px)) !important;
+  }
+  .platform-shell:not(.home-shell):not(.login-shell) .app-main > div {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px)) !important;
+  }
+  .panchayat-main-grid,
+  .map-view-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+  .gluestack-sheet-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+

@@ -91,8 +91,12 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 2. REAL-TIME TICKER BAR */}
-      <section className="plantiq-ticker">
+      <section className="plantiq-ticker" aria-label="Real-time agricultural updates">
         <div>
+          <span>🌾 {hi ? 'धान — अगले 24 घंटे बारिश की संभावना 84%' : 'Paddy — 84% chance of rain in 24 hours'} ✅</span>
+          <span>💧 {hi ? 'आज सिंचाई रोकें — पानी और डीजल बचाएं' : 'Skip irrigation today — save water and diesel'} ✅</span>
+          <span>🌱 {hi ? 'मलिहाबाद — मौसम अपडेट उपलब्ध' : 'Malihabad — weather update available'} 📈</span>
+          <span>🛡️ {hi ? 'महत्वपूर्ण अलर्ट — सलाह देखें' : 'Important alert — view advice'} ⚠️</span>
           <span>🌾 {hi ? 'धान — अगले 24 घंटे बारिश की संभावना 84%' : 'Paddy — 84% chance of rain in 24 hours'} ✅</span>
           <span>💧 {hi ? 'आज सिंचाई रोकें — पानी और डीजल बचाएं' : 'Skip irrigation today — save water and diesel'} ✅</span>
           <span>🌱 {hi ? 'मलिहाबाद — मौसम अपडेट उपलब्ध' : 'Malihabad — weather update available'} 📈</span>

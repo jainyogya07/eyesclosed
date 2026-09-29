@@ -77,7 +77,7 @@ export const PanchayatPage: React.FC = () => {
       </div>
 
       {/* Main Grid: Left 1-km Map, Right Panchayat Multi-Layer Side Panel */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '2rem', marginBottom: '2.5rem' }}>
+      <div className="panchayat-main-grid">
         <div>
           <MapView />
         </div>
