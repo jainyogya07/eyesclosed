@@ -16,8 +16,11 @@ import {
   TrendingUp,
   MapPin
 } from 'lucide-react';
+import { useApp } from '../../contexts/AppContext';
 
 export const DigitalTwinView: React.FC = () => {
+  const { language } = useApp();
+  const hi = language === 'hi';
   const [twinState, setTwinState] = useState<DigitalTwinState | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -105,7 +108,7 @@ export const DigitalTwinView: React.FC = () => {
         <div className="glass-panel" style={{ padding: '18px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-              WEATHER (M1/M2)
+              {hi ? 'मौसम (M1/M2)' : 'WEATHER (M1/M2)'}
             </span>
             <span className="badge badge-frozen" style={{ fontSize: '0.62rem', padding: '2px 6px' }}>FROZEN PILOT</span>
           </div>
@@ -113,10 +116,10 @@ export const DigitalTwinView: React.FC = () => {
             {twinState.weather.prediction.temperature_c}°C
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            Nominal 90% Interval: [{twinState.weather.uncertainty.lower_bound}°–{twinState.weather.uncertainty.upper_bound}°C]
+            {hi ? 'अनुमानित 90% सीमा' : 'Nominal 90% Interval'}: [{twinState.weather.uncertainty.lower_bound}°–{twinState.weather.uncertainty.upper_bound}°C]
           </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--color-earth-emerald)', fontWeight: 600, marginTop: '2px' }}>
-            RH: {twinState.weather.prediction.relative_humidity_pct}% • Wind: {twinState.weather.prediction.wind_speed_ms} m/s
+            {hi ? 'नमी' : 'RH'}: {twinState.weather.prediction.relative_humidity_pct}% • {hi ? 'हवा' : 'Wind'}: {twinState.weather.prediction.wind_speed_ms} m/s
           </div>
         </div>
 
@@ -124,7 +127,7 @@ export const DigitalTwinView: React.FC = () => {
         <div className="glass-panel" style={{ padding: '18px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-              PRECIPITATION (M3)
+              {hi ? 'वर्षा (M3)' : 'PRECIPITATION (M3)'}
             </span>
             <span className="badge badge-frozen" style={{ fontSize: '0.62rem', padding: '2px 6px' }}>FROZEN PILOT</span>
           </div>
@@ -132,10 +135,10 @@ export const DigitalTwinView: React.FC = () => {
             {twinState.precipitation.prediction.expected_rainfall_mm} mm
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            Rain Probability: <strong>{(twinState.precipitation.prediction.rain_probability * 100).toFixed(0)}%</strong>
+            {hi ? 'वर्षा संभावना' : 'Rain Probability'}: <strong>{(twinState.precipitation.prediction.rain_probability * 100).toFixed(0)}%</strong>
           </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--color-solar-amber)', fontWeight: 600, marginTop: '2px' }}>
-            Intensity: {twinState.precipitation.prediction.intensity_category}
+            {hi ? 'तीव्रता' : 'Intensity'}: {twinState.precipitation.prediction.intensity_category}
           </div>
         </div>
 
@@ -143,7 +146,7 @@ export const DigitalTwinView: React.FC = () => {
         <div className="glass-panel" style={{ padding: '18px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-              SOIL MOISTURE (M4)
+              {hi ? 'मिट्टी नमी (M4)' : 'SOIL MOISTURE (M4)'}
             </span>
             <span className="badge" style={{ fontSize: '0.62rem', padding: '2px 6px', background: '#fef3c7', color: '#92400e', border: '1px solid #fde68a' }}>
               Simulation / Prototype
@@ -153,10 +156,10 @@ export const DigitalTwinView: React.FC = () => {
             {twinState.soil.prediction.root_zone_sm_vwc_pct}% VWC
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            Root Zone (40cm depth)
+            {hi ? 'जड़ क्षेत्र (40 सेमी गहराई)' : 'Root Zone (40cm depth)'}
           </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-            Surface 5cm: {twinState.soil.prediction.surface_sm_vwc_pct}% VWC
+            {hi ? 'सतह 5 सेमी' : 'Surface 5cm'}: {twinState.soil.prediction.surface_sm_vwc_pct}% VWC
           </div>
         </div>
 
@@ -164,7 +167,7 @@ export const DigitalTwinView: React.FC = () => {
         <div className="glass-panel" style={{ padding: '18px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-              CROP STAGE (M5)
+              {hi ? 'फसल अवस्था (M5)' : 'CROP STAGE (M5)'}
             </span>
             <span className="badge" style={{ fontSize: '0.62rem', padding: '2px 6px', background: '#fef3c7', color: '#92400e', border: '1px solid #fde68a' }}>
               Simulation / Prototype
@@ -185,20 +188,20 @@ export const DigitalTwinView: React.FC = () => {
         <div className="glass-panel" style={{ padding: '18px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-              HAZARD STATUS (M8/M9)
+              {hi ? 'जोखिम स्थिति (M8/M9)' : 'HAZARD STATUS (M8/M9)'}
             </span>
             <span className="badge" style={{ fontSize: '0.62rem', padding: '2px 6px', background: '#fef3c7', color: '#92400e', border: '1px solid #fde68a' }}>
               Simulation / Prototype
             </span>
           </div>
           <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--color-earth-emerald)' }}>
-            STABLE (GREEN)
+            {hi ? 'सुरक्षित (हरा)' : 'STABLE (GREEN)'}
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            Flood Risk: <strong>{twinState.flood.prediction.risk_level}</strong> ({(twinState.flood.prediction.inundation_probability * 100).toFixed(0)}%)
+            {hi ? 'बाढ़ जोखिम' : 'Flood Risk'}: <strong>{twinState.flood.prediction.risk_level}</strong> ({(twinState.flood.prediction.inundation_probability * 100).toFixed(0)}%)
           </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-            Drainage time: {twinState.flood.prediction.waterlogging_drainage_time_hours}h
+            {hi ? 'निकासी समय' : 'Drainage time'}: {twinState.flood.prediction.waterlogging_drainage_time_hours}h
           </div>
         </div>
       </div>
@@ -216,13 +219,15 @@ export const DigitalTwinView: React.FC = () => {
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--color-quantum-violet)', fontWeight: 700, fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}>
               <Sliders size={16} />
-              WHAT-IF DIGITAL TWIN SCENARIO SIMULATOR
+              {hi ? 'डिजिटल ट्विन परिदृश्य सिम्युलेटर' : 'WHAT-IF DIGITAL TWIN SCENARIO SIMULATOR'}
             </div>
             <h3 style={{ fontSize: '1.5rem', color: 'var(--text-primary)' }}>
-              Stress-Test Environmental Perturbations
+              {hi ? 'पर्यावरणीय बदलावों का तनाव परीक्षण' : 'Stress-Test Environmental Perturbations'}
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
-              Simulate localized heavy rainfall, heatwaves, or canal cutoff before they occur to evaluate waterlogging and crop stress.
+              {hi
+                ? 'भारी वर्षा, लू अथवा नहर में पानी की कमी होने से पहले ही सिम्युलेट करके खेत की तैयारी परखें।'
+                : 'Simulate localized heavy rainfall, heatwaves, or canal cutoff before they occur to evaluate waterlogging and crop stress.'}
             </p>
           </div>
 
@@ -236,7 +241,7 @@ export const DigitalTwinView: React.FC = () => {
               className="badge"
               style={{ padding: '6px 12px', background: 'var(--bg-surface-subtle)', cursor: 'pointer', border: '1px solid var(--border-card)' }}
             >
-              Preset: 50mm Torrential Rain
+              {hi ? 'प्रारूप: 50 मिमी भारी बारिश' : 'Preset: 50mm Torrential Rain'}
             </button>
             <button
               onClick={() => {
@@ -247,7 +252,7 @@ export const DigitalTwinView: React.FC = () => {
               className="badge"
               style={{ padding: '6px 12px', background: 'var(--bg-surface-subtle)', cursor: 'pointer', border: '1px solid var(--border-card)' }}
             >
-              Preset: 5-Day Canal Cutoff
+              {hi ? 'प्रारूप: 5-दिवसीय नहर बंदी' : 'Preset: 5-Day Canal Cutoff'}
             </button>
           </div>
         </div>
@@ -257,7 +262,7 @@ export const DigitalTwinView: React.FC = () => {
           {/* Slider 1: Rainfall Override */}
           <div style={{ background: 'white', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Rainfall Perturbation</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{hi ? 'वर्षा बदलाव' : 'Rainfall Perturbation'}</span>
               <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--color-atmosphere-blue)' }}>
                 +{rainOverride} mm
               </span>
@@ -272,16 +277,16 @@ export const DigitalTwinView: React.FC = () => {
               style={{ width: '100%', accentColor: 'var(--color-atmosphere-blue)', cursor: 'pointer' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-              <span>0mm (Dry)</span>
-              <span>40mm (Heavy)</span>
-              <span>80mm (Cloudburst)</span>
+              <span>{hi ? '0 मिमी (शुष्क)' : '0mm (Dry)'}</span>
+              <span>{hi ? '40 मिमी (भारी)' : '40mm (Heavy)'}</span>
+              <span>{hi ? '80 मिमी (मूसलाधार)' : '80mm (Cloudburst)'}</span>
             </div>
           </div>
 
           {/* Slider 2: Temperature Override */}
           <div style={{ background: 'white', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Temperature Anomaly</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{hi ? 'तापमान बदलाव' : 'Temperature Anomaly'}</span>
               <span style={{ fontSize: '0.9rem', fontWeight: 700, color: tempOverride > 0 ? 'var(--color-hazard-crimson)' : 'var(--color-atmosphere-blue)' }}>
                 {tempOverride > 0 ? `+${tempOverride}°C` : `${tempOverride}°C`}
               </span>
@@ -296,18 +301,18 @@ export const DigitalTwinView: React.FC = () => {
               style={{ width: '100%', accentColor: 'var(--color-solar-amber)', cursor: 'pointer' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-              <span>-3°C (Cool spell)</span>
-              <span>0°C (Normal)</span>
-              <span>+6°C (Heatwave)</span>
+              <span>{hi ? '-3°C (शीतलहर)' : '-3°C (Cool spell)'}</span>
+              <span>{hi ? '0°C (सामान्य)' : '0°C (Normal)'}</span>
+              <span>{hi ? '+6°C (लू)' : '+6°C (Heatwave)'}</span>
             </div>
           </div>
 
           {/* Slider 3: Canal Supply */}
           <div style={{ background: 'white', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Canal Water Release</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{hi ? 'नहर जल आपूर्ति' : 'Canal Water Release'}</span>
               <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--color-earth-emerald)' }}>
-                {canalHours} hours/day
+                {canalHours} {hi ? 'घंटे/दिन' : 'hours/day'}
               </span>
             </div>
             <input
@@ -320,9 +325,9 @@ export const DigitalTwinView: React.FC = () => {
               style={{ width: '100%', accentColor: 'var(--color-earth-emerald)', cursor: 'pointer' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-              <span>0h (Shut)</span>
-              <span>6h (Normal)</span>
-              <span>12h (Full canal flow)</span>
+              <span>{hi ? '0 घंटे (बंद)' : '0h (Shut)'}</span>
+              <span>{hi ? '6 घंटे (सामान्य)' : '6h (Normal)'}</span>
+              <span>{hi ? '12 घंटे (पूर्ण प्रवाह)' : '12h (Full canal flow)'}</span>
             </div>
           </div>
         </div>
@@ -348,7 +353,9 @@ export const DigitalTwinView: React.FC = () => {
             }}
           >
             <Play size={16} />
-            {simulating ? 'Running Physical Simulation...' : 'Execute What-If Simulation'}
+            {simulating
+              ? (hi ? 'भौतिकी सिम्युलेशन चल रहा है...' : 'Running Physical Simulation...')
+              : (hi ? 'परिदृश्य सिम्युलेशन चलाएं' : 'Execute What-If Simulation')}
           </button>
 
           {simResult && (
@@ -369,7 +376,7 @@ export const DigitalTwinView: React.FC = () => {
               }}
             >
               <RotateCcw size={15} />
-              Reset Baseline
+              {hi ? 'प्रारंभिक स्थिति' : 'Reset Baseline'}
             </button>
           )}
         </div>

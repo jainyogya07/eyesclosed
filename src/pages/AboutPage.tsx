@@ -9,29 +9,35 @@ import {
   HeartHandshake,
   Layers
 } from 'lucide-react';
+import { useApp } from '../contexts/AppContext';
 
 export const AboutPage: React.FC = () => {
+  const { language } = useApp();
+  const hi = language === 'hi';
+
   return (
     <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem' }}>
       {/* Header */}
       <div style={{ marginBottom: '2.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-          <span className="badge badge-frozen">Smart India Hackathon (SIH 2024–26)</span>
-          <span className="badge badge-pilot">Architecture Specification</span>
+          <span className="badge badge-frozen">Smart India Hackathon</span>
+          <span className="badge badge-pilot">{hi ? 'सिस्टम वास्तुकला' : 'Architecture Specification'}</span>
         </div>
         <h1 style={{ fontSize: '2.4rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Info size={32} color="var(--color-atmosphere-blue)" />
-          About Kisaan Ki Yash (किसान की यश)
+          {hi ? 'किसान की यश के बारे में' : 'About Kisaan Ki Yash'}
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-          An AI-native climate intelligence and agricultural decision cascade designed for smallholder Indian farming resilience.
+          {hi
+            ? 'भारतीय छोटे और सीमांत किसानों के लिए स्थानीय मौसम, मिट्टी और AI आधारित कृषि निर्णय प्रणाली।'
+            : 'An AI-native climate intelligence and agricultural decision cascade designed for smallholder Indian farming resilience.'}
         </p>
       </div>
 
       {/* 3 Audience Tiers */}
       <div style={{ marginBottom: '3rem' }}>
         <h2 style={{ fontSize: '1.6rem', marginBottom: '1.25rem', color: 'var(--text-primary)' }}>
-          Who We Serve (Three Operating Perspectives)
+          {hi ? 'तीन उपयोगकर्ता दृष्टिकोण' : 'Who We Serve (Three Operating Perspectives)'}
         </h2>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
@@ -40,10 +46,12 @@ export const AboutPage: React.FC = () => {
               <HeartHandshake size={24} color="var(--color-earth-emerald)" />
             </div>
             <h3 style={{ fontSize: '1.25rem', marginBottom: '8px', color: 'var(--color-earth-emerald)' }}>
-              1. For Farmers (किसान भाई)
+              {hi ? '1. किसान भाइयों के लिए' : '1. For Farmers'}
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              Direct, unequivocal action advisories delivered in simple Hindi via audio notes. Clear DO / DO NOT guidance for irrigation pumping and chemical spraying, preventing wasted diesel and chemical wash-off.
+              {hi
+                ? 'सीधे और स्पष्ट कृषि निर्देश, जिन्हें ऑडियो संदेश के रूप में भी सुना जा सकता है। आज क्या करना है और क्या नहीं करना है (सिंचाई, खाद, छिड़काव), जिससे डीजल और फसल दोनों की बचत हो।'
+                : 'Direct, unequivocal action advisories delivered in simple Hindi via audio notes. Clear DO / DO NOT guidance for irrigation pumping and chemical spraying, preventing wasted diesel and chemical wash-off.'}
             </p>
           </div>
 
@@ -52,10 +60,12 @@ export const AboutPage: React.FC = () => {
               <Users size={24} color="var(--color-atmosphere-blue)" />
             </div>
             <h3 style={{ fontSize: '1.25rem', marginBottom: '8px', color: 'var(--color-atmosphere-blue)' }}>
-              2. For Panchayats & Officers
+              {hi ? '2. पंचायत एवं कृषि अधिकारियों के लिए' : '2. For Panchayats & Officers'}
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              A cyber-physical Panchayat Digital Twin and What-If simulator. Extension officers can monitor soil moisture stress and flood waterlogging across 50 villages simultaneously and route canal irrigation proactively.
+              {hi
+                ? 'पंचायत डिजिटल ट्विन और सैंडबॉक्स। अधिकारी एक साथ 50 गांवों में मिट्टी की नमी, जलभराव और फसल तनाव देखकर नहर से पानी छोड़ने की सही योजना बना सकते हैं।'
+                : 'A cyber-physical Panchayat Digital Twin and What-If simulator. Extension officers can monitor soil moisture stress and flood waterlogging across 50 villages simultaneously and route canal irrigation proactively.'}
             </p>
           </div>
 
@@ -64,10 +74,12 @@ export const AboutPage: React.FC = () => {
               <ShieldCheck size={24} color="var(--color-quantum-violet)" />
             </div>
             <h3 style={{ fontSize: '1.25rem', marginBottom: '8px', color: 'var(--color-quantum-violet)' }}>
-              3. For Scientists & Reviewers
+              {hi ? '3. वैज्ञानिकों एवं समीक्षकों के लिए' : '3. For Scientists & Reviewers'}
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              Complete transparency: metric projected CRS (EPSG:32644), Conformal Quantile Regression (CQR) certified 90% bounds, SHA-256 cryptographic model hashes, and Leave-One-Station-Out independent ground station benchmarks.
+              {hi
+                ? 'पूर्ण वैज्ञानिक पारदर्शिता: 1-किमी डाउनस्केलिंग, कन्फॉर्मल क्वांटाइल रिग्रेशन (CQR), स्वतंत्र मौसम स्टेशन परीक्षण (AWS_LKO_05) और सत्यापन रिपोर्ट।'
+                : 'Complete transparency: metric projected CRS (EPSG:32644), Conformal Quantile Regression (CQR) certified 90% bounds, SHA-256 cryptographic model hashes, and Leave-One-Station-Out independent ground station benchmarks.'}
             </p>
           </div>
         </div>

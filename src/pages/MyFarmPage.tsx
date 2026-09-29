@@ -21,52 +21,65 @@ import { ScientificDrawer } from '../components/common/ScientificDrawer';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { CinematicFarmBackground } from '../components/common/CinematicFarmBackground';
 
-const POPULAR_LOCATIONS: LocationInfo[] = [
+const POPULAR_LOCATIONS = [
   {
     panchayatCode: '0924001001',
-    panchayatName: 'Malihabad (मलिहाबाद)',
-    district: 'Lucknow (लखनऊ)',
-    state: 'Uttar Pradesh (उत्तर प्रदेश)',
+    panchayatNameEn: 'Malihabad',
+    panchayatNameHi: 'मलिहाबाद',
+    districtEn: 'Lucknow',
+    districtHi: 'लखनऊ',
+    stateEn: 'Uttar Pradesh',
+    stateHi: 'उत्तर प्रदेश',
     lat: 26.9167,
     lon: 80.7167
   },
   {
     panchayatCode: '0924001002',
-    panchayatName: 'Bakshi Ka Talab (बख्शी का तालाब)',
-    district: 'Lucknow (लखनऊ)',
-    state: 'Uttar Pradesh',
+    panchayatNameEn: 'Bakshi Ka Talab',
+    panchayatNameHi: 'बख्शी का तालाब',
+    districtEn: 'Lucknow',
+    districtHi: 'लखनऊ',
+    stateEn: 'Uttar Pradesh',
+    stateHi: 'उत्तर प्रदेश',
     lat: 27.0125,
     lon: 80.9312
   },
   {
     panchayatCode: '0924001003',
-    panchayatName: 'Mohanlalganj (मोहनलालगंज)',
-    district: 'Lucknow (लखनऊ)',
-    state: 'Uttar Pradesh',
+    panchayatNameEn: 'Mohanlalganj',
+    panchayatNameHi: 'मोहनलालगंज',
+    districtEn: 'Lucknow',
+    districtHi: 'लखनऊ',
+    stateEn: 'Uttar Pradesh',
+    stateHi: 'उत्तर प्रदेश',
     lat: 26.6712,
     lon: 80.9854
   },
   {
     panchayatCode: '0924001004',
-    panchayatName: 'Kakori (काकोरी)',
-    district: 'Lucknow (लखनऊ)',
-    state: 'Uttar Pradesh',
+    panchayatNameEn: 'Kakori',
+    panchayatNameHi: 'काकोरी',
+    districtEn: 'Lucknow',
+    districtHi: 'लखनऊ',
+    stateEn: 'Uttar Pradesh',
+    stateHi: 'उत्तर प्रदेश',
     lat: 26.8821,
     lon: 80.7981
   }
 ];
 
 const CROPS = [
-  { id: 'paddy', nameHi: 'धान (Paddy)', nameEn: 'Paddy', stageHi: 'पुष्पन अवस्था (Flowering)', stageEn: 'Flowering Stage' },
-  { id: 'mango', nameHi: 'आम (Mango)', nameEn: 'Mango Orchard', stageHi: 'फल वृद्धि (Fruit Growth)', stageEn: 'Fruit Growth' },
-  { id: 'wheat', nameHi: 'गेहूं (Wheat)', nameEn: 'Wheat', stageHi: 'बुवाई तैयारी (Pre-Sowing)', stageEn: 'Pre-Sowing' },
-  { id: 'mustard', nameHi: 'सरसों (Mustard)', nameEn: 'Mustard', stageHi: 'वानस्पतिक अवस्था (Vegetative)', stageEn: 'Vegetative' }
+  { id: 'paddy', nameHi: 'धान', nameEn: 'Paddy', stageHi: 'पुष्पन अवस्था', stageEn: 'Flowering Stage' },
+  { id: 'mango', nameHi: 'आम का बाग', nameEn: 'Mango Orchard', stageHi: 'फल वृद्धि अवस्था', stageEn: 'Fruit Growth' },
+  { id: 'wheat', nameHi: 'गेहूं', nameEn: 'Wheat', stageHi: 'बुवाई तैयारी', stageEn: 'Pre-Sowing' },
+  { id: 'mustard', nameHi: 'सरसों', nameEn: 'Mustard', stageHi: 'वानस्पतिक वृद्धि', stageEn: 'Vegetative' }
 ];
 
 export const MyFarmPage: React.FC = () => {
   const { language, location, setLocation, selectedCrop, setSelectedCrop, speakText, isSpeaking } = useApp();
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [gpsLoading, setGpsLoading] = useState(false);
+  const hi = language === 'hi';
 
   const currentCropObj = CROPS.find((c) => selectedCrop.includes(c.nameEn)) || CROPS[0];
 
@@ -77,9 +90,9 @@ export const MyFarmPage: React.FC = () => {
       (pos) => {
         setLocation({
           panchayatCode: '0924001001',
-          panchayatName: 'खेत (GPS Detected Location)',
-          district: 'Lucknow',
-          state: 'Uttar Pradesh',
+          panchayatName: hi ? 'मेरा खेत (GPS स्थान)' : 'My Field (GPS Location)',
+          district: hi ? 'लखनऊ' : 'Lucknow',
+          state: hi ? 'उत्तर प्रदेश' : 'Uttar Pradesh',
           lat: +pos.coords.latitude.toFixed(4),
           lon: +pos.coords.longitude.toFixed(4)
         });
@@ -289,16 +302,20 @@ export const MyFarmPage: React.FC = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '1.25rem', marginBottom: '1.75rem' }}>
           <div className="farmora-glass card-hover-tilt" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>जड़ क्षेत्र नमी</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>
+                {hi ? 'जड़ क्षेत्र नमी' : 'Root-Zone Moisture'}
+              </span>
               <Droplet size={18} color="var(--farmora-lime)" />
             </div>
             <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--farmora-lime)' }}>31.2%</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--farmora-wheat)' }}>0–30 cm Depth VWC (पर्याप्त)</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--farmora-wheat)' }}>0–30 cm Depth VWC ({hi ? 'पर्याप्त' : 'Adequate'})</div>
           </div>
 
           <div className="farmora-glass card-hover-tilt" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>फसल छतरी तापमान</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>
+                {hi ? 'फसल छतरी तापमान' : 'Crop Canopy Temp'}
+              </span>
               <Thermometer size={18} color="var(--farmora-wheat)" />
             </div>
             <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--farmora-wheat)' }}>27.8°C</div>
@@ -307,7 +324,9 @@ export const MyFarmPage: React.FC = () => {
 
           <div className="farmora-glass card-hover-tilt" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>48h वर्षा संभावना</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>
+                {hi ? '48 घंटे वर्षा संभावना' : '48h Rain Probability'}
+              </span>
               <CloudSun size={18} color="#38bdf8" />
             </div>
             <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#38bdf8' }}>84%</div>
@@ -316,29 +335,46 @@ export const MyFarmPage: React.FC = () => {
 
           <div className="farmora-glass card-hover-tilt" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>वाष्पीकरण (ETc)</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>
+                {hi ? 'दैनिक वाष्पीकरण (ETc)' : 'Evapotranspiration (ETc)'}
+              </span>
               <Wind size={18} color="var(--farmora-sage)" />
             </div>
             <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--farmora-light)' }}>5.8 mm</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)' }}>दैनिक फसल जल मांग</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)' }}>{hi ? 'दैनिक फसल जल मांग' : 'Daily crop water demand'}</div>
           </div>
         </div>
 
         {/* Progressive Disclosure: Why this advice? */}
         <ScientificDrawer
-          title="यह सलाह क्यों दी गई? (Why this advisory?)"
+          title={hi ? 'यह सलाह क्यों दी गई?' : 'Scientific Basis: Why this advisory?'}
           whyExplanation={
-            <div>
-              आपके चुने हुए क्षेत्र ({location.panchayatName}) में मॉडल 1 (M1) एवं मॉडल 3 (M3) के अनुसार अगले 18 घंटे में 12.4mm वर्षा अनुमानित है। 
-              वर्तमान में मिट्टी में 31.2% नमी उपलब्ध है जो इस फसल की वानस्पतिक मांग (5.8mm/दिन) के लिए 3 दिन तक पर्याप्त है। 
-              अभी पानी देने से मिट्टी संतृप्त (saturated) होकर जड़ों का श्वसन रोक देगी।
-            </div>
+            hi ? (
+              <div>
+                आपके चुने हुए क्षेत्र ({location.panchayatName}) में मॉडल 1 (M1) एवं मॉडल 3 (M3) के अनुसार अगले 18 घंटे में 12.4mm वर्षा अनुमानित है। 
+                वर्तमान में मिट्टी में 31.2% नमी उपलब्ध है जो इस फसल की वानस्पतिक मांग (5.8mm/दिन) के लिए 3 दिन तक पर्याप्त है। 
+                अभी पानी देने से मिट्टी संतृप्त होकर जड़ों का श्वसन रोक देगी।
+              </div>
+            ) : (
+              <div>
+                In your selected area ({location.panchayatName}), Models 1 & 3 forecast 12.4mm rainfall within 18 hours. 
+                Root-zone moisture is at 31.2% VWC, which fulfills the 5.8mm/day transpiration demand for the next 3 days. 
+                Irrigating now would oversaturate the soil and trigger hypoxia in the root system.
+              </div>
+            )
           }
           evidenceContent={
-            <div>
-              मलिहाबाद स्टेशन पर परीक्षण में मॉडल 1 का MAE 0.4083°C तथा मॉडल 3 का Hurdle RMSE 0.9725 पाया गया। 
-              निर्णय M10 एग्रोनॉमिक लॉजिक द्वारा सत्यापित है।
-            </div>
+            hi ? (
+              <div>
+                मलिहाबाद स्टेशन (AWS_LKO_05) पर स्वतंत्र परीक्षण में मॉडल 1 का MAE 0.4083°C तथा मॉडल 3 का Hurdle RMSE 0.9725 पाया गया। 
+                निर्णय M10 एग्रोनॉमिक लॉजिक द्वारा सत्यापित है।
+              </div>
+            ) : (
+              <div>
+                Independent benchmark evaluation at Malihabad station (AWS_LKO_05) confirmed Model 1 MAE of 0.4083°C and Model 3 Hurdle RMSE of 0.9725. 
+                Advisory recommendation is verified by Model 10 agronomic logic.
+              </div>
+            )
           }
           scientificDetails={{
             modelProvenance: 'M1 (Weather Downscaling) + M3 (Precipitation) + M4 (Soil Moisture) + M10 (Decision Engine)',
@@ -397,37 +433,51 @@ export const MyFarmPage: React.FC = () => {
               }}
             >
               <Navigation size={18} />
-              <span>{gpsLoading ? 'Locating via GPS...' : 'Use Current Device GPS'}</span>
+              <span>{gpsLoading ? (hi ? 'GPS खोज रहा है...' : 'Locating via GPS...') : (hi ? 'वर्तमान डिवाइस GPS स्थान का उपयोग करें' : 'Use Current Device GPS')}</span>
             </button>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-              {POPULAR_LOCATIONS.map((loc) => (
-                <button
-                  key={loc.panchayatCode}
-                  onClick={() => {
-                    setLocation(loc);
-                    setShowLocationModal(false);
-                  }}
-                  style={{
-                    padding: '12px 16px',
-                    borderRadius: 'var(--radius-md)',
-                    background: location.panchayatCode === loc.panchayatCode ? 'rgba(182, 178, 67, 0.2)' : 'rgba(251, 251, 251, 0.05)',
-                    border: location.panchayatCode === loc.panchayatCode ? '1.5px solid var(--farmora-lime)' : '1px solid rgba(182, 178, 67, 0.2)',
-                    color: 'var(--farmora-light)',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    textAlign: 'left'
-                  }}
-                >
-                  <div>
-                    <div style={{ fontWeight: 700 }}>{loc.panchayatName}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)' }}>{loc.district}</div>
-                  </div>
-                  {location.panchayatCode === loc.panchayatCode && <Check size={18} color="var(--farmora-lime)" />}
-                </button>
-              ))}
+              {POPULAR_LOCATIONS.map((loc) => {
+                const name = hi ? loc.panchayatNameHi : loc.panchayatNameEn;
+                const dist = hi ? loc.districtHi : loc.districtEn;
+                const st = hi ? loc.stateHi : loc.stateEn;
+                const isSelected = location.panchayatCode === loc.panchayatCode;
+
+                return (
+                  <button
+                    key={loc.panchayatCode}
+                    onClick={() => {
+                      setLocation({
+                        panchayatCode: loc.panchayatCode,
+                        panchayatName: name,
+                        district: dist,
+                        state: st,
+                        lat: loc.lat,
+                        lon: loc.lon
+                      });
+                      setShowLocationModal(false);
+                    }}
+                    style={{
+                      padding: '12px 16px',
+                      borderRadius: 'var(--radius-md)',
+                      background: isSelected ? 'rgba(182, 178, 67, 0.2)' : 'rgba(251, 251, 251, 0.05)',
+                      border: isSelected ? '1.5px solid var(--farmora-lime)' : '1px solid rgba(182, 178, 67, 0.2)',
+                      color: 'var(--farmora-light)',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 700 }}>{name}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)' }}>{dist}, {st}</div>
+                    </div>
+                    {isSelected && <Check size={18} color="var(--farmora-lime)" />}
+                  </button>
+                );
+              })}
             </div>
 
             <button
@@ -435,7 +485,7 @@ export const MyFarmPage: React.FC = () => {
               className="farmora-btn-secondary"
               style={{ width: '100%', padding: '10px' }}
             >
-              Close
+              {hi ? 'बंद करें' : 'Close'}
             </button>
           </div>
         </div>

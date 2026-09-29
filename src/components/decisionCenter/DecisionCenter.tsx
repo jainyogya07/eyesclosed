@@ -14,8 +14,11 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
+import { useApp } from '../../contexts/AppContext';
 
 export const DecisionCenter: React.FC = () => {
+  const { language } = useApp();
+  const hi = language === 'hi';
   const [advisory, setAdvisory] = useState<MasterDecisionAdvisory | null>(null);
   const [loading, setLoading] = useState(true);
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
@@ -100,14 +103,22 @@ export const DecisionCenter: React.FC = () => {
       >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span className="badge badge-pilot">M10 Decision Intelligence Engine</span>
-            <span className="badge badge-frozen">Certified 90% Holdout CQR</span>
+            <span className="badge badge-pilot">
+              {hi ? 'एम10 निर्णय बुद्धिमत्ता इंजन' : 'M10 Decision Intelligence Engine'}
+            </span>
+            <span className="badge badge-frozen">
+              {hi ? '90% सटीकता प्रमाणित' : 'Certified 90% Holdout CQR'}
+            </span>
           </div>
           <h2 style={{ fontSize: '2.2rem', color: 'var(--text-primary)' }}>
-            Agricultural Decision Center (कृषि निर्णय केंद्र)
+            {hi ? 'कृषि निर्णय व सलाह केंद्र' : 'Agricultural Decision & Advisory Center'}
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-            Panchayat: <strong>{advisory.panchayat_name}</strong> • Valid through 24-Hour Cascade Forecast Window
+            {hi ? (
+              <>पंचायत: <strong>{advisory.panchayat_name}</strong> • 24 घंटे की प्रमाणित कृषि सलाह</>
+            ) : (
+              <>Panchayat: <strong>{advisory.panchayat_name}</strong> • Valid through 24-Hour Cascade Forecast Window</>
+            )}
           </p>
         </div>
 
@@ -235,7 +246,6 @@ export const DecisionCenter: React.FC = () => {
 
               {/* Card Body with Vernacular Hindi & English Text */}
               <div style={{ padding: '20px', flex: 1 }}>
-                {/* Hindi Vernacular Message */}
                 <div
                   style={{
                     background: 'var(--bg-surface-subtle)',
@@ -249,11 +259,11 @@ export const DecisionCenter: React.FC = () => {
                     lineHeight: 1.5
                   }}
                 >
-                  "{act.vernacular_message_hi}"
+                  "{hi ? act.vernacular_message_hi : act.vernacular_message_en}"
                 </div>
 
                 <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '14px' }}>
-                  {act.vernacular_message_en}
+                  {hi ? act.vernacular_message_en : act.scientific_justification}
                 </p>
 
                 {/* Benefit Tag */}

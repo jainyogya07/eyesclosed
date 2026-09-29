@@ -284,7 +284,7 @@ export const FertilizerAlarmSystem: React.FC = () => {
                   }}
                 >
                   <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>SMS Plan</div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#c2410c' }}>₹59 <small style={{ fontSize: '0.65rem' }}>/सीजन</small></div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#c2410c' }}>₹59 <small style={{ fontSize: '0.65rem' }}>{hi ? '/सीजन' : '/season'}</small></div>
                 </button>
 
                 <button
@@ -300,7 +300,7 @@ export const FertilizerAlarmSystem: React.FC = () => {
                   }}
                 >
                   <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Voice + WhatsApp</div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#15803d' }}>₹89 <small style={{ fontSize: '0.65rem' }}>/सीजन</small></div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#15803d' }}>₹89 <small style={{ fontSize: '0.65rem' }}>{hi ? '/सीजन' : '/season'}</small></div>
                 </button>
               </div>
 

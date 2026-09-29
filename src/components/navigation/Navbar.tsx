@@ -14,12 +14,12 @@ export const Navbar: React.FC = () => {
   const referenceHome = pageLocation.pathname === '/home' || pageLocation.pathname === '/';
   const links = [
     ['/home', hi ? 'होम' : 'Home'],
-    ['/panchayat', hi ? 'पंचायत' : 'Panchayat'],
-    ['/agriculture', hi ? 'फसल' : 'Crop Intelligence'],
+    ['/panchayat', hi ? 'मेरी पंचायत' : 'Panchayat'],
+    ['/agriculture', hi ? 'फसल सलाह' : 'Crop Care'],
     ['/weather', hi ? 'मौसम' : 'Weather'],
-    ['/digital-twin', hi ? 'GIS मानचित्र' : 'GIS Map'],
-    ['/irrigation', hi ? 'जल और मिट्टी' : 'Water & Soil'],
-    ['/hazards', hi ? 'अलर्ट' : 'Alerts']
+    ['/digital-twin', hi ? 'खेत मानचित्र' : 'Farm Map'],
+    ['/irrigation', hi ? 'सिंचाई व खाद' : 'Water & Nutrients'],
+    ['/hazards', hi ? 'जोखिम अलर्ट' : 'Alerts']
   ];
   return <header className={`farmer-nav ${referenceHome ? 'plantiq-nav agripilot-reference-nav' : ''}`}>
     <div className="farmer-nav-inner">
@@ -27,7 +27,44 @@ export const Navbar: React.FC = () => {
       <nav className="farmer-nav-links platform-nav-links">{links.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}</nav>
       <div className="nav-actions">
         {!referenceHome && <span className="nav-location"><MapPin size={14} />{location.panchayatName.split(' ')[0]}</span>}
-        <button className="language-button" aria-label="Change language" onClick={() => setLanguage(hi ? 'en' : 'hi')}>{hi ? 'EN' : 'हिं'}</button>
+        
+        {/* Unambiguous Segmented Language Switcher */}
+        <div style={{ display: 'inline-flex', alignItems: 'center', background: referenceHome ? 'rgba(0,0,0,0.25)' : '#e2e8f0', borderRadius: '999px', padding: '2px', border: '1px solid rgba(255,255,255,0.3)' }}>
+          <button
+            type="button"
+            onClick={() => setLanguage('en')}
+            style={{
+              background: !hi ? '#059669' : 'transparent',
+              color: !hi ? '#ffffff' : (referenceHome ? '#ffffff' : '#475569'),
+              border: 'none',
+              borderRadius: '999px',
+              padding: '4px 10px',
+              fontWeight: 800,
+              fontSize: '0.72rem',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            onClick={() => setLanguage('hi')}
+            style={{
+              background: hi ? '#059669' : 'transparent',
+              color: hi ? '#ffffff' : (referenceHome ? '#ffffff' : '#475569'),
+              border: 'none',
+              borderRadius: '999px',
+              padding: '4px 10px',
+              fontWeight: 800,
+              fontSize: '0.72rem',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            हिं
+          </button>
+        </div>
         <div className="profile-wrap">
           <button className="profile-button" aria-label="Open user profile" onClick={() => setProfileOpen(!profileOpen)}><UserRound size={16} /><span>{isSignedIn ? (hi ? 'प्रोफ़ाइल' : 'Profile') : (hi ? 'साइन इन' : 'Sign in')}</span><ChevronDown size={14} /></button>
           {profileOpen && <div className="profile-menu">

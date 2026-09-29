@@ -92,7 +92,7 @@ export const AdvicePage: React.FC = () => {
           </div>
 
           <h1 style={{ fontSize: '2.6rem', fontWeight: 800, color: 'var(--farmora-light)', letterSpacing: '-0.025em', marginBottom: '8px' }}>
-            {language === 'hi' ? 'खेत की कार्य योजना (Action Advice)' : 'Farm Action Timeline'}
+            {language === 'hi' ? 'खेत की कार्य योजना' : 'Farm Action Timeline'}
           </h1>
           <p style={{ fontSize: '1.1rem', color: 'var(--farmora-platinum)' }}>
             {language === 'hi'
@@ -116,10 +116,10 @@ export const AdvicePage: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <BellRing size={22} color="var(--farmora-lime)" />
               <span style={{ fontWeight: 800, color: 'var(--farmora-light)', fontSize: '1.1rem' }}>
-                उर्वरक अलार्मिंग सेवा (Fertilizer Early Warning Alert)
+                {language === 'hi' ? 'खाद सुरक्षा अलार्म सेवा' : 'Fertilizer Early Warning Alert'}
               </span>
             </div>
-            <span className="badge badge-pilot">₹59 / SEASON PROTECTION</span>
+            <span className="badge badge-pilot">{language === 'hi' ? '₹59 / सीजन सुरक्षा' : '₹59 / SEASON PROTECTION'}</span>
           </div>
 
           <p style={{ color: 'var(--farmora-platinum)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '14px' }}>
@@ -137,7 +137,9 @@ export const AdvicePage: React.FC = () => {
                 fontSize: '0.85rem'
               }}
             >
-              {fertilizerSubscribed ? '✓ SMS & Voice Alert Active' : 'Activate 1-Week Rain Alert (₹59 / Season)'}
+              {fertilizerSubscribed
+                ? (language === 'hi' ? '✓ अलर्ट सक्रिय' : '✓ SMS & Voice Alert Active')
+                : (language === 'hi' ? '1-हफ्ता पूर्व वर्षा अलर्ट शुरू करें (₹59 / सीजन)' : 'Activate 1-Week Rain Alert (₹59 / Season)')}
             </button>
             <span style={{ fontSize: '0.75rem', color: 'var(--farmora-wheat)', fontFamily: 'var(--font-mono)' }}>
               SMS & WHATSAPP DIRECT PHONE ALARM
@@ -171,7 +173,7 @@ export const AdvicePage: React.FC = () => {
                 }}
               >
                 <Clock size={16} color="var(--farmora-lime)" />
-                {language === 'hi' ? 'आज के कदम (TODAY)' : "TODAY'S ACTIONS"}
+                {language === 'hi' ? 'आज के कदम' : "TODAY'S ACTIONS"}
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -249,7 +251,7 @@ export const AdvicePage: React.FC = () => {
                               fontSize: '0.85rem'
                             }}
                           >
-                            बचत: ₹{item.estimated_benefit_inr}
+                            {language === 'hi' ? 'बचत' : 'Savings'}: ₹{item.estimated_benefit_inr}
                           </div>
                         )}
                       </div>
@@ -273,7 +275,11 @@ export const AdvicePage: React.FC = () => {
                           }}
                         >
                           {isPlayingThis ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                          <span>{isPlayingThis ? 'Stop Audio' : 'Listen Voice Advice'}</span>
+                          <span>
+                            {isPlayingThis
+                              ? (language === 'hi' ? 'आवाज़ रोकें' : 'Stop Audio')
+                              : (language === 'hi' ? 'सलाह सुनें (Audio)' : 'Listen Voice Advice')}
+                          </span>
                         </button>
 
                         <button
@@ -305,7 +311,7 @@ export const AdvicePage: React.FC = () => {
                           }}
                         >
                           <div style={{ fontWeight: 700, color: 'var(--farmora-wheat)', marginBottom: '8px' }}>
-                            मॉडल साक्ष्य (Model Evidence):
+                            {language === 'hi' ? 'मॉडल साक्ष्य:' : 'Model Evidence:'}
                           </div>
                           <div style={{ color: 'var(--farmora-platinum)', lineHeight: 1.6 }}>
                             {item.scientific_justification}

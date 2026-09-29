@@ -27,7 +27,7 @@ export const DigitalTwinSandbox: React.FC = () => {
   const simulatedMoisture = Math.min(42, Math.max(18, +(31.4 + (rainOverride * 0.45) - (tempOverride * 0.8) + (canalHours * 0.25)).toFixed(1)));
   const recommendedIrrigation = simulatedMoisture >= 30 ? 0 : +(30 - simulatedMoisture).toFixed(1);
   const fuelSavingsInr = recommendedIrrigation === 0 ? Math.round(1450 + (rainOverride * 15)) : 0;
-  const pondingRisk = rainOverride > 25 ? 'HIGH (जलभराव संभावना)' : rainOverride > 15 ? 'MODERATE (मध्यम)' : 'LOW (सामान्य)';
+  const pondingRisk = rainOverride > 25 ? (hi ? 'उच्च जोखिम (जलभराव संभावना)' : 'High Risk') : rainOverride > 15 ? (hi ? 'मध्यम जोखिम' : 'Moderate Risk') : (hi ? 'सामान्य (कम जोखिम)' : 'Low Risk');
 
   const handleReset = () => {
     setRainOverride(12);
@@ -88,7 +88,7 @@ export const DigitalTwinSandbox: React.FC = () => {
                 </span>
               </div>
               <h2 style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)', fontWeight: 800, color: '#ffffff', margin: '4px 0 6px' }}>
-                {hi ? <>कृषि परिदृश्य <em>सिम्युलेटर (What-If Analysis)</em></> : <>What-If <em>Agricultural Scenario Simulator</em></>}
+                {hi ? <>कृषि परिदृश्य <em>सिम्युलेटर</em></> : <>What-If <em>Agricultural Scenario Simulator</em></>}
               </h2>
               <p style={{ color: '#94a3b8', fontSize: '0.92rem', maxWidth: '650px', lineHeight: 1.5 }}>
                 {hi
@@ -141,7 +141,7 @@ export const DigitalTwinSandbox: React.FC = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                 <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#cbd5e1' }}>
-                  {hi ? 'परिदृश्य चर (Scenario Variables)' : 'Scenario Control Inputs'}
+                  {hi ? 'परिदृश्य नियंत्रण' : 'Scenario Control Inputs'}
                 </span>
                 <button
                   onClick={handleReset}
@@ -163,7 +163,7 @@ export const DigitalTwinSandbox: React.FC = () => {
               {/* Slider 1: Rain Override */}
               <div style={{ marginBottom: '1.25rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '6px' }}>
-                  <span style={{ color: '#93c5fd' }}>🌧️ {hi ? 'वर्षा बदलाव (Rainfall Override)' : 'Rainfall Override'}</span>
+                  <span style={{ color: '#93c5fd' }}>🌧️ {hi ? 'वर्षा बदलाव' : 'Rainfall Override'}</span>
                   <span style={{ fontWeight: 800, color: '#38bdf8' }}>{rainOverride} mm</span>
                 </div>
                 <input
@@ -176,16 +176,16 @@ export const DigitalTwinSandbox: React.FC = () => {
                   style={{ width: '100%', accentColor: '#38bdf8' }}
                 />
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#64748b' }}>
-                  <span>0 mm (सूखा)</span>
+                  <span>{hi ? '0 मिमी (सूखा)' : '0 mm (Dry)'}</span>
                   <span>25 mm</span>
-                  <span>50 mm (भारी वर्षा)</span>
+                  <span>{hi ? '50 मिमी (भारी वर्षा)' : '50 mm (Heavy)'}</span>
                 </div>
               </div>
 
               {/* Slider 2: Temperature Override */}
               <div style={{ marginBottom: '1.25rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '6px' }}>
-                  <span style={{ color: '#fde047' }}>🌡️ {hi ? 'तापमान बदलाव (Temp Delta)' : 'Temperature Delta'}</span>
+                  <span style={{ color: '#fde047' }}>🌡️ {hi ? 'तापमान बदलाव' : 'Temperature Delta'}</span>
                   <span style={{ fontWeight: 800, color: '#facc15' }}>{tempOverride > 0 ? `+${tempOverride}` : tempOverride}°C</span>
                 </div>
                 <input
@@ -198,17 +198,17 @@ export const DigitalTwinSandbox: React.FC = () => {
                   style={{ width: '100%', accentColor: '#facc15' }}
                 />
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#64748b' }}>
-                  <span>-5°C (शीतलहर)</span>
-                  <span>0°C (सामान्य)</span>
-                  <span>+5°C (लू/हीटवेव)</span>
+                  <span>{hi ? '-5°C (शीतलहर)' : '-5°C (Cold snap)'}</span>
+                  <span>{hi ? '0°C (सामान्य)' : '0°C (Normal)'}</span>
+                  <span>{hi ? '+5°C (लू)' : '+5°C (Heatwave)'}</span>
                 </div>
               </div>
 
               {/* Slider 3: Canal Water Hours */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '6px' }}>
-                  <span style={{ color: '#6ee7b7' }}>💧 {hi ? 'नहर जल आपूर्ति (Canal Release)' : 'Canal Water Release'}</span>
-                  <span style={{ fontWeight: 800, color: '#34d399' }}>{canalHours} hrs</span>
+                  <span style={{ color: '#6ee7b7' }}>💧 {hi ? 'नहर जल आपूर्ति' : 'Canal Water Release'}</span>
+                  <span style={{ fontWeight: 800, color: '#34d399' }}>{canalHours} {hi ? 'घंटे' : 'hrs'}</span>
                 </div>
                 <input
                   type="range"
@@ -220,9 +220,9 @@ export const DigitalTwinSandbox: React.FC = () => {
                   style={{ width: '100%', accentColor: '#34d399' }}
                 />
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#64748b' }}>
-                  <span>0 घंटे (बंद)</span>
-                  <span>12 घंटे</span>
-                  <span>24 घंटे (पूर्ण प्रवाह)</span>
+                  <span>{hi ? '0 घंटे (बंद)' : '0 hrs (Closed)'}</span>
+                  <span>{hi ? '12 घंटे' : '12 hrs'}</span>
+                  <span>{hi ? '24 घंटे (पूर्ण प्रवाह)' : '24 hrs (Full flow)'}</span>
                 </div>
               </div>
             </div>
@@ -249,13 +249,13 @@ export const DigitalTwinSandbox: React.FC = () => {
                   {/* Root Zone Moisture Metric */}
                   <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '12px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
                     <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase' }}>
-                      {hi ? 'जड़ क्षेत्र नमी (Root VWC)' : 'Root-Zone Moisture'}
+                      {hi ? 'जड़ क्षेत्र नमी' : 'Root-Zone Moisture'}
                     </div>
                     <div style={{ fontSize: '1.6rem', fontWeight: 800, color: simulatedMoisture >= 30 ? '#34d399' : '#f87171', margin: '2px 0' }}>
                       {simulatedMoisture}%
                     </div>
                     <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                      Field Capacity: 34%
+                      {hi ? 'संतृप्ति सीमा: 34%' : 'Field Capacity: 34%'}
                     </div>
                   </div>
 
@@ -268,7 +268,7 @@ export const DigitalTwinSandbox: React.FC = () => {
                       {recommendedIrrigation} mm
                     </div>
                     <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                      {recommendedIrrigation === 0 ? 'ट्यूबवेल बंद रखें' : 'सिंचाई आवश्यक'}
+                      {recommendedIrrigation === 0 ? (hi ? 'ट्यूबवेल बंद रखें' : 'Pumps Off') : (hi ? 'सिंचाई आवश्यक' : 'Irrigate')}
                     </div>
                   </div>
                 </div>
@@ -305,7 +305,7 @@ export const DigitalTwinSandbox: React.FC = () => {
                   {hi ? 'अनुमानित बचत (डीजल व बिजली):' : 'Estimated Energy/Fuel Savings:'}
                 </span>
                 <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#34d399' }}>
-                  +₹{fuelSavingsInr} / एकड़
+                  +₹{fuelSavingsInr} / {hi ? 'एकड़' : 'acre'}
                 </span>
               </div>
             </div>

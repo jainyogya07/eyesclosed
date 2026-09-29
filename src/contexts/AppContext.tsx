@@ -30,9 +30,9 @@ interface AppContextType {
 
 const defaultLocation: LocationInfo = {
   panchayatCode: '0924001001',
-  panchayatName: 'Malihabad (मलिहाबाद)',
-  district: 'Lucknow (लखनऊ)',
-  state: 'Uttar Pradesh (उत्तर प्रदेश)',
+  panchayatName: 'Malihabad',
+  district: 'Lucknow',
+  state: 'Uttar Pradesh',
   lat: 26.9167,
   lon: 80.7167
 };
@@ -40,10 +40,27 @@ const defaultLocation: LocationInfo = {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('hi');
+  const [language, setLanguageState] = useState<Language>(() => {
+    try {
+      const saved = localStorage.getItem('kisaan-lang') as Language;
+      return saved === 'hi' || saved === 'en' ? saved : 'en';
+    } catch {
+      return 'en';
+    }
+  });
+
+  const setLanguage = (lang: Language) => {
+    try {
+      localStorage.setItem('kisaan-lang', lang);
+    } catch {
+      // Ignore
+    }
+    setLanguageState(lang);
+  };
+
   const [viewMode, setViewMode] = useState<ViewMode>('simple');
   const [location, setLocation] = useState<LocationInfo>(defaultLocation);
-  const [selectedCrop, setSelectedCrop] = useState<string>('Paddy (धान - बासमती)');
+  const [selectedCrop, setSelectedCrop] = useState<string>('Paddy (Basmati)');
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const [isSignedIn, setIsSignedIn] = useState<boolean>(() => sessionStorage.getItem('kisaan-signed-in') === 'true');
 

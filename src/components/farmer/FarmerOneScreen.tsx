@@ -210,16 +210,28 @@ export const FarmerOneScreen: React.FC = () => {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', fontSize: '0.82rem' }}>
             <div style={{ background: '#f0f9ff', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid #bae6fd' }}>
-              <strong style={{ color: '#0369a1' }}>1. Model 3 (वर्षा डाउनस्केलिंग):</strong>
-              <div style={{ marginTop: '4px' }}>12.4 मिमी बारिश का 84% विश्वास अंतराल (1-किमी ग्रिड)।</div>
+              <strong style={{ color: '#0369a1' }}>
+                {hi ? '1. वर्षा मॉडल (M3):' : '1. Rainfall Model (M3):'}
+              </strong>
+              <div style={{ marginTop: '4px' }}>
+                {hi ? '12.4 मिमी बारिश का 84% विश्वास अंतराल (1-किमी ग्रिड)।' : '12.4 mm rainfall predicted in 24h with 84% probability.'}
+              </div>
             </div>
             <div style={{ background: '#ecfdf5', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid #a7f3d0' }}>
-              <strong style={{ color: '#047857' }}>2. Model 2 (मिट्टी नमी हाइड्रोलॉजी):</strong>
-              <div style={{ marginTop: '4px' }}>जड़ क्षेत्र में 31.4% नमी (फील्ड क्षमता 34% के करीब)।</div>
+              <strong style={{ color: '#047857' }}>
+                {hi ? '2. मिट्टी नमी मॉडल (M2):' : '2. Soil Hydrology (M2):'}
+              </strong>
+              <div style={{ marginTop: '4px' }}>
+                {hi ? 'जड़ क्षेत्र में 31.4% नमी (फील्ड क्षमता 34% के करीब)।' : 'Root-zone moisture is sufficient at 31.4% VWC.'}
+              </div>
             </div>
             <div style={{ background: '#fffbeb', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid #fde68a' }}>
-              <strong style={{ color: '#b45309' }}>3. Model 3 (ETc फसल जल मांग):</strong>
-              <div style={{ marginTop: '4px' }}>दैनिक वाष्पोत्सर्जन 5.8 मिमी/दिन (पर्याप्त मिट्टी नमी)।</div>
+              <strong style={{ color: '#b45309' }}>
+                {hi ? '3. फसल जल मांग (M3 ETc):' : '3. Crop Water Demand (M3 ETc):'}
+              </strong>
+              <div style={{ marginTop: '4px' }}>
+                {hi ? 'दैनिक वाष्पोत्सर्जन 5.8 मिमी/दिन (पर्याप्त मिट्टी नमी)।' : 'Daily evapotranspiration loss is 5.8 mm/day.'}
+              </div>
             </div>
           </div>
         </div>
