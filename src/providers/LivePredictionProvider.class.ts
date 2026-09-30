@@ -154,9 +154,13 @@ export class LivePredictionProvider implements PredictionProvider {
   }
 
   async getModelCatalog(): Promise<ModelStatus[]> {
-    return this.fetchWithFallback('/orchestration/models', () =>
-      this.fallbackMock.getModelCatalog()
+    const raw = await this.fetchWithFallback<ModelStatus[] | { models?: ModelStatus[] }>(
+      '/orchestration/models',
+      () => this.fallbackMock.getModelCatalog()
     );
+    if (Array.isArray(raw)) return raw;
+    if (raw && Array.isArray(raw.models)) return raw.models;
+    return this.fallbackMock.getModelCatalog();
   }
 
   getDataMode(): "mock" | "live" {

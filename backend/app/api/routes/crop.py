@@ -24,6 +24,7 @@ def get_crop_phenology(
         }
     )
 
+@router.get("/crop/state/{panchayat_code}")
 @router.get("/crops/phenology/{panchayat_code}")
 @router.get("/crop/phenology/{panchayat_code}")
 def get_panchayat_crop_phenology(panchayat_code: str):

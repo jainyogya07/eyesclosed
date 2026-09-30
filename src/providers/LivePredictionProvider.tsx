@@ -126,7 +126,9 @@ export const LivePredictionProvider: React.FC<{ children: React.ReactNode }> = (
       flood: floodResult.status === 'fulfilled' ? floodResult.value : null,
       hazards: hazardsResult.status === 'fulfilled' ? hazardsResult.value : null,
       advisory: advisoryResult.status === 'fulfilled' ? advisoryResult.value : null,
-      modelCatalog: catalogResult.status === 'fulfilled' ? catalogResult.value : [],
+      modelCatalog: catalogResult.status === 'fulfilled' && Array.isArray(catalogResult.value)
+        ? catalogResult.value
+        : [],
     });
 
     setLastUpdated(new Date());
@@ -145,10 +147,11 @@ export const LivePredictionProvider: React.FC<{ children: React.ReactNode }> = (
     fetchAll();
   }, [panchayatCode]);
 
+  const catalog = Array.isArray(data.modelCatalog) ? data.modelCatalog : [];
   const modelCount = {
-    total: data.modelCatalog.length,
-    frozen: data.modelCatalog.filter((m) => m.status === 'FROZEN').length,
-    active: data.modelCatalog.filter((m) => m.status !== 'NOT_AVAILABLE').length,
+    total: catalog.length,
+    frozen: catalog.filter((m) => m.status === 'FROZEN').length,
+    active: catalog.filter((m) => m.status !== 'NOT_AVAILABLE').length,
   };
 
   return (

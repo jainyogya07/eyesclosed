@@ -294,7 +294,7 @@ def test_live_panchayat_domain_endpoints(client):
     """Verifies all Panchayat endpoints called by frontend LivePredictionProvider."""
     endpoints = [
         "/api/v1/soil/moisture/PC_092805",
-        "/api/v1/crops/phenology/PC_092805",
+        "/api/v1/crop/state/0924001001",
         "/api/v1/irrigation/demand/PC_092805",
         "/api/v1/yield/forecast/PC_092805",
         "/api/v1/hazards/flood/PC_092805",

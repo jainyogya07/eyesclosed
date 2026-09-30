@@ -17,7 +17,7 @@ export const ModelLabPage: React.FC = () => {
   const hi = language !== 'en';
   const [expandedModel, setExpandedModel] = useState<string | null>(null);
 
-  const models = data.modelCatalog;
+  const models = Array.isArray(data.modelCatalog) ? data.modelCatalog : [];
 
   return (
     <div style={{ maxWidth: '1360px', margin: '0 auto', padding: '2rem' }}>

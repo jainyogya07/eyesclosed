@@ -18,6 +18,14 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+function asCatalog(data: unknown): ModelStatus[] {
+  if (Array.isArray(data)) return data as ModelStatus[];
+  if (data && typeof data === 'object' && Array.isArray((data as { models?: unknown }).models)) {
+    return (data as { models: ModelStatus[] }).models;
+  }
+  return [];
+}
+
 export interface WeatherPayload {
   temperature_c: number;
   temperature_lower: number;
@@ -209,7 +217,7 @@ export const panchayatApi = {
 
 // Model catalog
 export const modelsApi = {
-  getCatalog: () => apiFetch<ModelStatus[]>('/orchestration/models'),
+  getCatalog: async () => asCatalog(await apiFetch<unknown>('/orchestration/models')),
 };
 
 // Health
