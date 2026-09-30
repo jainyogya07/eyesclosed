@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -13,38 +13,94 @@ import {
   Sprout,
   TrendingUp,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Sparkles,
+  RotateCcw,
+  Navigation,
+  Sliders,
+  CheckCircle2
 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
+import { useFarm, PILOT_PANCHAYATS_CATALOG } from '../contexts/FarmContext';
+import { detectUserLocation } from '../services/geoService';
 import heroAerial from '../../assets/images/kisaan-aerial-hero.png';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { language, location } = useApp();
+  const { language, location, setLocation } = useApp();
+  const { farm, loadDemoFarm, configureFarm, resetFarm } = useFarm();
   const hi = language === 'hi';
+  const en = !hi;
+
+  const [detecting, setDetecting] = useState(false);
+  const [geoMsg, setGeoMsg] = useState<string | null>(null);
+
+  const handleAutoDetectLocation = async () => {
+    setDetecting(true);
+    setGeoMsg(en ? 'Detecting GPS coordinates...' : 'GPS स्थान खोजा जा रहा है...');
+    try {
+      const res = await detectUserLocation(PILOT_PANCHAYATS_CATALOG);
+      if (res.success && res.nearestPanchayat) {
+        const p = res.nearestPanchayat;
+        setLocation({
+          panchayatCode: p.code,
+          panchayatName: p.name,
+          district: p.district,
+          state: p.state,
+          lat: p.lat,
+          lon: p.lon
+        });
+
+        if (farm.isConfigured) {
+          configureFarm({
+            panchayat: p,
+            soil: {
+              ...farm.soil,
+              type: p.soilType,
+              ph: p.ph
+            }
+          });
+        }
+        setGeoMsg(
+          en
+            ? `Detected: ${res.detectedPlaceName || p.name} (${res.distanceKm} km away)`
+            : `स्थान मिला: ${p.hi} (${res.distanceKm} किमी दूर)`
+        );
+        setTimeout(() => setGeoMsg(null), 4000);
+      } else {
+        setGeoMsg(res.errorMessage || (en ? 'Location unavailable' : 'स्थान उपलब्ध नहीं'));
+        setTimeout(() => setGeoMsg(null), 4000);
+      }
+    } catch {
+      setGeoMsg(en ? 'GPS detection failed' : 'GPS डिटेक्शन विफल');
+      setTimeout(() => setGeoMsg(null), 3000);
+    } finally {
+      setDetecting(false);
+    }
+  };
 
   const solutionModules = [
     [
       Droplets,
-      hi ? 'जल सेतु (Water Intelligence)' : 'Water Intelligence',
-      hi ? 'मिट्टी की नमी, वाष्पीकरण और सिंचाई के सही समय की सटीक सलाह।' : 'Root-zone moisture, ET budget, and precision irrigation timing.',
-      '/irrigation'
+      hi ? 'जल व मृदा सेतु' : 'Water & Soil Moisture',
+      hi ? 'मिट्टी की नमी, वाष्पीकरण और सिंचाई के सही समय की सटीक सलाह।' : 'Root-zone moisture, ET0 budget, and precision irrigation timing.',
+      '/water'
     ],
     [
       Sprout,
-      hi ? 'फसल सेतु (Crop Intelligence)' : 'Crop Intelligence',
+      hi ? 'फसल उपयुक्तता व स्वास्थ्य' : 'Crop Intelligence',
       hi ? 'सेंटिनल-2 उपग्रह से फसल की अवस्था, स्वास्थ्य व पोषक तत्व मार्गदर्शन।' : 'Sentinel-2 phenology tracking, health index, and nutrient guidance.',
-      '/agriculture'
+      '/crops'
     ],
     [
       ShieldCheck,
-      hi ? 'जोखिम सेतु (Risk Intelligence)' : 'Risk Intelligence',
+      hi ? 'जलवायु जोखिम व अलर्ट' : 'Risk & Hazard Intelligence',
       hi ? 'बाढ़, पाला, लू और सूखे की 7-दिन पहले अग्रिम चेतावनी व बचाव।' : 'Early warnings for flood, frost, heat waves, and waterlogging.',
-      '/hazards'
+      '/risks'
     ],
     [
       Layers,
-      hi ? 'डिजिटल ट्विन (Digital Twin 3D)' : 'Digital Twin 3D',
+      hi ? 'डिजिटल ट्विन 3D' : '3D Digital Twin Simulation',
       hi ? 'आपके गांव और खेत का 3D भौतिकी-आधारित सिमुलेशन मॉडल।' : 'Physics-informed 3D simulation of village terrain & microclimates.',
       '/digital-twin'
     ],
@@ -134,15 +190,332 @@ export const LandingPage: React.FC = () => {
                 : 'Connecting Indian agriculture with 1-km hyperlocal weather, satellite soil telemetry, and predictive AI.'}
             </p>
             <div className="plantiq-hero-actions">
-              <button onClick={() => navigate('/panchayat')} className="plantiq-primary">
-                {hi ? 'मेरी पंचायत ग्रिड देखें' : 'Explore Panchayat Grid'} <ChevronRight size={19} />
+              <button onClick={() => navigate(farm.isConfigured ? '/my-farm' : '/setup')} className="plantiq-primary">
+                {farm.isConfigured
+                  ? (hi ? 'मेरा खेत डैशबोर्ड खोलें' : 'Open My Farm Dashboard')
+                  : (hi ? 'अपना खेत सेट करें' : 'Start Farm Setup')}{' '}
+                <ChevronRight size={19} />
+              </button>
+              <button
+                type="button"
+                onClick={handleAutoDetectLocation}
+                disabled={detecting}
+                className="plantiq-secondary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                <Navigation size={16} />
+                <span>{detecting ? (hi ? 'खोज रहे हैं...' : 'Detecting...') : hi ? 'मेरा स्थान पहचानें (GPS)' : 'Use My Location'}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/learn')}
+                className="plantiq-secondary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(225, 29, 72, 0.15)', borderColor: 'rgba(225, 29, 72, 0.4)', color: '#ffffff' }}
+              >
+                <span>🎬</span>
+                <span>{hi ? 'सीखें (Kisan Shorts)' : 'Kisan Shorts'}</span>
               </button>
               <Link to="/digital-twin" className="plantiq-secondary">
                 {hi ? 'डिजिटल ट्विन 3D' : 'Digital Twin 3D'}
               </Link>
             </div>
+            {geoMsg && (
+              <div
+                style={{
+                  marginTop: '12px',
+                  display: 'inline-block',
+                  background: 'rgba(255, 255, 255, 0.92)',
+                  color: '#0369a1',
+                  padding: '6px 14px',
+                  borderRadius: '999px',
+                  fontSize: '0.8rem',
+                  fontWeight: 700
+                }}
+              >
+                {geoMsg}
+              </div>
+            )}
           </motion.div>
         </div>
+      </section>
+
+      {/* 1.5. FARM COMMAND CENTER & RE-ANALYSIS DASHBOARD */}
+      <section
+        style={{
+          maxWidth: '1200px',
+          margin: '-36px auto 24px',
+          padding: '0 1rem',
+          position: 'relative',
+          zIndex: 20
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          style={{
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(16px)',
+            borderRadius: '20px',
+            border: farm.isConfigured ? '1.5px solid #86efac' : '1.5px solid #cbd5e1',
+            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.08)',
+            padding: '24px 28px'
+          }}
+        >
+          {farm.isConfigured ? (
+            <div>
+              {/* Header */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '12px',
+                  paddingBottom: '16px',
+                  borderBottom: '1px solid #f1f5f9',
+                  marginBottom: '16px'
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <span
+                      style={{
+                        background: '#dcfce7',
+                        color: '#15803d',
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        padding: '3px 10px',
+                        borderRadius: '999px',
+                        letterSpacing: '0.04em'
+                      }}
+                    >
+                      {hi ? 'सक्रिय खेत विश्लेषण' : 'ACTIVE FARM INTELLIGENCE'}
+                    </span>
+                    {farm.isDemo && (
+                      <span
+                        style={{
+                          background: '#fef3c7',
+                          color: '#b45309',
+                          fontSize: '0.68rem',
+                          fontWeight: 800,
+                          padding: '2px 8px',
+                          borderRadius: '999px'
+                        }}
+                      >
+                        DEMO MODE
+                      </span>
+                    )}
+                  </div>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                    {hi ? farm.panchayat.hi : farm.panchayat.name} · {farm.panchayat.district}, {farm.panchayat.state}
+                  </h2>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/setup')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 16px',
+                      borderRadius: '10px',
+                      border: '1.5px solid #059669',
+                      background: '#ecfdf5',
+                      color: '#047857',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <RotateCcw size={14} />
+                    <span>{hi ? 'नया विश्लेषण करें / खेत बदलें' : 'Run New Analysis / Switch Farm'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => navigate('/learn')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 16px',
+                      borderRadius: '10px',
+                      border: '1.5px solid #f43f5e',
+                      background: '#fff1f2',
+                      color: '#e11d48',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <span>🎬</span>
+                    <span>{hi ? 'सीखें (रील्स)' : 'Kisan Shorts'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => navigate('/my-farm')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 18px',
+                      borderRadius: '10px',
+                      border: 'none',
+                      background: '#059669',
+                      color: '#ffffff',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)'
+                    }}
+                  >
+                    <Sprout size={15} />
+                    <span>{hi ? 'मेरा खेत केंद्र' : 'Go to My Farm'}</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* 4 Metrics Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+                <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                    {hi ? 'मुख्य फसल व अवस्था' : 'Primary Crop & Stage'}
+                  </div>
+                  <div style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', marginTop: '4px' }}>
+                    {hi ? (farm.crop.nameHi || farm.crop.nameEn) : (farm.crop.nameEn || farm.crop.nameHi)}
+                  </div>
+                  <div style={{ fontSize: '0.76rem', color: '#059669', fontWeight: 700, marginTop: '2px' }}>
+                    {farm.crop.stage || 'Vegetative'} • {farm.landArea} {farm.landUnit === 'bigha' ? (hi ? 'बीघा' : 'Bigha') : (hi ? 'एकड़' : 'Acre')}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                    {hi ? 'मिट्टी व जल साधन' : 'Soil Physics & Water Source'}
+                  </div>
+                  <div style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', marginTop: '4px' }}>
+                    {farm.soil.type || farm.panchayat.soilType}
+                  </div>
+                  <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '2px' }}>
+                    pH: <strong>{farm.soil.ph}</strong> • {farm.waterSource === 'tubewell' ? (hi ? 'नलकूप' : 'Tubewell') : (hi ? 'नहर' : 'Canal')}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                    {hi ? 'रूट-ज़ोन नमी व वर्षा' : 'Root Moisture & Rain Forecast'}
+                  </div>
+                  <div style={{ fontSize: '1rem', fontWeight: 800, color: '#0284c7', marginTop: '4px' }}>
+                    31.4% {hi ? '(पर्याप्त)' : '(Optimal)'}
+                  </div>
+                  <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '2px' }}>
+                    {hi ? '12.4 मिमी बारिश अनुमान (84%)' : '12.4 mm Rain Expected (84%)'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f0fdf4', padding: '14px', borderRadius: '12px', border: '1px solid #bbf7d0' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#15803d', fontWeight: 700, textTransform: 'uppercase' }}>
+                    {hi ? 'आज की मुख्य कार्य सलाह' : "Today's Action Advisory"}
+                  </div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0f172a', marginTop: '4px', lineHeight: 1.3 }}>
+                    {hi ? 'आज सिंचाई रोकें — बारिश से पूर्ति होगी' : 'Hold irrigation today — rainfall incoming'}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#059669', fontWeight: 700, marginTop: '2px' }}>
+                    {hi ? 'बचत: ~₹1,450 ऊर्जा खर्च' : 'Saves ~₹1,450 pumping power'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '16px'
+              }}
+            >
+              <div>
+                <span
+                  style={{
+                    background: '#ecfdf5',
+                    color: '#059669',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    letterSpacing: '0.04em'
+                  }}
+                >
+                  {hi ? 'हाइपरलोकल कृषि इंटेलिजेंस' : 'HYPERLOCAL CLIMATE INTELLIGENCE'}
+                </span>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: '6px 0 4px' }}>
+                  {hi ? 'अपने खेत का 1-किमी AI विश्लेषण शुरू करें' : 'Start Your 1-km Hyperlocal Farm Analysis'}
+                </h3>
+                <p style={{ color: '#64748b', fontSize: '0.86rem', margin: 0, maxWidth: '640px' }}>
+                  {hi
+                    ? 'अपनी पंचायत, फसल और मिट्टी का चयन करें या तुरंत अनुभव करने के लिए हमारा मलिहाबाद पायलट डेमो देखें।'
+                    : 'Select your Panchayat, crop stage, and soil access in 8 easy steps, or instantly test with our pilot demo.'}
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={loadDemoFarm}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '10px 18px',
+                    borderRadius: '12px',
+                    border: '1.5px solid #cbd5e1',
+                    background: '#ffffff',
+                    color: '#334155',
+                    fontSize: '0.84rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <Sparkles size={15} color="#059669" />
+                  <span>{hi ? 'डेमो खेत देखें' : 'Try Demo Farm'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => navigate('/setup')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '10px 20px',
+                    borderRadius: '12px',
+                    border: 'none',
+                    background: '#059669',
+                    color: '#ffffff',
+                    fontSize: '0.84rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 16px rgba(5, 150, 105, 0.25)'
+                  }}
+                >
+                  <Sprout size={16} />
+                  <span>{hi ? 'अपना खेत जोड़ें' : 'Configure Farm (8 Steps)'}</span>
+                  <ArrowRight size={15} />
+                </button>
+              </div>
+            </div>
+          )}
+        </motion.div>
       </section>
 
       {/* 2. REAL-TIME TICKER BAR */}

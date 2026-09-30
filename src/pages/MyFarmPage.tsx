@@ -1,495 +1,747 @@
 import React, { useState } from 'react';
-import { useApp, LocationInfo } from '../contexts/AppContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import {
   MapPin,
-  Volume2,
-  VolumeX,
-  Droplet,
-  CloudSun,
   Sprout,
-  Compass,
-  Search,
-  Check,
-  ChevronDown,
-  Navigation,
-  Wind,
-  Sparkles,
+  Droplets,
+  CloudRain,
   Thermometer,
-  ArrowRight
+  ArrowRight,
+  Sparkles,
+  Volume2,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle2,
+  Info,
+  Calendar,
+  Layers,
+  Ruler,
+  ShieldCheck,
+  AlertTriangle,
+  RotateCcw
 } from 'lucide-react';
-import { ScientificDrawer } from '../components/common/ScientificDrawer';
-import { StatusBadge } from '../components/common/StatusBadge';
-import { CinematicFarmBackground } from '../components/common/CinematicFarmBackground';
-
-const POPULAR_LOCATIONS = [
-  {
-    panchayatCode: '0924001001',
-    panchayatNameEn: 'Malihabad',
-    panchayatNameHi: 'मलिहाबाद',
-    districtEn: 'Lucknow',
-    districtHi: 'लखनऊ',
-    stateEn: 'Uttar Pradesh',
-    stateHi: 'उत्तर प्रदेश',
-    lat: 26.9167,
-    lon: 80.7167
-  },
-  {
-    panchayatCode: '0924001002',
-    panchayatNameEn: 'Bakshi Ka Talab',
-    panchayatNameHi: 'बख्शी का तालाब',
-    districtEn: 'Lucknow',
-    districtHi: 'लखनऊ',
-    stateEn: 'Uttar Pradesh',
-    stateHi: 'उत्तर प्रदेश',
-    lat: 27.0125,
-    lon: 80.9312
-  },
-  {
-    panchayatCode: '0924001003',
-    panchayatNameEn: 'Mohanlalganj',
-    panchayatNameHi: 'मोहनलालगंज',
-    districtEn: 'Lucknow',
-    districtHi: 'लखनऊ',
-    stateEn: 'Uttar Pradesh',
-    stateHi: 'उत्तर प्रदेश',
-    lat: 26.6712,
-    lon: 80.9854
-  },
-  {
-    panchayatCode: '0924001004',
-    panchayatNameEn: 'Kakori',
-    panchayatNameHi: 'काकोरी',
-    districtEn: 'Lucknow',
-    districtHi: 'लखनऊ',
-    stateEn: 'Uttar Pradesh',
-    stateHi: 'उत्तर प्रदेश',
-    lat: 26.8821,
-    lon: 80.7981
-  }
-];
-
-const CROPS = [
-  { id: 'paddy', nameHi: 'धान', nameEn: 'Paddy', stageHi: 'पुष्पन अवस्था', stageEn: 'Flowering Stage' },
-  { id: 'mango', nameHi: 'आम का बाग', nameEn: 'Mango Orchard', stageHi: 'फल वृद्धि अवस्था', stageEn: 'Fruit Growth' },
-  { id: 'wheat', nameHi: 'गेहूं', nameEn: 'Wheat', stageHi: 'बुवाई तैयारी', stageEn: 'Pre-Sowing' },
-  { id: 'mustard', nameHi: 'सरसों', nameEn: 'Mustard', stageHi: 'वानस्पतिक वृद्धि', stageEn: 'Vegetative' }
-];
+import { useFarm } from '../contexts/FarmContext';
+import { useApp } from '../contexts/AppContext';
 
 export const MyFarmPage: React.FC = () => {
-  const { language, location, setLocation, selectedCrop, setSelectedCrop, speakText, isSpeaking } = useApp();
-  const [showLocationModal, setShowLocationModal] = useState(false);
-  const [gpsLoading, setGpsLoading] = useState(false);
-  const hi = language === 'hi';
+  const { farm, loadDemoFarm, playVoice, stopVoice, isSpeaking } = useFarm();
+  const { language } = useApp();
+  const navigate = useNavigate();
 
-  const currentCropObj = CROPS.find((c) => selectedCrop.includes(c.nameEn)) || CROPS[0];
+  const en = language === 'en';
+  const [showWhy, setShowWhy] = useState(false);
+  const [showWhatTodo, setShowWhatTodo] = useState(false);
 
-  const handleUseGPS = () => {
-    if (!navigator.geolocation) return;
-    setGpsLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocation({
-          panchayatCode: '0924001001',
-          panchayatName: hi ? 'मेरा खेत (GPS स्थान)' : 'My Field (GPS Location)',
-          district: hi ? 'लखनऊ' : 'Lucknow',
-          state: hi ? 'उत्तर प्रदेश' : 'Uttar Pradesh',
-          lat: +pos.coords.latitude.toFixed(4),
-          lon: +pos.coords.longitude.toFixed(4)
-        });
-        setGpsLoading(false);
-        setShowLocationModal(false);
-      },
-      () => {
-        setGpsLoading(false);
-      }
-    );
-  };
-
-  const adviceAudioText =
-    language === 'hi'
-      ? 'किसान भाई, आज आपके खेत के लिए सबसे जरूरी सलाह: आज सिंचाई बिल्कुल रोकें। अगले 18 घंटे में लगभग 12 मिलीमीटर बारिश की प्रबल संभावना है। जमीन में पहले से पर्याप्त नमी है। ट्यूबवेल न चलाने से आपके 350 से 400 रुपये बचेंगे।'
-      : 'Farmer advisory for today: Hold irrigation completely. Expected rainfall of 12 millimeters over the next 18 hours. Root zone moisture is already adequate at 31%. Pumping water today will cause waterlogging and waste electricity.';
-
-  return (
-    <div style={{ position: 'relative', minHeight: 'calc(100vh - 120px)', padding: '2.5rem 1.5rem 6rem 1.5rem', backgroundColor: 'var(--farmora-dark)' }}>
-      {/* Background Animated Farm Environment */}
-      <CinematicFarmBackground variant="golden_farm" showParticles={true} opacity={0.3} />
-
-      <div style={{ maxWidth: '960px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        {/* Top: Location & Crop Bar (Cockpit Glass Bar) */}
-        <div
-          className="farmora-glass-elevated"
-          style={{
-            padding: '18px 24px',
-            marginBottom: '1.75rem',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '14px',
-            borderRadius: 'var(--radius-xl)'
-          }}
-        >
-          {/* Location Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ padding: '8px', borderRadius: '50%', background: 'rgba(182, 178, 67, 0.15)', border: '1px solid rgba(182, 178, 67, 0.3)' }}>
-              <MapPin size={20} color="var(--farmora-lime)" />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--farmora-wheat)', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
-                {language === 'hi' ? 'खेत का स्थान (1-KM GRID)' : 'ACTIVE PLOT GRID'}
-              </div>
-              <button
-                onClick={() => setShowLocationModal(true)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--farmora-light)',
-                  fontSize: '1.05rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: 0
-                }}
-              >
-                <span>{location.panchayatName}</span>
-                <ChevronDown size={16} color="var(--farmora-lime)" />
-              </button>
-            </div>
-          </div>
-
-          {/* Crop Selector Chips */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            {CROPS.map((crop) => {
-              const isSelected = selectedCrop.includes(crop.nameEn);
-              return (
-                <button
-                  key={crop.id}
-                  onClick={() => setSelectedCrop(`${crop.nameEn} (${crop.stageEn})`)}
-                  style={{
-                    padding: '6px 14px',
-                    borderRadius: 'var(--radius-full)',
-                    border: isSelected ? '1.5px solid var(--farmora-lime)' : '1px solid rgba(182, 178, 67, 0.2)',
-                    background: isSelected ? 'var(--farmora-lime)' : 'rgba(251, 251, 251, 0.05)',
-                    color: isSelected ? 'var(--farmora-dark)' : 'var(--farmora-platinum)',
-                    fontSize: '0.8rem',
-                    fontWeight: isSelected ? 800 : 500,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {language === 'hi' ? crop.nameHi : crop.nameEn}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ==============================================================
-            THE SINGLE-SCREEN FARMER ANSWER (Hero Cockpit Card)
-            ============================================================== */}
-        <div
-          className="farmora-glass-elevated"
-          style={{
-            padding: '2.5rem',
-            borderRadius: 'var(--radius-xl)',
-            marginBottom: '1.75rem',
-            border: '2px solid rgba(182, 178, 67, 0.45)',
-            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.7)'
-          }}
-        >
-          {/* Header Badge & Action Time */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '1.25rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span className="badge badge-frozen">M1–M3 VERIFIED DECISION</span>
-              <span style={{ fontSize: '0.82rem', fontFamily: 'var(--font-mono)', color: 'var(--farmora-wheat)' }}>
-                {language === 'hi' ? 'आज के लिए सलाह' : 'TODAY’S PRIME ACTION'}
-              </span>
-            </div>
-
-            <div style={{ fontSize: '0.78rem', color: 'var(--farmora-wheat)', fontFamily: 'var(--font-mono)' }}>
-              VALID UNTIL: 23:59 IST • 1-KM RES
-            </div>
-          </div>
-
-          {/* Main Huge Recommendation Box */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.75rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-            <div
-              style={{
-                width: '88px',
-                height: '88px',
-                borderRadius: 'var(--radius-lg)',
-                backgroundColor: 'rgba(12, 13, 5, 0.8)',
-                border: '2px solid var(--farmora-lime)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '3.4rem',
-                flexShrink: 0,
-                boxShadow: '0 0 25px rgba(182, 178, 67, 0.35)'
-              }}
-            >
-              🌧️
-            </div>
-
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '1.15rem', color: '#38bdf8', fontWeight: 700, marginBottom: '6px' }}>
-                {language === 'hi'
-                  ? 'अगले 18 घंटे में 12.4 मिमी वर्षा की 84% सम्भावना है।'
-                  : '84% probability of 12.4 mm rainfall in the next 18 hours.'}
-              </div>
-
-              <h1
-                style={{
-                  fontSize: 'clamp(2.2rem, 4.5vw, 3.2rem)',
-                  fontWeight: 900,
-                  color: 'var(--farmora-lime)',
-                  lineHeight: 1.1,
-                  letterSpacing: '-0.02em',
-                  marginBottom: '10px',
-                  textShadow: '0 0 25px var(--farmora-lime-glow)'
-                }}
-              >
-                {language === 'hi' ? 'आज सिंचाई रोकें' : 'Hold Irrigation Today'}
-              </h1>
-
-              <p style={{ fontSize: '1.1rem', color: 'var(--farmora-platinum)', lineHeight: 1.6, maxWidth: '680px' }}>
-                {language === 'hi'
-                  ? 'खेत में जड़ों के पास 31% नमी पहले से मौजूद है। आज ट्यूबवेल न चलाने से आपके ₹350–₹400 की बिजली और डीजल की सीधी बचत होगी और फसल जलभराव से बचेगी।'
-                  : 'Root-zone moisture is sufficient at 31% VWC. Skipping pumping today saves ₹350–₹400 in diesel/electricity and prevents root rot.'}
-              </p>
-            </div>
-          </div>
-
-          {/* Voice Player & Audio Bar */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => speakText(adviceAudioText)}
-              className="farmora-btn-primary"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '14px 28px',
-                fontSize: '1rem',
-                background: isSpeaking ? '#ef4444' : 'var(--farmora-lime)',
-                color: isSpeaking ? 'white' : 'var(--farmora-dark)'
-              }}
-            >
-              {isSpeaking ? <VolumeX size={20} /> : <Volume2 size={20} />}
-              <span>
-                {isSpeaking
-                  ? language === 'hi' ? 'आवाज़ रोकें' : 'Stop Audio'
-                  : language === 'hi' ? 'सलाह सुनें (Hindi Audio)' : 'Listen to Advice (Audio)'}
-              </span>
-              {isSpeaking && (
-                <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
-                  <span style={{ width: 3, height: 16, background: 'currentColor', animation: 'audioWaveBar 0.8s infinite ease-in-out' }} />
-                  <span style={{ width: 3, height: 22, background: 'currentColor', animation: 'audioWaveBar 0.6s infinite ease-in-out' }} />
-                  <span style={{ width: 3, height: 12, background: 'currentColor', animation: 'audioWaveBar 0.9s infinite ease-in-out' }} />
-                </div>
-              )}
-            </button>
-            <span style={{ fontSize: '0.85rem', color: 'var(--farmora-wheat)', fontFamily: 'var(--font-mono)' }}>
-              LOCAL DIALECT VOICEOVER SYNTHESIS
-            </span>
-          </div>
-        </div>
-
-        {/* 4 Vital Conditions Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '1.25rem', marginBottom: '1.75rem' }}>
-          <div className="farmora-glass card-hover-tilt" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>
-                {hi ? 'जड़ क्षेत्र नमी' : 'Root-Zone Moisture'}
-              </span>
-              <Droplet size={18} color="var(--farmora-lime)" />
-            </div>
-            <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--farmora-lime)' }}>31.2%</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--farmora-wheat)' }}>0–30 cm Depth VWC ({hi ? 'पर्याप्त' : 'Adequate'})</div>
-          </div>
-
-          <div className="farmora-glass card-hover-tilt" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>
-                {hi ? 'फसल छतरी तापमान' : 'Crop Canopy Temp'}
-              </span>
-              <Thermometer size={18} color="var(--farmora-wheat)" />
-            </div>
-            <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--farmora-wheat)' }}>27.8°C</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)' }}>M1 Downscaled (-0.8°C vs air)</div>
-          </div>
-
-          <div className="farmora-glass card-hover-tilt" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>
-                {hi ? '48 घंटे वर्षा संभावना' : '48h Rain Probability'}
-              </span>
-              <CloudSun size={18} color="#38bdf8" />
-            </div>
-            <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#38bdf8' }}>84%</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)' }}>12.4 mm (M3 Hurdle)</div>
-          </div>
-
-          <div className="farmora-glass card-hover-tilt" style={{ padding: '20px', borderRadius: 'var(--radius-lg)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--farmora-platinum)', fontWeight: 700, textTransform: 'uppercase' }}>
-                {hi ? 'दैनिक वाष्पीकरण (ETc)' : 'Evapotranspiration (ETc)'}
-              </span>
-              <Wind size={18} color="var(--farmora-sage)" />
-            </div>
-            <div style={{ fontSize: '2.2rem', fontWeight: 900, color: 'var(--farmora-light)' }}>5.8 mm</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)' }}>{hi ? 'दैनिक फसल जल मांग' : 'Daily crop water demand'}</div>
-          </div>
-        </div>
-
-        {/* Progressive Disclosure: Why this advice? */}
-        <ScientificDrawer
-          title={hi ? 'यह सलाह क्यों दी गई?' : 'Scientific Basis: Why this advisory?'}
-          whyExplanation={
-            hi ? (
-              <div>
-                आपके चुने हुए क्षेत्र ({location.panchayatName}) में मॉडल 1 (M1) एवं मॉडल 3 (M3) के अनुसार अगले 18 घंटे में 12.4mm वर्षा अनुमानित है। 
-                वर्तमान में मिट्टी में 31.2% नमी उपलब्ध है जो इस फसल की वानस्पतिक मांग (5.8mm/दिन) के लिए 3 दिन तक पर्याप्त है। 
-                अभी पानी देने से मिट्टी संतृप्त होकर जड़ों का श्वसन रोक देगी।
-              </div>
-            ) : (
-              <div>
-                In your selected area ({location.panchayatName}), Models 1 & 3 forecast 12.4mm rainfall within 18 hours. 
-                Root-zone moisture is at 31.2% VWC, which fulfills the 5.8mm/day transpiration demand for the next 3 days. 
-                Irrigating now would oversaturate the soil and trigger hypoxia in the root system.
-              </div>
-            )
-          }
-          evidenceContent={
-            hi ? (
-              <div>
-                मलिहाबाद स्टेशन (AWS_LKO_05) पर स्वतंत्र परीक्षण में मॉडल 1 का MAE 0.4083°C तथा मॉडल 3 का Hurdle RMSE 0.9725 पाया गया। 
-                निर्णय M10 एग्रोनॉमिक लॉजिक द्वारा सत्यापित है।
-              </div>
-            ) : (
-              <div>
-                Independent benchmark evaluation at Malihabad station (AWS_LKO_05) confirmed Model 1 MAE of 0.4083°C and Model 3 Hurdle RMSE of 0.9725. 
-                Advisory recommendation is verified by Model 10 agronomic logic.
-              </div>
-            )
-          }
-          scientificDetails={{
-            modelProvenance: 'M1 (Weather Downscaling) + M3 (Precipitation) + M4 (Soil Moisture) + M10 (Decision Engine)',
-            uncertainty: 'Conformal prediction interval [3.6mm, 6.0mm] with 90% confidence',
-            stationValidation: 'Station AWS_LKO_05 pilot data locked',
-            metrics: {
-              'Soil Field Capacity': '34% VWC',
-              'Permanent Wilting Point': '14% VWC',
-              'Predicted Rain Probability': '84%',
-              'Economic Diesel Savings': '₹350 / acre'
-            }
-          }}
-        />
-      </div>
-
-      {/* Location Modal */}
-      {showLocationModal && (
+  // =========================================================================
+  // STATE A — BEFORE INPUT (NO FARM CONTEXT CONFIGURED)
+  // =========================================================================
+  if (!farm.isConfigured) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        style={{
+          maxWidth: '680px',
+          margin: '3rem auto',
+          padding: '0 1.25rem',
+          textAlign: 'center'
+        }}
+      >
         <div
           style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0, 0, 0, 0.75)',
-            backdropFilter: 'blur(10px)',
-            zIndex: 200,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1.5rem'
+            background: 'rgba(255, 255, 255, 0.92)',
+            backdropFilter: 'blur(12px)',
+            borderRadius: '20px',
+            border: '1px solid rgba(226, 232, 240, 0.8)',
+            padding: '2.5rem 2rem',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.04)'
           }}
         >
           <div
-            className="farmora-glass-elevated"
             style={{
-              width: '100%',
-              maxWidth: '500px',
-              padding: '28px',
-              borderRadius: 'var(--radius-xl)'
+              width: '56px',
+              height: '56px',
+              borderRadius: '16px',
+              background: '#ecfdf5',
+              color: '#059669',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px',
+              border: '1.5px solid #a7f3d0'
             }}
           >
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--farmora-light)', marginBottom: '14px' }}>
-              {language === 'hi' ? 'खेत का स्थान चुनें' : 'Select Farm Location'}
-            </h3>
+            <Sprout size={28} />
+          </div>
 
+          <span
+            style={{
+              background: '#ecfdf5',
+              color: '#047857',
+              fontSize: '0.72rem',
+              fontWeight: 800,
+              padding: '3px 12px',
+              borderRadius: '999px',
+              border: '1px solid #bbf7d0',
+              letterSpacing: '0.04em'
+            }}
+          >
+            MAUSAM SETU PERSONAL ASSISTANT
+          </span>
+
+          <h2
+            style={{
+              fontSize: '1.5rem',
+              color: '#0f172a',
+              fontWeight: 800,
+              margin: '12px 0 8px'
+            }}
+          >
+            {en ? 'Configure Your Farm' : 'अपना खेत सेट करें'}
+          </h2>
+
+          <p
+            style={{
+              fontSize: '0.9rem',
+              color: '#475569',
+              lineHeight: 1.55,
+              maxWidth: '480px',
+              margin: '0 auto 1.5rem'
+            }}
+          >
+            {en
+              ? 'We generate accurate farm advisories only after understanding your 1-km hyperlocal weather, root-zone soil moisture, water access, and crop stage together.'
+              : 'हम आपके खेत के लिए 1-किमी स्थानीय मौसम, मिट्टी की नमी, पानी की उपलब्धता और फसल अवस्था को एक साथ समझने के बाद ही सटीक सलाह देंगे।'}
+          </p>
+
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
-              onClick={handleUseGPS}
-              className="farmora-btn-primary"
+              type="button"
+              onClick={() => navigate('/setup')}
               style={{
-                width: '100%',
-                padding: '12px',
-                fontSize: '0.92rem',
-                marginBottom: '16px',
-                display: 'flex',
+                padding: '10px 22px',
+                borderRadius: '10px',
+                background: '#059669',
+                color: '#ffffff',
+                border: 'none',
+                fontSize: '0.85rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
+                gap: '6px',
+                boxShadow: '0 4px 14px rgba(5, 150, 105, 0.25)'
               }}
             >
-              <Navigation size={18} />
-              <span>{gpsLoading ? (hi ? 'GPS खोज रहा है...' : 'Locating via GPS...') : (hi ? 'वर्तमान डिवाइस GPS स्थान का उपयोग करें' : 'Use Current Device GPS')}</span>
+              <span>{en ? 'CONFIGURE MY FARM' : 'अपना खेत सेट करें'}</span>
+              <ArrowRight size={15} />
             </button>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-              {POPULAR_LOCATIONS.map((loc) => {
-                const name = hi ? loc.panchayatNameHi : loc.panchayatNameEn;
-                const dist = hi ? loc.districtHi : loc.districtEn;
-                const st = hi ? loc.stateHi : loc.stateEn;
-                const isSelected = location.panchayatCode === loc.panchayatCode;
-
-                return (
-                  <button
-                    key={loc.panchayatCode}
-                    onClick={() => {
-                      setLocation({
-                        panchayatCode: loc.panchayatCode,
-                        panchayatName: name,
-                        district: dist,
-                        state: st,
-                        lat: loc.lat,
-                        lon: loc.lon
-                      });
-                      setShowLocationModal(false);
-                    }}
-                    style={{
-                      padding: '12px 16px',
-                      borderRadius: 'var(--radius-md)',
-                      background: isSelected ? 'rgba(182, 178, 67, 0.2)' : 'rgba(251, 251, 251, 0.05)',
-                      border: isSelected ? '1.5px solid var(--farmora-lime)' : '1px solid rgba(182, 178, 67, 0.2)',
-                      color: 'var(--farmora-light)',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      cursor: 'pointer',
-                      textAlign: 'left'
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontWeight: 700 }}>{name}</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--farmora-platinum)' }}>{dist}, {st}</div>
-                    </div>
-                    {isSelected && <Check size={18} color="var(--farmora-lime)" />}
-                  </button>
-                );
-              })}
-            </div>
-
             <button
-              onClick={() => setShowLocationModal(false)}
-              className="farmora-btn-secondary"
-              style={{ width: '100%', padding: '10px' }}
+              type="button"
+              onClick={loadDemoFarm}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '10px',
+                background: '#ffffff',
+                color: '#334155',
+                border: '1.5px solid #cbd5e1',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
             >
-              {hi ? 'बंद करें' : 'Close'}
+              <Sparkles size={15} color="#059669" />
+              <span>{en ? 'TRY DEMO FARM (Malihabad)' : 'डेमो खेत देखें (मलिहाबाद)'}</span>
             </button>
           </div>
         </div>
-      )}
-    </div>
+      </motion.div>
+    );
+  }
+
+  // =========================================================================
+  // STATE B — AFTER INPUT (FARM CONFIGURED)
+  // =========================================================================
+  const audioText = en
+    ? `Farmer friend, for your ${farm.crop.nameEn || farm.crop.nameHi} crop in ${farm.panchayat.name}: Today's primary verdict is: No irrigation needed today. There is an 84% probability of 12.4 millimeters rainfall in the next 24 hours, and root-zone soil moisture is already adequate at 31.4 percent.`
+    : `किसान भाई, ${farm.panchayat.hi} में आपकी फसल ${farm.crop.nameHi} के लिए आज का मुख्य फैसला: आज खेत को पानी देने की जरूरत नहीं है। अगले 24 घंटों में 12.4 मिलीमीटर बारिश की संभावना है और मिट्टी में 31.4 प्रतिशत पर्याप्त नमी मौजूद है।`;
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.07 }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } }
+  };
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      style={{
+        maxWidth: '920px',
+        margin: '0 auto',
+        padding: '1.25rem 1rem 4rem'
+      }}
+    >
+      {/* Top Greeting */}
+      <motion.div variants={itemVariants} style={{ marginBottom: '1.25rem' }}>
+        <div style={{ fontSize: '0.72rem', color: '#059669', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+          {en ? 'NAMASTE • GOOD MORNING' : 'नमस्ते • शुभ प्रभात'}
+        </div>
+        <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', margin: '2px 0 4px' }}>
+          {en ? "Your Farm's Status Today" : 'यह आपके खेत का आज का हाल है'}
+        </h1>
+        <div style={{ fontSize: '0.82rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <span>{en ? farm.panchayat.name : farm.panchayat.hi}</span>
+          <span>•</span>
+          <span>{en ? (farm.crop.nameEn || farm.crop.nameHi) : (farm.crop.nameHi || farm.crop.nameEn)}</span>
+          <span>•</span>
+          <span>{farm.landArea} {farm.landUnit === 'bigha' ? (en ? 'Bigha' : 'बीघा') : (en ? 'Acre' : 'एकड़')}</span>
+          <span>•</span>
+          <span style={{ color: '#059669', fontWeight: 700 }}>
+            {farm.crop.stage || 'Vegetative'}
+          </span>
+        </div>
+      </motion.div>
+
+      {/* PRIMARY DECISION HERO */}
+      <motion.div
+        variants={itemVariants}
+        whileHover={{ translateY: -2 }}
+        style={{
+          background: 'rgba(255, 255, 255, 0.94)',
+          backdropFilter: 'blur(12px)',
+          borderRadius: '18px',
+          border: '1.5px solid #86efac',
+          boxShadow: '0 8px 24px rgba(5, 150, 105, 0.06)',
+          padding: '1.5rem 1.75rem',
+          marginBottom: '1.5rem'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+          <span style={{ background: '#059669', color: '#ffffff', fontSize: '0.7rem', fontWeight: 800, padding: '2px 10px', borderRadius: '999px' }}>
+            {en ? "TODAY'S VERDICT" : 'आज का मुख्य फैसला'}
+          </span>
+          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+            1-km Root-Zone Hydro-Meteorological Model
+          </span>
+        </div>
+
+        <h2
+          style={{
+            fontSize: '1.35rem',
+            color: '#065f46',
+            fontWeight: 900,
+            lineHeight: 1.3,
+            marginBottom: '8px'
+          }}
+        >
+          {en ? 'No Irrigation Needed Today.' : 'आज खेत को पानी देने की ज़रूरत नहीं है।'}
+        </h2>
+
+        <p style={{ fontSize: '0.9rem', color: '#334155', lineHeight: 1.55, marginBottom: '1.25rem', maxWidth: '720px' }}>
+          {en
+            ? '84% probability of 12.4 mm rainfall in the next 24 hours with adequate 31.4% root-zone moisture already present. Hold pumping to avoid unnecessary groundwater extraction and save energy (Estimated savings ~₹1,450 · Illustrative avoided cost).'
+            : 'अगले 24 घंटों में 12.4 मिमी बारिश की 84% संभावना है और मिट्टी में जड़ों के पास 31.4% पर्याप्त नमी मौजूद है। सिंचाई रोककर अनावश्यक भूजल दोहन और बिजली/डीजल लागत बचाएं (अनुमानित बचत ~₹1,450 · Illustrative avoided cost)।'}
+        </p>
+
+        {/* Action Buttons */}
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <button
+            type="button"
+            onClick={() => setShowWhy(!showWhy)}
+            style={{
+              padding: '7px 16px',
+              borderRadius: '999px',
+              border: '1.5px solid #cbd5e1',
+              background: showWhy ? '#f1f5f9' : '#ffffff',
+              color: '#0f172a',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <span>{en ? 'Why?' : 'क्यों?'}</span>
+            {showWhy ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowWhatTodo(!showWhatTodo)}
+            style={{
+              padding: '7px 16px',
+              borderRadius: '999px',
+              border: '1.5px solid #cbd5e1',
+              background: showWhatTodo ? '#f1f5f9' : '#ffffff',
+              color: '#0f172a',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <span>{en ? 'Next Steps' : 'क्या करें?'}</span>
+            {showWhatTodo ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => (isSpeaking ? stopVoice() : playVoice(audioText))}
+            style={{
+              padding: '7px 16px',
+              borderRadius: '999px',
+              border: '1.5px solid #a7f3d0',
+              background: isSpeaking ? '#fee2e2' : '#ecfdf5',
+              color: isSpeaking ? '#dc2626' : '#059669',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <Volume2 size={15} />
+            <span>
+              {isSpeaking
+                ? (en ? 'Stop Audio' : 'बंद करें')
+                : (en ? 'Listen Audio' : 'सलाह सुनें')}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate('/learn')}
+            style={{
+              padding: '7px 16px',
+              borderRadius: '999px',
+              border: '1.5px solid #f43f5e',
+              background: '#fff1f2',
+              color: '#e11d48',
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <span>🎬</span>
+            <span>{en ? 'Watch Kisan Shorts' : 'सीखें (रील्स)'}</span>
+          </button>
+        </div>
+
+        {/* Expandable Why Drawer */}
+        <AnimatePresence>
+          {showWhy && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              style={{
+                marginTop: '14px',
+                paddingTop: '12px',
+                borderTop: '1px solid #e2e8f0',
+                fontSize: '0.82rem',
+                color: '#334155',
+                overflow: 'hidden'
+              }}
+            >
+              <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                {en ? 'Scientific Reasons Behind Today’s Verdict:' : 'इस निर्णय के वैज्ञानिक कारण:'}
+              </div>
+              <ul style={{ margin: 0, paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <li>
+                  {en
+                    ? '1. Rainfall Forecast: 12.4 mm expected between 4:00 PM and 10:00 PM (84% probability). Infiltration will replenish root zone without pumping.'
+                    : '1. वर्षा का अनुमान: आज शाम 4 से 10 बजे के बीच 12.4 मिमी बारिश की 84% संभावना है, जिससे जड़-क्षेत्र में प्राकृतिक पानी मिलेगा।'}
+                </li>
+                <li>
+                  {en
+                    ? '2. Root-Zone Moisture: Currently 31.4% VWC at 40cm depth, optimal for vegetative/flowering stage.'
+                    : '2. मिट्टी की नमी: 40 सेमी गहराई पर 31.4% नमी मौजूद है, जो पौधे की जड़ के लिए पूरी तरह अनुकूल है।'}
+                </li>
+                <li>
+                  {en
+                    ? '3. Soil Retention: Sandy Loam retains 45mm available water; rainfall will keep moisture within field capacity.'
+                    : '3. मृदा जल-धारण: बलुई दोमट मिट्टी में 45 मिमी जल भण्डारण क्षमता है; वर्षा के बाद नमी फील्ड कैपेसिटी में रहेगी।'}
+                </li>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Expandable What To Do Drawer */}
+        <AnimatePresence>
+          {showWhatTodo && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              style={{
+                marginTop: '14px',
+                paddingTop: '12px',
+                borderTop: '1px solid #e2e8f0',
+                fontSize: '0.82rem',
+                color: '#334155',
+                overflow: 'hidden'
+              }}
+            >
+              <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                {en ? 'Recommended Farmer Actions:' : 'किसान भाइयों के लिए तुरंत करने योग्य कार्य:'}
+              </div>
+              <ul style={{ margin: 0, paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <li>
+                  {en
+                    ? '1. Keep tubewell pump off today. Avoid wasting groundwater and electricity/diesel.'
+                    : '1. आज नलकूप या पंपसेट बिल्कुल न चलाएं।'}
+                </li>
+                <li>
+                  {en
+                    ? '2. Inspect field bund drainage outlets to prevent waterlogging during evening showers.'
+                    : '2. खेत की मेड़ के जल निकासी रास्ते साफ रखें ताकि शाम की बारिश का पानी जमा न हो।'}
+                </li>
+                <li>
+                  {en
+                    ? '3. Postpone pesticide/fertilizer spraying until rainfall passes to avoid chemical washout.'
+                    : '3. कीटनाशक या यूरिया का छिड़काव आज टालें, बारिश में दवा बहने का जोखिम है।'}
+                </li>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* TODAY SNAPSHOT (4 CORE METRICS) */}
+      <motion.div variants={itemVariants} style={{ marginBottom: '1.5rem' }}>
+        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569', letterSpacing: '0.04em', marginBottom: '8px' }}>
+          {en ? "TODAY'S FIELD SNAPSHOT (4 CORE SIGNALS)" : 'खेत की वर्तमान स्थिति (TODAY SNAPSHOT)'}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+          {/* Metric 1: Rain */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '14px 16px',
+              borderRadius: '14px',
+              border: '1px solid rgba(226, 232, 240, 0.8)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#0284c7', fontWeight: 700, marginBottom: '4px' }}>
+              <CloudRain size={16} />
+              <span>{en ? 'Rainfall' : 'वर्षा (Rain)'}</span>
+            </div>
+            <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.1 }}>
+              84% <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>(12.4 mm)</span>
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#0284c7', marginTop: '4px', fontWeight: 600 }}>
+              {en ? 'Expected 4 PM - 10 PM' : 'शाम 4 से 10 बजे संभावना'}
+            </div>
+          </div>
+
+          {/* Metric 2: Temperature */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '14px 16px',
+              borderRadius: '14px',
+              border: '1px solid rgba(226, 232, 240, 0.8)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#ea580c', fontWeight: 700, marginBottom: '4px' }}>
+              <Thermometer size={16} />
+              <span>{en ? 'Air Temp' : 'तापमान (Temp)'}</span>
+            </div>
+            <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.1 }}>
+              28–34°C
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px', fontWeight: 600 }}>
+              {en ? 'Within normal range' : 'सामान्य तापमान सीमा'}
+            </div>
+          </div>
+
+          {/* Metric 3: Soil Moisture */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '14px 16px',
+              borderRadius: '14px',
+              border: '1px solid rgba(226, 232, 240, 0.8)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#059669', fontWeight: 700, marginBottom: '4px' }}>
+              <Droplets size={16} />
+              <span>{en ? 'Soil Moisture' : 'मिट्टी नमी (Soil)'}</span>
+            </div>
+            <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.1 }}>
+              31.4% <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#059669' }}>({en ? 'Optimal' : 'पर्याप्त'})</span>
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px', fontWeight: 600 }}>
+              {en ? '40cm root-zone depth' : '40 सेमी रूट-ज़ोन गहराई'}
+            </div>
+          </div>
+
+          {/* Metric 4: Crop Status */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '14px 16px',
+              borderRadius: '14px',
+              border: '1px solid rgba(226, 232, 240, 0.8)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#16a34a', fontWeight: 700, marginBottom: '4px' }}>
+              <Sprout size={16} />
+              <span>{en ? 'Crop Stage' : 'फसल अवस्था (Crop)'}</span>
+            </div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.1 }}>
+              {farm.crop.stage || 'Vegetative'}
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#16a34a', marginTop: '4px', fontWeight: 600 }}>
+              {en ? 'Healthy biomass vigor' : 'स्वस्थ वनस्पति वृद्धि'}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* NEXT 3 ACTIONS */}
+      <motion.div variants={itemVariants} style={{ marginBottom: '1.5rem' }}>
+        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569', letterSpacing: '0.04em', marginBottom: '8px' }}>
+          {en ? 'NEXT 3 ACTIONS FOR YOUR FIELD' : 'अगले 3 मुख्य कदम (NEXT 3 ACTIONS)'}
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {/* Action 1 */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              border: '1px solid rgba(226, 232, 240, 0.8)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '10px'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  background: '#ecfdf5',
+                  color: '#059669',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <Droplets size={16} />
+              </div>
+              <div>
+                <strong style={{ fontSize: '0.85rem', color: '#0f172a', display: 'block' }}>
+                  {en ? '1. Irrigation: Hold today' : '1. सिंचाई: आज रोकें (Hold today)'}
+                </strong>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                  {en ? 'Rainfall will cover soil deficit without pumping' : 'आगामी वर्षा मिट्टी की नमी पूरा करेगी, पंप न चलाएं'}
+                </span>
+              </div>
+            </div>
+            <span style={{ background: '#ecfdf5', color: '#059669', fontSize: '0.7rem', fontWeight: 800, padding: '3px 10px', borderRadius: '999px' }}>
+              {en ? 'RECOMMENDED' : 'स्वीकृत'}
+            </span>
+          </div>
+
+          {/* Action 2 */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              border: '1px solid rgba(226, 232, 240, 0.8)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '10px'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  background: '#f0fdf4',
+                  color: '#16a34a',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <Sprout size={16} />
+              </div>
+              <div>
+                <strong style={{ fontSize: '0.85rem', color: '#0f172a', display: 'block' }}>
+                  {en ? '2. Nutrients: Review after rainfall' : '2. खाद प्रबंधन: बारिश के बाद समीक्षा करें'}
+                </strong>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                  {en ? 'Wait for post-monsoon soil percolation before top dressing' : 'बारिश के पानी के अवशोषण के बाद ही यूरिया की खुराक दें'}
+                </span>
+              </div>
+            </div>
+            <span style={{ background: '#f8fafc', color: '#64748b', fontSize: '0.7rem', fontWeight: 800, padding: '3px 10px', borderRadius: '999px' }}>
+              {en ? 'POST-RAIN' : 'बाद में'}
+            </span>
+          </div>
+
+          {/* Action 3 */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              border: '1px solid rgba(226, 232, 240, 0.8)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '10px'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  background: '#fffbeb',
+                  color: '#d97706',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <CloudRain size={16} />
+              </div>
+              <div>
+                <strong style={{ fontSize: '0.85rem', color: '#0f172a', display: 'block' }}>
+                  {en ? '3. Drainage: Check low-lying bund outlets' : '3. जल निकासी: निचले खेत की नालियां चेक करें'}
+                </strong>
+                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                  {en ? 'Keep channels clear to prevent water accumulation' : 'जलभराव से बचाव हेतु मेड़ के निकास खुले रखें'}
+                </span>
+              </div>
+            </div>
+            <span style={{ background: '#fffbeb', color: '#d97706', fontSize: '0.7rem', fontWeight: 800, padding: '3px 10px', borderRadius: '999px' }}>
+              {en ? 'ACTION' : 'जरूरी'}
+            </span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* 3-DAY TIMELINE */}
+      <motion.div variants={itemVariants}>
+        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569', letterSpacing: '0.04em', marginBottom: '8px' }}>
+          {en ? '3-DAY AGRICULTURAL TIMELINE' : '3-दिन का कृषि चक्र (3-DAY TIMELINE)'}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '10px' }}>
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '14px',
+              borderRadius: '12px',
+              border: '1px solid rgba(226, 232, 240, 0.8)'
+            }}
+          >
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#059669', marginBottom: '3px' }}>
+              {en ? 'TODAY' : 'आज'}
+            </div>
+            <strong style={{ fontSize: '0.88rem', color: '#0f172a', display: 'block', marginBottom: '2px' }}>
+              {en ? 'Evening Rain (12.4mm)' : 'शाम को वर्षा (12.4 मिमी)'}
+            </strong>
+            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              {en ? 'Hold irrigation; inspect drainage outlets' : 'सिंचाई बंद रखें; नालियों की निकासी चेक करें'}
+            </span>
+          </div>
+
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '14px',
+              borderRadius: '12px',
+              border: '1px solid rgba(226, 232, 240, 0.8)'
+            }}
+          >
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0284c7', marginBottom: '3px' }}>
+              {en ? 'TOMORROW' : 'कल'}
+            </div>
+            <strong style={{ fontSize: '0.88rem', color: '#0f172a', display: 'block', marginBottom: '2px' }}>
+              {en ? 'Optimal Soil Moisture' : 'अनुकूल मृदा नमी'}
+            </strong>
+            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              {en ? 'Roots absorb moisture; suitable for weeding' : 'जड़ें नमी सोखेंगी; खरपतवार निराई हेतु अनुकूल'}
+            </span>
+          </div>
+
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(10px)',
+              padding: '14px',
+              borderRadius: '12px',
+              border: '1px solid rgba(226, 232, 240, 0.8)'
+            }}
+          >
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b', marginBottom: '3px' }}>
+              {en ? 'DAY AFTER' : 'परसों'}
+            </div>
+            <strong style={{ fontSize: '0.88rem', color: '#0f172a', display: 'block', marginBottom: '2px' }}>
+              {en ? 'Clear & Sunny' : 'खुला व साफ मौसम'}
+            </strong>
+            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              {en ? 'Foliar spray and field operations permitted' : 'पोषक तत्वों का स्प्रे व सामान्य खेत कार्य करें'}
+            </span>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };

@@ -705,12 +705,18 @@ html, body {
     padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px)) !important;
   }
   .panchayat-main-grid,
-  .map-view-grid {
-    grid-template-columns: 1fr !important;
-    gap: 1.25rem !important;
-  }
   .gluestack-sheet-grid {
     grid-template-columns: 1fr !important;
   }
 }
+
+@media (max-width: 1024px) {
+  .modern-sidebar {
+    display: none !important;
+  }
+  .app-main {
+    margin-left: 0 !important;
+  }
+}
+
 

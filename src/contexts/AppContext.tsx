@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 
 export type Language = 'hi' | 'en';
 export type ViewMode = 'simple' | 'scientific';
+export type PlatformMode = 'farmer' | 'panchayat' | 'scientific';
 
 export interface LocationInfo {
   panchayatCode: string;
@@ -17,6 +18,8 @@ interface AppContextType {
   setLanguage: (lang: Language) => void;
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
+  platformMode: PlatformMode;
+  setPlatformMode: (mode: PlatformMode) => void;
   location: LocationInfo;
   setLocation: (loc: LocationInfo) => void;
   selectedCrop: string;
@@ -58,6 +61,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setLanguageState(lang);
   };
 
+  const [platformMode, setPlatformModeState] = useState<PlatformMode>(() => {
+    try {
+      const saved = localStorage.getItem('kisaan_platform_mode') as PlatformMode;
+      return saved === 'farmer' || saved === 'panchayat' || saved === 'scientific' ? saved : 'farmer';
+    } catch {
+      return 'farmer';
+    }
+  });
+
+  const setPlatformMode = (mode: PlatformMode) => {
+    try {
+      localStorage.setItem('kisaan_platform_mode', mode);
+    } catch {}
+    setPlatformModeState(mode);
+  };
+
   const [viewMode, setViewMode] = useState<ViewMode>('simple');
   const [location, setLocation] = useState<LocationInfo>(defaultLocation);
   const [selectedCrop, setSelectedCrop] = useState<string>('Paddy (Basmati)');
@@ -97,6 +116,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setLanguage,
         viewMode,
         setViewMode,
+        platformMode,
+        setPlatformMode,
         location,
         setLocation,
         selectedCrop,

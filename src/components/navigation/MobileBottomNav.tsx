@@ -45,21 +45,27 @@ export const MobileBottomNav: React.FC = () => {
       exact: true
     },
     {
+      to: '/my-farm',
+      label: hi ? 'मेरा खेत' : 'My Farm',
+      icon: Sprout,
+      exact: false
+    },
+    {
       to: '/panchayat',
       label: hi ? 'पंचायत' : 'Panchayat',
       icon: MapPin,
       exact: false
     },
     {
-      to: '/weather',
-      label: hi ? 'मौसम' : 'Weather',
-      icon: CloudSun,
+      to: '/crops',
+      label: hi ? 'फसल' : 'Crops',
+      icon: Sparkles,
       exact: false
     },
     {
-      to: '/decision-center',
+      to: '/advice',
       label: hi ? 'सलाह' : 'Advice',
-      icon: Sparkles,
+      icon: CloudSun,
       exact: false
     }
   ];
