@@ -17,6 +17,7 @@ import {
   MapPin
 } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
+import { Landscape3DScene } from './Landscape3DScene';
 
 export const DigitalTwinView: React.FC = () => {
   const { language } = useApp();
@@ -24,8 +25,12 @@ export const DigitalTwinView: React.FC = () => {
   const [twinState, setTwinState] = useState<DigitalTwinState | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // 3D Scene Controls & Layer Mode
+  const [layerMode, setLayerMode] = useState<'canopy' | 'moisture' | 'flood' | 'strata'>('canopy');
+  const [selectedPlot, setSelectedPlot] = useState<string>('Plot A (North Basmati Terrace)');
+
   // Scenario Simulator Inputs
-  const [rainOverride, setRainOverride] = useState<number>(0);
+  const [rainOverride, setRainOverride] = useState<number>(14.8);
   const [tempOverride, setTempOverride] = useState<number>(0);
   const [canalHours, setCanalHours] = useState<number>(6);
   const [simResult, setSimResult] = useState<ScenarioResult | null>(null);
@@ -122,6 +127,224 @@ export const DigitalTwinView: React.FC = () => {
             </div>
             <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
               STATE TIMESTAMP: {new Date(twinState.last_updated_utc).toLocaleTimeString()} UTC
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3D INTERACTIVE DIGITAL TWIN WEBGL STAGE */}
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #090d16 0%, #0f172a 100%)',
+          borderRadius: '24px',
+          padding: '24px',
+          border: '1.5px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '0 25px 60px -10px rgba(0, 0, 0, 0.5)',
+          marginBottom: '2.5rem',
+          color: '#ffffff'
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '18px' }}>
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span style={{ background: '#7c3aed', color: '#ffffff', padding: '3px 10px', borderRadius: '999px', fontSize: '0.72rem', fontWeight: 800 }}>
+                🎮 {hi ? 'इंटरैक्टिव 3D भौतिकी सिमुलेशन' : 'INTERACTIVE 3D PHYSICS TWIN'}
+              </span>
+              <span style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', padding: '3px 10px', borderRadius: '999px', fontSize: '0.72rem', fontWeight: 700, border: '1px solid rgba(16, 185, 129, 0.4)' }}>
+                ● 60 FPS WEBGL
+              </span>
+            </div>
+            <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>
+              {hi ? 'खेत व सूक्ष्म-जलवायु 3D डिजिटल ट्विन' : 'Hyperlocal Microclimate 3D Landscape Twin'}
+            </h3>
+            <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
+              {hi ? 'माउस से 3D मॉडल को घुमाएं, ज़ूम करें और नीचे स्लाइडर बदल कर बारिश व नहर प्रवाह का सीधा असर देखें।' : 'Rotate 3D terrain with mouse, inspect plot sensors, and move sliders to observe real-time rain downpour & canal discharge.'}
+            </p>
+          </div>
+
+          {/* 3D Visualization Layer Switcher */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {[
+              { id: 'canopy', labelHi: '🌿 फसल छत्रक (NDVI)', labelEn: '🌿 Canopy NDVI' },
+              { id: 'moisture', labelHi: '💧 मृदा नमी हीटमैप', labelEn: '💧 Soil Moisture' },
+              { id: 'flood', labelHi: '⚠️ जलभराव जोखिम', labelEn: '⚠️ Inundation Risk' },
+              { id: 'strata', labelHi: '🔬 जड़ संस्तर (-15cm)', labelEn: '🔬 Root Strata' }
+            ].map((layer) => (
+              <button
+                key={layer.id}
+                type="button"
+                onClick={() => setLayerMode(layer.id as any)}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: '10px',
+                  border: layerMode === layer.id ? '2px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.15)',
+                  background: layerMode === layer.id ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                  color: layerMode === layer.id ? '#38bdf8' : '#cbd5e1',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {hi ? layer.labelHi : layer.labelEn}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 3D Canvas Container */}
+        <div style={{ position: 'relative', height: '520px', borderRadius: '18px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <Landscape3DScene
+            rainfall={rainOverride}
+            temperature={tempOverride}
+            canalHours={canalHours}
+            layerMode={layerMode}
+            selectedPlot={selectedPlot}
+            onSelectPlot={setSelectedPlot}
+          />
+
+          {/* Floating HUD: Selected Plot Details */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '16px',
+              left: '16px',
+              background: 'rgba(15, 23, 42, 0.88)',
+              backdropFilter: 'blur(8px)',
+              padding: '12px 18px',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              fontSize: '0.8rem',
+              color: '#ffffff',
+              maxWidth: '360px',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+              zIndex: 10
+            }}
+          >
+            <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', marginBottom: '2px' }}>
+              📍 3D Inspected Target
+            </div>
+            <strong style={{ fontSize: '0.92rem', color: '#ffffff', display: 'block', marginBottom: '6px' }}>
+              {selectedPlot}
+            </strong>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', fontSize: '0.72rem', color: '#cbd5e1' }}>
+              <div>Rainfall Input: <strong style={{ color: '#38bdf8' }}>{rainOverride} mm</strong></div>
+              <div>Temp Anomaly: <strong style={{ color: '#f59e0b' }}>{tempOverride > 0 ? `+${tempOverride}` : tempOverride}°C</strong></div>
+              <div>Canal Release: <strong style={{ color: '#10b981' }}>{canalHours} hrs</strong></div>
+              <div>Camera: <span style={{ color: '#94a3b8' }}>Orbit 360°</span></div>
+            </div>
+          </div>
+
+          {/* Floating HUD: 3D Camera Controls Hint */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '16px',
+              right: '16px',
+              background: 'rgba(15, 23, 42, 0.8)',
+              backdropFilter: 'blur(8px)',
+              padding: '8px 14px',
+              borderRadius: '999px',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              fontSize: '0.72rem',
+              color: '#94a3b8',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              zIndex: 10
+            }}
+          >
+            <span>🖱️ Drag to rotate</span>
+            <span>•</span>
+            <span>📜 Scroll to zoom</span>
+            <span>•</span>
+            <span style={{ color: '#34d399' }}>🛰️ Sentinel-2 Active</span>
+          </div>
+        </div>
+
+        {/* Live Interactive Sliders directly connected to 3D Scene */}
+        <div style={{ marginTop: '20px', background: 'rgba(255, 255, 255, 0.04)', padding: '18px 22px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+            <strong style={{ fontSize: '0.88rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Sliders size={16} color="#38bdf8" />
+              {hi ? 'रीयल-टाइम 3D सिमुलेशन स्लाइडर्स (सीधा प्रभाव देखें)' : 'Live 3D Perturbation Sliders (Observe instant 3D response)'}
+            </strong>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => { setRainOverride(0); setTempOverride(0); setCanalHours(4); }}
+                style={{ padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#cbd5e1', fontSize: '0.72rem', cursor: 'pointer' }}
+              >
+                Clear Sky (0mm)
+              </button>
+              <button
+                type="button"
+                onClick={() => { setRainOverride(14.8); setTempOverride(0); setCanalHours(0); }}
+                style={{ padding: '4px 10px', borderRadius: '6px', border: '1px solid #38bdf8', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700 }}
+              >
+                Today Forecast (14.8mm)
+              </button>
+              <button
+                type="button"
+                onClick={() => { setRainOverride(45); setTempOverride(1); setCanalHours(0); }}
+                style={{ padding: '4px 10px', borderRadius: '6px', border: '1px solid #ef4444', background: 'rgba(239, 68, 68, 0.15)', color: '#f87171', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700 }}
+              >
+                Cloudburst (45mm)
+              </button>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px' }}>
+            {/* Slider 1: Rainfall */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '6px' }}>
+                <span style={{ color: '#94a3b8' }}>🌧️ {hi ? 'वर्षा बदलाव' : 'Rainfall Simulation'}</span>
+                <strong style={{ color: '#38bdf8' }}>{rainOverride} mm</strong>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="80"
+                step="1"
+                value={rainOverride}
+                onChange={(e) => setRainOverride(Number(e.target.value))}
+                style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer' }}
+              />
+            </div>
+
+            {/* Slider 2: Temperature */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '6px' }}>
+                <span style={{ color: '#94a3b8' }}>🌡️ {hi ? 'तापमान विसंगति' : 'Temperature Perturbation'}</span>
+                <strong style={{ color: '#f59e0b' }}>{tempOverride > 0 ? `+${tempOverride}` : tempOverride} °C</strong>
+              </div>
+              <input
+                type="range"
+                min="-2"
+                max="5"
+                step="0.5"
+                value={tempOverride}
+                onChange={(e) => setTempOverride(Number(e.target.value))}
+                style={{ width: '100%', accentColor: '#f59e0b', cursor: 'pointer' }}
+              />
+            </div>
+
+            {/* Slider 3: Canal Water */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '6px' }}>
+                <span style={{ color: '#94a3b8' }}>💧 {hi ? 'नहर जल आपूर्ति' : 'Canal Water Release'}</span>
+                <strong style={{ color: '#10b981' }}>{canalHours} hrs</strong>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="12"
+                step="1"
+                value={canalHours}
+                onChange={(e) => setCanalHours(Number(e.target.value))}
+                style={{ width: '100%', accentColor: '#10b981', cursor: 'pointer' }}
+              />
             </div>
           </div>
         </div>

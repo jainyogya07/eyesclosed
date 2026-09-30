@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
   Droplets,
   Sprout,
@@ -20,7 +21,8 @@ import {
   Calendar,
   Layers,
   TestTube,
-  DollarSign
+  DollarSign,
+  Tv
 } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import { useLivePrediction } from '../../providers/LivePredictionProvider';
@@ -268,6 +270,83 @@ export const FarmerPinpointHub: React.FC = () => {
           gap: '2rem'
         }}
       >
+        {/* Quick Access Top Bar: 3D Digital Twin & Learn Teaching Videos */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem'
+          }}
+        >
+          {/* Card 1: 3D Digital Twin */}
+          <Link
+            to="/digital-twin"
+            style={{
+              textDecoration: 'none',
+              background: 'linear-gradient(135deg, #090d16 0%, #1e1b4b 100%)',
+              color: '#ffffff',
+              borderRadius: '20px',
+              padding: '1.25rem 1.5rem',
+              border: '1.5px solid rgba(56, 189, 248, 0.4)',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(56, 189, 248, 0.2)', padding: '2px 8px', borderRadius: '999px', fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8', marginBottom: '6px' }}>
+                <Sparkles size={11} />
+                <span>{hi ? 'इंटरैक्टिव 3D भौतिकी' : 'INTERACTIVE 3D PHYSICS'}</span>
+              </div>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 900, color: '#ffffff' }}>
+                {hi ? 'खेत का 3D डिजिटल ट्विन 🎮' : '3D Farm Digital Twin 🎮'}
+              </h3>
+              <p style={{ margin: '4px 0 0', fontSize: '0.76rem', color: '#94a3b8', lineHeight: 1.3 }}>
+                {hi ? 'बारिश, तापमान व नहर पानी का 3D सिमुलेशन और सेंसर पिन देखें' : 'Simulate rainfall, temperature & canal release on 3D terrain'}
+              </p>
+            </div>
+            <div style={{ background: '#38bdf8', color: '#090d16', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginLeft: '12px' }}>
+              <ArrowRight size={20} />
+            </div>
+          </Link>
+
+          {/* Card 2: Learn (MANAGE + ICAR Videos) */}
+          <Link
+            to="/learn"
+            style={{
+              textDecoration: 'none',
+              background: 'linear-gradient(135deg, #064e3b 0%, #065f46 100%)',
+              color: '#ffffff',
+              borderRadius: '20px',
+              padding: '1.25rem 1.5rem',
+              border: '1.5px solid rgba(16, 185, 129, 0.4)',
+              boxShadow: '0 10px 25px -5px rgba(6, 78, 59, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(16, 185, 129, 0.25)', padding: '2px 8px', borderRadius: '999px', fontSize: '0.68rem', fontWeight: 800, color: '#6ee7b7', marginBottom: '6px' }}>
+                <Tv size={11} />
+                <span>{hi ? 'MANAGE · ICAR · TNAU' : 'VERIFIED TRAINING'}</span>
+              </div>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 900, color: '#ffffff' }}>
+                {hi ? 'आज सीखें: प्रैक्टिकल वीडियो 🎬' : 'Learn: Practical Video Feed 🎬'}
+              </h3>
+              <p style={{ margin: '4px 0 0', fontSize: '0.76rem', color: '#a7f3d0', lineHeight: 1.3 }}>
+                {hi ? 'नर्सरी प्रबंधन, जलभराव निकास व पत्तियों का पीलापन पहचान' : 'Field demonstrations with 3 key rules and AI doctor'}
+              </p>
+            </div>
+            <div style={{ background: '#10b981', color: '#064e3b', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginLeft: '12px' }}>
+              <ArrowRight size={20} />
+            </div>
+          </Link>
+        </div>
+
         {/* ========================================================================= */}
         {/* 1. INPUT SYSTEM: FARM & SOIL INPUT CONSOLE                                */}
         {/* ========================================================================= */}
