@@ -1,9 +1,10 @@
 """
-Kisaan Ki Yash - Backend Application Entrypoint.
-FastAPI REST service powering the 10-model agricultural intelligence stack.
+Mausam Setu — Backend Application Entrypoint.
+Slogan: Sahi Samay, Sahi Salah, Har Kisaan Tak
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from contextlib import asynccontextmanager
 
 from backend.app.config import settings
@@ -29,28 +30,29 @@ from backend.app.api.routes.decisions import router as decisions_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Verify integrity of all frozen model artifacts
-    logger.info("[STARTUP] Initializing Kisaan Ki Yash Intelligence Backend...")
+    logger.info("[STARTUP] Initializing Mausam Setu Intelligence Backend...")
     verification = model_registry.verify_frozen_artifacts()
     logger.info(f"[STARTUP] Frozen artifact verification status: {verification}")
     yield
     # Shutdown
-    logger.info("[SHUTDOWN] Terminating Kisaan Ki Yash Intelligence Backend.")
+    logger.info("[SHUTDOWN] Terminating Mausam Setu Intelligence Backend.")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     description=(
-        "1-km Hyperlocal Agricultural & Climate Intelligence Platform REST API. "
-        "Enforces strict data provenance, uncertainty bounds, spatial CRS standards (EPSG:32644), "
-        "and sequential model lifecycle governance."
+        "Mausam Setu — Sahi Samay, Sahi Salah, Har Kisaan Tak. "
+        "1-km hyperlocal agricultural & climate intelligence REST API."
     ),
     lifespan=lifespan
 )
 
-# Enable CORS for the React/Vite frontend
+_origins = [o.strip() for o in settings.ALLOWED_ORIGINS.split(",") if o.strip()]
+app.add_middleware(GZipMiddleware, minimum_size=500)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "*"],
+    allow_origins=_origins or ["*"],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -76,10 +78,13 @@ app.include_router(decisions_router, prefix=prefix)
 @app.get("/")
 def root():
     return {
-        "message": "Welcome to Kisaan Ki Yash 1-km Intelligence API",
+        "brand": "Mausam Setu",
+        "slogan": settings.SLOGAN,
+        "message": "Welcome to Mausam Setu 1-km Intelligence API",
         "docs_url": "/docs",
         "health_url": f"{prefix}/health",
-        "models_url": f"{prefix}/models"
+        "models_url": f"{prefix}/models",
+        "bundle_url": f"{prefix}/bundle/{{panchayat_code}}",
     }
 
 if __name__ == "__main__":

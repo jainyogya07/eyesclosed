@@ -24,6 +24,7 @@ def get_yield_forecast(
         }
     )
 
+@router.get("/yield/{panchayat_code}")
 @router.get("/yield/forecast/{panchayat_code}")
 def get_panchayat_yield_forecast(panchayat_code: str):
     p_data = resolve_panchayat(panchayat_code)

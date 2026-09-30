@@ -17,7 +17,7 @@ import { FertilizerAlarmSystem } from '../components/farmer/FertilizerAlarmSyste
 export const IrrigationPage: React.FC = () => {
   const { language } = useApp();
   const { data } = useLivePrediction();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
   const [faoDrawerOpen, setFaoDrawerOpen] = useState(false);
 
   // Live M6 FAO-56 values (fall back to static demo values when offline)
@@ -42,12 +42,12 @@ export const IrrigationPage: React.FC = () => {
       {/* Header */}
       <div style={{ marginBottom: '2.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-          <span className="badge badge-frozen">{language === 'hi' ? 'मॉडल 6 — भौतिकी इंजन' : 'Model 6 — Deterministic Physics Engine'}</span>
+          <span className="badge badge-frozen">{language !== 'en' ? 'मॉडल 6 — भौतिकी इंजन' : 'Model 6 — Deterministic Physics Engine'}</span>
           <span className="badge badge-pilot">FAO-56 Penman-Monteith</span>
         </div>
         <h1 style={{ fontSize: '2.4rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Droplet size={32} color="var(--color-atmosphere-blue)" />
-          {language === 'hi' ? 'सिंचाई सलाह व जल संतुलन' : 'Irrigation Demand & Soil Water Balance'}
+          {language !== 'en' ? 'सिंचाई सलाह व जल संतुलन' : 'Irrigation Demand & Soil Water Balance'}
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
           {language === 'hi'
@@ -71,7 +71,7 @@ export const IrrigationPage: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5rem' }}>
           <div style={{ maxWidth: '720px' }}>
             <div style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--color-earth-emerald)', textTransform: 'uppercase', marginBottom: '6px' }}>
-              {language === 'hi' ? 'आज का फैसला' : "Today's Irrigation Verdict"}
+              {language !== 'en' ? 'आज का फैसला' : "Today's Irrigation Verdict"}
             </div>
 
             <h2
@@ -83,7 +83,7 @@ export const IrrigationPage: React.FC = () => {
                 marginBottom: '10px'
               }}
             >
-              {language === 'hi' ? 'आज सिंचाई रोकें (पंप न चलाएं)' : 'Hold Irrigation (No Pumping Required)'}
+              {language !== 'en' ? 'आज सिंचाई रोकें (पंप न चलाएं)' : 'Hold Irrigation (No Pumping Required)'}
             </h2>
 
             <p style={{ fontSize: '1.1rem', color: 'var(--text-primary)', lineHeight: 1.5, marginBottom: '14px' }}>
@@ -95,7 +95,7 @@ export const IrrigationPage: React.FC = () => {
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'white', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-glow-emerald)', boxShadow: 'var(--shadow-sm)' }}>
               <DollarSign size={18} color="var(--color-earth-emerald)" />
               <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--color-earth-emerald)' }}>
-                {language === 'hi' ? 'अनुमानित बचत: लगभग ₹1,450 / एकड़ (डीजल व बिजली)' : 'Estimated Savings: ₹1,450 / acre (Pumping costs)'}
+                {language !== 'en' ? 'अनुमानित बचत: लगभग ₹1,450 / एकड़ (डीजल व बिजली)' : 'Estimated Savings: ₹1,450 / acre (Pumping costs)'}
               </span>
             </div>
           </div>
@@ -113,7 +113,7 @@ export const IrrigationPage: React.FC = () => {
             }}
           >
             <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginBottom: '8px' }}>
-              {language === 'hi' ? 'जड़ क्षेत्र मिट्टी जल स्तर (40 सेमी)' : 'ROOT ZONE SOIL TANK (40CM)'}
+              {language !== 'en' ? 'जड़ क्षेत्र मिट्टी जल स्तर (40 सेमी)' : 'ROOT ZONE SOIL TANK (40CM)'}
             </div>
 
             {/* Tank Graphic */}
@@ -142,18 +142,18 @@ export const IrrigationPage: React.FC = () => {
                 }}
               />
               <div style={{ position: 'absolute', top: '10px', left: 0, right: 0, fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                {language === 'hi' ? 'संतृप्ति सीमा: 34%' : 'Field Capacity: 34%'}
+                {language !== 'en' ? 'संतृप्ति सीमा: 34%' : 'Field Capacity: 34%'}
               </div>
               <div style={{ position: 'absolute', bottom: '35%', left: 0, right: 0, fontSize: '0.75rem', fontWeight: 800, color: 'white' }}>
-                {language === 'hi' ? 'वर्तमान नमी: 31.4%' : 'Current: 31.4% VWC'}
+                {language !== 'en' ? 'वर्तमान नमी: 31.4%' : 'Current: 31.4% VWC'}
               </div>
               <div style={{ position: 'absolute', bottom: '6px', left: 0, right: 0, fontSize: '0.68rem', color: 'rgba(255,255,255,0.8)' }}>
-                {language === 'hi' ? 'मुरझान बिंदु: 13.5%' : 'Wilting Point: 13.5%'}
+                {language !== 'en' ? 'मुरझान बिंदु: 13.5%' : 'Wilting Point: 13.5%'}
               </div>
             </div>
 
             <div style={{ fontSize: '0.75rem', color: 'var(--color-earth-emerald)', fontWeight: 700 }}>
-              {language === 'hi' ? 'स्थिति: पर्याप्त नमी (पानी की आवश्यकता नहीं)' : 'Status: OPTIMAL / SATISFIED'}
+              {language !== 'en' ? 'स्थिति: पर्याप्त नमी (पानी की आवश्यकता नहीं)' : 'Status: OPTIMAL / SATISFIED'}
             </div>
           </div>
         </div>
@@ -163,49 +163,49 @@ export const IrrigationPage: React.FC = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
         <div className="glass-panel" style={{ padding: '20px' }}>
           <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-            {language === 'hi' ? 'संदर्भ वाष्पोत्सर्जन (ET0)' : 'REFERENCE ET0'}
+            {language !== 'en' ? 'संदर्भ वाष्पोत्सर्जन (ET0)' : 'REFERENCE ET0'}
           </div>
           <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>
-            {et0} mm / {language === 'hi' ? 'दिन' : 'day'}
+            {et0} mm / {language !== 'en' ? 'दिन' : 'day'}
           </div>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            {language === 'hi' ? 'तापमान, हवा और धूप के आधार पर वायुमंडलीय वाष्पीकरण मांग।' : 'Atmospheric evaporative demand based on temperature, wind, humidity, and solar radiation.'}
+            {language !== 'en' ? 'तापमान, हवा और धूप के आधार पर वायुमंडलीय वाष्पीकरण मांग।' : 'Atmospheric evaporative demand based on temperature, wind, humidity, and solar radiation.'}
           </div>
         </div>
 
         <div className="glass-panel" style={{ padding: '20px' }}>
           <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-            {language === 'hi' ? 'फसल गुणांक (Kc)' : 'CROP COEFFICIENT (KC)'}
+            {language !== 'en' ? 'फसल गुणांक (Kc)' : 'CROP COEFFICIENT (KC)'}
           </div>
           <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-earth-emerald)', marginTop: '4px' }}>
-            {kc} ({language === 'hi' ? 'पुष्पन अवस्था' : 'Flowering'})
+            {kc} ({language !== 'en' ? 'पुष्पन अवस्था' : 'Flowering'})
           </div>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            {language === 'hi' ? 'धान की बालियां निकलने की अवस्था में पौधे का सटीक जल गुणांक।' : 'Paddy Basmati heading stage scales standard grass ET0 to actual crop transpiration.'}
+            {language !== 'en' ? 'धान की बालियां निकलने की अवस्था में पौधे का सटीक जल गुणांक।' : 'Paddy Basmati heading stage scales standard grass ET0 to actual crop transpiration.'}
           </div>
         </div>
 
         <div className="glass-panel" style={{ padding: '20px' }}>
           <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-            {language === 'hi' ? 'दैनिक फसल खपत (ETc)' : 'CROP ET (ETC = KC × ET0)'}
+            {language !== 'en' ? 'दैनिक फसल खपत (ETc)' : 'CROP ET (ETC = KC × ET0)'}
           </div>
           <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)', marginTop: '4px' }}>
-            {etc} mm / {language === 'hi' ? 'दिन' : 'day'}
+            {etc} mm / {language !== 'en' ? 'दिन' : 'day'}
           </div>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            {language === 'hi' ? '24 घंटे में फसल द्वारा वाष्पोत्सर्जित कुल पानी की मात्रा।' : 'Total volumetric water transpired by the crop canopy in 24 hours.'}
+            {language !== 'en' ? '24 घंटे में फसल द्वारा वाष्पोत्सर्जित कुल पानी की मात्रा।' : 'Total volumetric water transpired by the crop canopy in 24 hours.'}
           </div>
         </div>
 
         <div className="glass-panel" style={{ padding: '20px' }}>
           <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-            {language === 'hi' ? 'शुद्ध जल संतुलन' : 'NET WATER BALANCE'}
+            {language !== 'en' ? 'शुद्ध जल संतुलन' : 'NET WATER BALANCE'}
           </div>
           <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-earth-emerald)', marginTop: '4px' }}>
-            +{netWaterBalance} mm {language === 'hi' ? 'अतिरिक्त' : 'Surplus'}
+            +{netWaterBalance} mm {language !== 'en' ? 'अतिरिक्त' : 'Surplus'}
           </div>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-            {language === 'hi' ? 'अनुमानित वर्षा (+12.4 मिमी) से दैनिक खपत (-5.8 मिमी) पूरी हो जाएगी।' : 'Rainfall (+12.4mm) minus daily ETc (-5.8mm) leaves a positive moisture surplus.'}
+            {language !== 'en' ? 'अनुमानित वर्षा (+12.4 मिमी) से दैनिक खपत (-5.8 मिमी) पूरी हो जाएगी।' : 'Rainfall (+12.4mm) minus daily ETc (-5.8mm) leaves a positive moisture surplus.'}
           </div>
         </div>
       </div>
@@ -232,7 +232,7 @@ export const IrrigationPage: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <ShieldCheck size={20} color="var(--color-earth-emerald)" />
             <h3 style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-              {language === 'hi' ? 'वैज्ञानिक आधार: मॉडल 6 भौतिक समीकरणों (FAO-56) पर क्यों आधारित है' : 'Scientific Explanation: Why Model 6 is a Physical Equation, Not ML'}
+              {language !== 'en' ? 'वैज्ञानिक आधार: मॉडल 6 भौतिक समीकरणों (FAO-56) पर क्यों आधारित है' : 'Scientific Explanation: Why Model 6 is a Physical Equation, Not ML'}
             </h3>
           </div>
           {faoDrawerOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}

@@ -30,7 +30,7 @@ interface HazardCardItem {
 
 export const HazardsPage: React.FC = () => {
   const { language } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
 
   const hazards: HazardCardItem[] = [
     {

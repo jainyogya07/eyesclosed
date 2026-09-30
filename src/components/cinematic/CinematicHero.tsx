@@ -129,7 +129,7 @@ export const CinematicHero: React.FC<CinematicHeroProps> = ({ onNavigateTab }) =
               color: 'var(--text-primary)'
             }}
           >
-            Kisaan Ki Yash <br />
+            Mausam Setu <br />
             <span
               style={{
                 background: 'linear-gradient(135deg, #059669 0%, #0284c7 100%)',
@@ -137,7 +137,7 @@ export const CinematicHero: React.FC<CinematicHeroProps> = ({ onNavigateTab }) =
                 WebkitTextFillColor: 'transparent'
               }}
             >
-              1-km Hyperlocal Decision Intelligence
+              Sahi Samay, Sahi Salah, Har Kisaan Tak
             </span>
           </h1>
 

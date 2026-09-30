@@ -14,7 +14,7 @@ const STATUS_COLOR: Record<string, string> = {
 export const ModelLabPage: React.FC = () => {
   const { language } = useApp();
   const { data, isLoading } = useLivePrediction();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
   const [expandedModel, setExpandedModel] = useState<string | null>(null);
 
   const models = data.modelCatalog;

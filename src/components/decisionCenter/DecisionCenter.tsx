@@ -18,7 +18,7 @@ import { useApp } from '../../contexts/AppContext';
 
 export const DecisionCenter: React.FC = () => {
   const { language } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
   const [advisory, setAdvisory] = useState<MasterDecisionAdvisory | null>(null);
   const [loading, setLoading] = useState(true);
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);

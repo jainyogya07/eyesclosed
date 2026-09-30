@@ -69,7 +69,7 @@ type LayerMode = 'temp' | 'rain' | 'soil' | 'flood';
 
 export const MapView: React.FC = () => {
   const { language } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
 
   const [activeLayer, setActiveLayer] = useState<LayerMode>('temp');
   const [selectedCell, setSelectedCell] = useState<GridCell>(CELLS[19]); // Center cell

@@ -21,7 +21,7 @@ import { Landscape3DScene } from './Landscape3DScene';
 
 export const DigitalTwinView: React.FC = () => {
   const { language } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
   const [twinState, setTwinState] = useState<DigitalTwinState | null>(null);
   const [loading, setLoading] = useState(true);
 

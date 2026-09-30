@@ -18,12 +18,13 @@ import {
   Globe2
 } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const MobileBottomNav: React.FC = () => {
-  const { language, setLanguage, location } = useApp();
+  const { language, location } = useApp();
   const pageLocation = useLocation();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const hi = language === 'hi';
+  const hi = language !== 'en';
 
   const isExploreActive = [
     '/agriculture',
@@ -224,22 +225,7 @@ export const MobileBottomNav: React.FC = () => {
                 <Globe2 size={15} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
                 {hi ? 'भाषा (Language)' : 'Language'}
               </span>
-              <div className="gluestack-lang-pill-group">
-                <button
-                  type="button"
-                  onClick={() => setLanguage('en')}
-                  className={`gluestack-lang-pill ${!hi ? 'selected' : ''}`}
-                >
-                  English
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLanguage('hi')}
-                  className={`gluestack-lang-pill ${hi ? 'selected' : ''}`}
-                >
-                  हिंदी
-                </button>
-              </div>
+              <LanguageSwitcher variant="light" />
             </div>
 
             {/* Explore Grid */}

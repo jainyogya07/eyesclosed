@@ -1,17 +1,28 @@
 """
-Backend configuration and system-wide invariants for Kisaan Ki Yash platform.
+Backend configuration for Mausam Setu.
+Slogan: Sahi Samay, Sahi Salah, Har Kisaan Tak
 """
 import os
 try:
     from pydantic_settings import BaseSettings
 except ImportError:
     class BaseSettings:
-        pass
+        def __init__(self, **kwargs):
+            for key, value in type(self).__dict__.items():
+                if key.isupper():
+                    setattr(self, key, os.environ.get(key, value))
+            for key, value in kwargs.items():
+                setattr(self, key, value)
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Kisaan Ki Yash Intelligence API"
-    VERSION: str = "0.1.0-pilot"
+    PROJECT_NAME: str = os.environ.get("PROJECT_NAME", "Mausam Setu Intelligence API")
+    VERSION: str = os.environ.get("VERSION", "1.0.0")
+    SLOGAN: str = "Sahi Samay, Sahi Salah, Har Kisaan Tak"
     API_V1_PREFIX: str = "/api/v1"
+    ALLOWED_ORIGINS: str = os.environ.get(
+        "ALLOWED_ORIGINS",
+        "https://mausam-setu.vercel.app,https://mausamsetu.vercel.app,http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173",
+    )
     
     # Base paths
     BASE_DIR: str = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

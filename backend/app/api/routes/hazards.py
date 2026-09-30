@@ -24,6 +24,7 @@ def get_hazards(
         }
     )
 
+@router.get("/hazards/{panchayat_code}")
 @router.get("/hazards/extreme/{panchayat_code}")
 def get_panchayat_hazards(panchayat_code: str):
     p_data = resolve_panchayat(panchayat_code)

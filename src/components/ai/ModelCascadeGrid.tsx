@@ -168,7 +168,7 @@ export const MODEL_CATALOG: ModelDetail[] = [
 
 export const ModelCascadeGrid: React.FC = () => {
   const { language } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
   const [selectedModel, setSelectedModel] = useState<ModelDetail>(MODEL_CATALOG[0]);
 
   return (

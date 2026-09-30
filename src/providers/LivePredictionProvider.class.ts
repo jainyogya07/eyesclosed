@@ -28,8 +28,8 @@ export class LivePredictionProvider implements PredictionProvider {
   private backendUnavailable: boolean = false;
   private listeners: Set<(unavailable: boolean) => void> = new Set();
 
-  constructor(baseUrl: string = '/api/v1') {
-    this.baseUrl = baseUrl;
+  constructor(baseUrl: string = import.meta.env.VITE_API_URL || '/api/v1') {
+    this.baseUrl = baseUrl.replace(/\/$/, '');
     this.fallbackMock = new MockPredictionProvider();
     this.probeHealth();
   }

@@ -102,7 +102,16 @@ def get_panchayat(id: str):
     return panchayat
 
 @router.get("/digital-twin/{panchayat_code}")
+@router.get("/bundle/{panchayat_code}")
 def get_digital_twin(panchayat_code: str):
     from backend.app.services.intelligence_engine import intelligence_engine
-    return intelligence_engine.compute_digital_twin_state(panchayat_code)
+    from backend.app.infrastructure.ttl_cache import twin_cache
+
+    cache_key = panchayat_code.upper()
+    cached = twin_cache.get(cache_key)
+    if cached is not None:
+        return cached
+    payload = intelligence_engine.compute_digital_twin_state(panchayat_code)
+    twin_cache.set(cache_key, payload)
+    return payload
 

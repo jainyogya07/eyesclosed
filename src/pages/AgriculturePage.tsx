@@ -17,7 +17,7 @@ import {
 
 export const AgriculturePage: React.FC = () => {
   const { language, selectedCrop, setSelectedCrop } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
 
   const crops = [
     { id: 'Paddy (Basmati)', nameHi: 'धान (बासमती PB-1509)', nameEn: 'Paddy (Basmati PB-1509)' },

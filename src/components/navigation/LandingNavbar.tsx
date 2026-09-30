@@ -3,25 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Menu,
   X,
-  Globe2,
-  ChevronRight,
-  Sprout,
-  PlayCircle,
-  Layers,
-  Sparkles,
-  Building2,
-  Info
+  ChevronRight
 } from 'lucide-react';
-import { useApp } from '../../contexts/AppContext';
+import { useI18n } from '../../i18n';
 import { useFarm } from '../../contexts/FarmContext';
 import { HeaderSocialIcons } from '../brand/SocialIcons';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const LandingNavbar: React.FC = () => {
-  const { language, setLanguage } = useApp();
+  const { t } = useI18n();
   const { farm } = useFarm();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const hi = language === 'hi';
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
@@ -111,7 +104,7 @@ export const LandingNavbar: React.FC = () => {
             onMouseLeave={(e) => (e.currentTarget.style.color = '#e2e8f0')}
           >
             <span>🌾</span>
-            <span>{hi ? 'सुविधाएं' : 'Features'}</span>
+            <span>{t('nav_features')}</span>
           </button>
 
           <Link
@@ -131,7 +124,7 @@ export const LandingNavbar: React.FC = () => {
             onMouseLeave={(e) => (e.currentTarget.style.color = '#e2e8f0')}
           >
             <span>🎬</span>
-            <span>{hi ? 'सीखें व शॉर्ट्स' : 'Learn (Videos)'}</span>
+            <span>{t('nav_learn')}</span>
           </Link>
 
           <Link
@@ -151,7 +144,7 @@ export const LandingNavbar: React.FC = () => {
             onMouseLeave={(e) => (e.currentTarget.style.color = '#e2e8f0')}
           >
             <span>🌐</span>
-            <span>{hi ? '3D ट्विन' : 'Digital Twin'}</span>
+            <span>{t('nav_twin')}</span>
           </Link>
 
           <button
@@ -174,7 +167,7 @@ export const LandingNavbar: React.FC = () => {
             onMouseLeave={(e) => (e.currentTarget.style.color = '#e2e8f0')}
           >
             <span>👥</span>
-            <span>{hi ? 'हमारे बारे में' : 'About Us'}</span>
+            <span>{t('nav_about')}</span>
           </button>
 
           <Link
@@ -201,10 +194,10 @@ export const LandingNavbar: React.FC = () => {
               e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
               e.currentTarget.style.color = '#cbd5e1';
             }}
-            title={hi ? 'अधिकारी व वैज्ञानिक डैशबोर्ड' : 'Officer & Scientist Portals'}
+            title={t('nav_officer_full')}
           >
             <span>🏛️</span>
-            <span>{hi ? 'अधिकारी लॉगिन' : 'Officer Hub'}</span>
+            <span>{t('nav_officer')}</span>
           </Link>
         </nav>
 
@@ -221,38 +214,7 @@ export const LandingNavbar: React.FC = () => {
             <HeaderSocialIcons light={true} />
           </div>
 
-          {/* Language Switcher */}
-          <button
-            type="button"
-            onClick={() => setLanguage(hi ? 'en' : 'hi')}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '5px',
-              padding: '6px 12px',
-              borderRadius: '999px',
-              background: 'rgba(255, 255, 255, 0.12)',
-              border: '1px solid rgba(255, 255, 255, 0.24)',
-              color: '#ffffff',
-              fontSize: '0.76rem',
-              fontWeight: 800,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              backdropFilter: 'blur(8px)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
-              e.currentTarget.style.borderColor = '#86efac';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.24)';
-            }}
-            title={hi ? 'Switch to English' : 'हिंदी में बदलें'}
-          >
-            <Globe2 size={13} color="#86efac" />
-            <span>{hi ? 'EN' : 'हि'}</span>
-          </button>
+          <LanguageSwitcher variant="dark" />
 
           {/* Primary Action Button */}
           <button
@@ -284,7 +246,7 @@ export const LandingNavbar: React.FC = () => {
             }}
           >
             <span>🌾</span>
-            <span>{farm.isConfigured ? (hi ? 'मेरा खेत खोलें' : 'Open My Farm') : (hi ? 'अपना खेत खोलें' : 'Open Farm')}</span>
+            <span>{farm.isConfigured ? t('cta_open_farm') : t('cta_setup_farm')}</span>
             <ChevronRight size={15} />
           </button>
 
@@ -339,7 +301,7 @@ export const LandingNavbar: React.FC = () => {
               cursor: 'pointer'
             }}
           >
-            🌾 {hi ? 'सुविधाएं' : 'Features'}
+            🌾 {t('nav_features')}
           </button>
 
           <Link
@@ -353,7 +315,7 @@ export const LandingNavbar: React.FC = () => {
               padding: '8px 0'
             }}
           >
-            🎬 {hi ? 'सीखें व शॉर्ट्स' : 'Learn (Videos)'}
+            🎬 {t('nav_learn')}
           </Link>
 
           <Link
@@ -367,7 +329,7 @@ export const LandingNavbar: React.FC = () => {
               padding: '8px 0'
             }}
           >
-            🌐 {hi ? '3D डिजिटल ट्विन' : 'Digital Twin'}
+            🌐 {t('nav_twin')}
           </Link>
 
           <button
@@ -384,7 +346,7 @@ export const LandingNavbar: React.FC = () => {
               cursor: 'pointer'
             }}
           >
-            👥 {hi ? 'हमारे बारे में' : 'About Us'}
+            👥 {t('nav_about')}
           </button>
 
           <Link
@@ -398,38 +360,20 @@ export const LandingNavbar: React.FC = () => {
               padding: '8px 0'
             }}
           >
-            🏛️ {hi ? 'अधिकारी व वैज्ञानिक डैशबोर्ड' : 'Officer & Scientist Portals'}
+            🏛️ {t('nav_officer_full')}
           </Link>
 
           {/* Social Links on Mobile */}
           <div style={{ paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
             <span style={{ fontSize: '0.72rem', color: '#94a3b8', display: 'block', marginBottom: '8px' }}>
-              {hi ? 'सोशल मीडिया व वीडियो' : 'Social Media & Videos'}:
+              {t('social_videos')}:
             </span>
             <HeaderSocialIcons light={true} />
           </div>
 
           {/* Language Switcher & Farm Button on Mobile */}
-          <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
-            <button
-              type="button"
-              onClick={() => {
-                setLanguage(hi ? 'en' : 'hi');
-                setMobileMenuOpen(false);
-              }}
-              style={{
-                flex: 1,
-                padding: '10px',
-                borderRadius: '10px',
-                background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#ffffff',
-                fontWeight: 700,
-                fontSize: '0.84rem'
-              }}
-            >
-              {hi ? 'Switch to English' : 'हिंदी में बदलें'}
-            </button>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '8px', alignItems: 'center' }}>
+            <LanguageSwitcher variant="dark" />
             <button
               type="button"
               onClick={() => {
@@ -447,7 +391,7 @@ export const LandingNavbar: React.FC = () => {
                 fontSize: '0.84rem'
               }}
             >
-              🌾 {farm.isConfigured ? (hi ? 'मेरा खेत' : 'My Farm') : (hi ? 'खेत जोड़ें' : 'Setup')}
+              🌾 {farm.isConfigured ? t('cta_open_farm') : t('cta_setup_farm')}
             </button>
           </div>
         </div>

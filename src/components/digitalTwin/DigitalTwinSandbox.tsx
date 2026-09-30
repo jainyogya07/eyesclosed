@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 
 export const DigitalTwinSandbox: React.FC = () => {
   const { language, location, selectedCrop } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
 
   const [rainOverride, setRainOverride] = useState<number>(12);
   const [tempOverride, setTempOverride] = useState<number>(0);

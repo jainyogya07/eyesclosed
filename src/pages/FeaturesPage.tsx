@@ -24,7 +24,7 @@ type Feature = {
 
 export const FeaturesPage: React.FC = () => {
   const { language } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
   const [filter, setFilter] = useState<'All' | Feature['status']>('All');
 
   const groups = useMemo(() => {

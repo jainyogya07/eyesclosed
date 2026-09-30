@@ -183,6 +183,10 @@ export const hazardsApi = {
 };
 
 // M10: Decisions
+export const bundleApi = {
+  get: (code: string) => apiFetch<Record<string, unknown>>(`/bundle/${code}`),
+};
+
 export const decisionsApi = {
   getAdvisory: (code: string) => apiFetch<AdvisoryPayload>(`/advisories/${code}`),
   runScenario: (params: {

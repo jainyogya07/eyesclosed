@@ -54,7 +54,7 @@ export const AVAILABLE_CROPS = [
 export const FarmerPinpointHub: React.FC = () => {
   const { language, location, setLocation, selectedCrop, setSelectedCrop } = useApp();
   const { data: liveData } = useLivePrediction();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
 
   // Navigation State
   const [activeTab, setActiveTab] = useState<TabId>('input');

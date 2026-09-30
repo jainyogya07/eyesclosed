@@ -13,7 +13,7 @@ import { useApp } from '../contexts/AppContext';
 
 export const AboutPage: React.FC = () => {
   const { language } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
 
   return (
     <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem' }}>

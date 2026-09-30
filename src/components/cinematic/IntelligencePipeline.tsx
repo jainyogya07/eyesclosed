@@ -137,7 +137,7 @@ export const IntelligencePipeline: React.FC = () => {
             CAUSAL INTELLIGENCE ARCHITECTURE
           </span>
           <h3 style={{ fontSize: '1.4rem', color: 'var(--text-primary)' }}>
-            {language === 'hi' ? 'डेटा से निर्णय तक का सफर (Intelligence Pipeline)' : 'From Raw Telemetry to Farmer Action (Data Flow)'}
+            {language !== 'en' ? 'डेटा से निर्णय तक का सफर (Intelligence Pipeline)' : 'From Raw Telemetry to Farmer Action (Data Flow)'}
           </h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
             Click on any node to inspect data sources, models, resolution, and current readiness status.
@@ -195,7 +195,7 @@ export const IntelligencePipeline: React.FC = () => {
               </div>
 
               <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px', lineHeight: 1.2 }}>
-                {language === 'hi' ? node.nameHi : node.nameEn}
+                {language !== 'en' ? node.nameHi : node.nameEn}
               </div>
 
               <div

@@ -19,16 +19,15 @@ import {
   Sliders,
   CheckCircle2
 } from 'lucide-react';
-import { useApp } from '../contexts/AppContext';
+import { useI18n } from '../i18n';
 import { useFarm } from '../contexts/FarmContext';
 import heroAerial from '../../assets/images/kisaan-aerial-hero.png';
 import { SocialMediaLinks } from '../components/brand/SocialIcons';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { language, location } = useApp();
+  const { location, t, hi } = useI18n();
   const { farm, loadDemoFarm, configureFarm, resetFarm } = useFarm();
-  const hi = language === 'hi';
   const en = !hi;
 
   const solutionModules = [
@@ -135,7 +134,7 @@ export const LandingPage: React.FC = () => {
             {/* Trust Kicker Badge */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '999px', background: 'rgba(16, 185, 129, 0.22)', border: '1px solid rgba(110, 231, 183, 0.45)', color: '#a7f3d0', fontSize: '0.82rem', fontWeight: 800, marginBottom: '16px', backdropFilter: 'blur(8px)' }}>
               <span>🌾</span>
-              <span>{hi ? 'सही समय · सही सलाह · हर किसान की पक्की तरक्की' : 'Right Time · Right Advice · Every Farmer’s Growth'}</span>
+              <span>{t('slogan')}</span>
               <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#86efac' }} />
               <span><MapPin size={13} style={{ display: 'inline', verticalAlign: '-1px' }} /> {location.panchayatName}</span>
             </div>
@@ -154,14 +153,12 @@ export const LandingPage: React.FC = () => {
                 textShadow: '0 2px 14px rgba(0,0,0,0.5)'
               }}
             >
-              {hi ? 'ना अंदाज़ा, ना फसल का नुकसान!' : 'Zero Guesswork · Zero Crop Loss'}
+              {t('hero_hook')}
             </div>
 
             {/* Impactful Farmer Pitch */}
             <p style={{ maxWidth: '780px', margin: '0 auto 24px', fontSize: 'clamp(0.96rem, 1.8vw, 1.22rem)', lineHeight: 1.6, color: '#f1f5f9' }}>
-              {hi
-                ? 'मौसम के धोखे या दूसरों के अंदाज़े में अपनी साल भर की मेहनत मत गंवाइए। अब आपके गांव और खेत की 1-किमी सटीक मौसम भविष्यवाणी, मिट्टी की असली नमी, और फसल में कीड़ा-पीलापन दूर करने की पक्की सलाह — सीधे आपके मोबाइल पर, 100% आपकी मातृभाषा में।'
-                : 'Stop risking your hard work on guesswork. Get 1-km pinpoint village weather forecasts, root-zone soil telemetry, and instant AI crop pest diagnostics — calibrated to your exact field in your own language.'}
+              {t('hero_pitch')}
             </p>
 
             {/* 4 Compelling Farmer-First Value Chips */}
@@ -190,10 +187,10 @@ export const LandingPage: React.FC = () => {
                 <span style={{ fontSize: '1.4rem' }}>🌧️</span>
                 <div>
                   <strong style={{ display: 'block', color: '#86efac', fontSize: '0.84rem' }}>
-                    {hi ? 'बारिश होगी या नहीं? पक्का अलर्ट' : 'Rain or Not? Confirmed Alert'}
+                    {t('chip_rain')}
                   </strong>
                   <span style={{ color: '#cbd5e1', fontSize: '0.74rem', lineHeight: 1.35 }}>
-                    {hi ? '48 घंटे पहले सूचना — व्यर्थ ट्यूबवेल, डीजल और स्प्रे का खर्च 100% बचाएं।' : '48h prior notice to save needless pumping and wasted foliar spray.'}
+                    {t('chip_rain_d')}
                   </span>
                 </div>
               </div>
@@ -213,10 +210,10 @@ export const LandingPage: React.FC = () => {
                 <span style={{ fontSize: '1.4rem' }}>💰</span>
                 <div>
                   <strong style={{ display: 'block', color: '#fde047', fontSize: '0.84rem' }}>
-                    {hi ? 'हर एकड़ ₹4,000+ की सीधी बचत' : '₹4,000+ Savings / Acre'}
+                    {t('chip_save')}
                   </strong>
                   <span style={{ color: '#cbd5e1', fontSize: '0.74rem', lineHeight: 1.35 }}>
-                    {hi ? 'डीजल, बिजली और अनावश्यक खाद/दवाइयों पर किसानों द्वारा प्रमाणित भारी बचत।' : 'Verified fuel, electricity, and fertilizer input optimization.'}
+                    {t('chip_save_d')}
                   </span>
                 </div>
               </div>
@@ -236,10 +233,10 @@ export const LandingPage: React.FC = () => {
                 <span style={{ fontSize: '1.4rem' }}>🌾</span>
                 <div>
                   <strong style={{ display: 'block', color: '#93c5fd', fontSize: '0.84rem' }}>
-                    {hi ? 'पीलापन या कीट? 10 सेकंड में AI इलाज' : 'Pest or Yellowing? 10s AI Cure'}
+                    {t('chip_pest')}
                   </strong>
                   <span style={{ color: '#cbd5e1', fontSize: '0.74rem', lineHeight: 1.35 }}>
-                    {hi ? 'वैज्ञानिक व जैविक उपाय जो तुरंत फसल को बचाए और पैदावार बढ़ाए।' : 'Immediate ICAR-validated biocontrol & agronomic treatment.'}
+                    {t('chip_pest_d')}
                   </span>
                 </div>
               </div>
@@ -259,10 +256,10 @@ export const LandingPage: React.FC = () => {
                 <span style={{ fontSize: '1.4rem' }}>🔊</span>
                 <div>
                   <strong style={{ display: 'block', color: '#f472b6', fontSize: '0.84rem' }}>
-                    {hi ? '100% बोलकर पूछें, सुनकर समझें' : 'Voice-First AI Assistant'}
+                    {t('chip_voice')}
                   </strong>
                   <span style={{ color: '#cbd5e1', fontSize: '0.74rem', lineHeight: 1.35 }}>
-                    {hi ? 'टाइप करने की ज़रूरत नहीं — बस माइक दबाएं और अपनी भाषा में पूछें।' : 'No typing needed — speak naturally in Hindi or your mother tongue.'}
+                    {t('chip_voice_d')}
                   </span>
                 </div>
               </div>
@@ -284,9 +281,7 @@ export const LandingPage: React.FC = () => {
               >
                 <span>🌾</span>
                 <span>
-                  {farm.isConfigured
-                    ? (hi ? 'मेरा खेत डैशबोर्ड खोलें' : 'Open My Farm Dashboard')
-                    : (hi ? 'अभी अपना खेत जोड़ें — बिल्कुल मुफ़्त' : 'Start Farm Setup — 100% Free')}
+                  {farm.isConfigured ? t('cta_dashboard') : t('cta_start')}
                 </span>
                 <ChevronRight size={19} />
               </button>
@@ -305,7 +300,7 @@ export const LandingPage: React.FC = () => {
                 }}
               >
                 <span>🎬</span>
-                <span>{hi ? 'किसान ट्रेनिंग वीडियो (Shorts)' : 'Kisan Videos & Shorts'}</span>
+                <span>{t('cta_videos')}</span>
               </button>
 
               <Link
@@ -318,7 +313,7 @@ export const LandingPage: React.FC = () => {
                 }}
               >
                 <span>🌐</span>
-                <span>{hi ? '3D डिजिटल ट्विन सिमुलेशन' : '3D Digital Twin'}</span>
+                <span>{t('cta_twin')}</span>
               </Link>
 
               <button
@@ -336,7 +331,7 @@ export const LandingPage: React.FC = () => {
                 }}
               >
                 <span>🏛️</span>
-                <span>{hi ? 'अधिकारी व वैज्ञानिक लॉगिन' : 'Officer & Scientist Hub'}</span>
+                <span>{t('cta_officer')}</span>
               </button>
             </div>
 
@@ -356,7 +351,7 @@ export const LandingPage: React.FC = () => {
               }}
             >
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                <strong style={{ color: '#86efac' }}>50,000+</strong> {hi ? 'किसान परिवार' : 'Farmers'}
+                <strong style={{ color: '#86efac' }}>50,000+</strong> {t('proof_farmers')}
               </span>
               <span>•</span>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
@@ -1000,14 +995,10 @@ export const LandingPage: React.FC = () => {
           transition={{ duration: 0.55 }}
         >
           <Leaf size={38} />
-          <h2>{hi ? 'मौसम सेतु के साथ सुरक्षित खेती शुरू करें' : 'Start Resilient Farming with Mausam Setu'}</h2>
-          <p>
-            {hi
-              ? 'अपने गांव की पंचायत ग्रिड, उपग्रह मिट्टी नमी व मौसम अलर्ट का सीधा लाभ उठाएं।'
-              : 'Access hyperlocal Panchayat weather grids, satellite root-zone moisture, and AI crop advice.'}
-          </p>
+          <h2>{t('cta_start_farming')}</h2>
+          <p>{t('cta_start_farming_p')}</p>
           <button onClick={() => navigate('/panchayat')}>
-            {hi ? 'अपनी पंचायत देखें' : 'Open Panchayat View'} <ChevronRight size={18} />
+            {t('cta_panchayat')} <ChevronRight size={18} />
           </button>
         </motion.div>
       </section>

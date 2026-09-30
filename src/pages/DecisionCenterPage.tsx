@@ -6,7 +6,7 @@ import { Sparkles, ShieldCheck } from 'lucide-react';
 
 export const DecisionCenterPage: React.FC = () => {
   const { language } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
   const [activeMode, setActiveMode] = useState<'farmer' | 'scientific'>('farmer');
 
   return (

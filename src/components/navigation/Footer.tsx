@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useApp } from '../../contexts/AppContext';
+import { useI18n } from '../../i18n';
 import { SocialMediaLinks } from '../brand/SocialIcons';
 
 export const Footer: React.FC = () => {
-  const { language } = useApp();
-  const hi = language === 'hi';
+  const { t, hi } = useI18n();
 
   return (
     <footer className="platform-footer" aria-label="MausamSetu Footer">
@@ -25,29 +24,26 @@ export const Footer: React.FC = () => {
             />
           </Link>
           <strong style={{ fontSize: '0.86rem', color: '#059669', letterSpacing: '0.02em' }}>
-            {hi ? 'सही समय, सही सलाह, हर किसान तक' : 'Sahi Samay, Sahi Salah, Har Kisaan Tak'}
+            {t('slogan')}
           </strong>
           <p style={{ margin: 0, fontSize: '0.78rem', color: '#64748b', lineHeight: 1.4 }}>
-            {hi
-              ? '1-किमी हाइपरलोकल मौसम, उपग्रह मिट्टी नमी व ICAR/MANAGE प्रमाणित कृषि निर्णय प्रणाली।'
-              : '1-km hyperlocal weather, satellite soil moisture telemetry, and AI agricultural decision support.'}
+            {t('footer_copy')}
           </p>
           <span className="footer-status">
-            <i /> {hi ? 'लाइव टेलीमेट्री और मॉडल सक्रिय' : 'Live telemetry & AI models active'}
+            <i /> {t('footer_live')}
           </span>
 
-          {/* Social Media Links: YouTube, Twitter/X, Instagram */}
           <div style={{ marginTop: '6px' }}>
             <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#475569', display: 'block', marginBottom: '6px' }}>
-              {hi ? 'जुड़ें और सीखें' : 'Connect & Learn'}:
+              {t('footer_connect')}:
             </span>
             <SocialMediaLinks compact />
           </div>
         </div>
 
         <div>
-          <h3>{hi ? 'एक्सप्लोर' : 'Explore'}</h3>
-          <Link to="/home">{hi ? 'होम' : 'Home'}</Link>
+          <h3>{t('footer_explore')}</h3>
+          <Link to="/home">{t('footer_home')}</Link>
           <Link to="/my-farm">{hi ? 'मेरा खेत केंद्र' : 'My Farm Center'}</Link>
           <Link to="/panchayat">{hi ? 'पंचायत ग्रिड' : 'Panchayat Grid'}</Link>
           <Link to="/crops">{hi ? 'फसल उपयुक्तता' : 'Crop Intelligence'}</Link>
@@ -70,12 +66,12 @@ export const Footer: React.FC = () => {
           <Link to="/model-lab">{hi ? 'AI मॉडल लैब M1–M10' : 'AI Model Lab M1–M10'}</Link>
           <Link to="/data-center">{hi ? 'डेटा केंद्र व टेलीमेट्री' : 'Data Center & Telemetry'}</Link>
           <Link to="/validation">{hi ? 'मॉडल सत्यापन मेट्रिक्स' : 'Validation & Benchmarks'}</Link>
-          <Link to="/about">{hi ? 'मौसम सेतु के बारे में' : 'About Mausam Setu'}</Link>
+          <Link to="/about">{t('footer_about')}</Link>
         </div>
       </div>
 
       <div className="platform-footer-bottom">
-        <span>{hi ? '© 2026 मौसम सेतु · सर्वाधिकार सुरक्षित' : '© 2026 Mausam Setu · All Rights Reserved'}</span>
+        <span>{t('footer_rights')}</span>
         <span>{hi ? 'राष्ट्रीय कृषि जलवायु निर्णय समर्थन प्रणाली' : 'National Agricultural Climate Decision Support System'}</span>
       </div>
     </footer>

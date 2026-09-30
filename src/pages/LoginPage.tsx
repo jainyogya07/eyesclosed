@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, LockKeyhole, MapPin, ShieldCheck, Sprout } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
+import { useI18n } from '../i18n';
 import { KisaanLogo } from '../components/brand/KisaanLogo';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { signIn } = useApp();
+  const { t } = useI18n();
   const [role, setRole] = useState('Farmer');
   const [phone, setPhone] = useState('');
 
@@ -21,7 +23,7 @@ export const LoginPage: React.FC = () => {
       <section className="login-hero">
         <div className="login-brand"><span><KisaanLogo size={34} /></span><strong>Mausam Setu</strong></div>
         <div className="login-hero-copy">
-          <p className="login-eyebrow">Panchayat climate intelligence</p>
+          <p className="login-eyebrow">{t('login_eyebrow')}</p>
           <h1>Know what weather means for your <em>crops.</em></h1>
           <p>Weather, soil, Panchayat data and AI work together to turn local climate signals into clear agricultural action.</p>
         </div>

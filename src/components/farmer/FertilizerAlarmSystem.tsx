@@ -17,7 +17,7 @@ import {
 
 export const FertilizerAlarmSystem: React.FC = () => {
   const { language, speakText, isSpeaking, location } = useApp();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
 
   const [activePlan, setActivePlan] = useState<'sms' | 'call'>('call');
   const [phoneNumber, setPhoneNumber] = useState('');

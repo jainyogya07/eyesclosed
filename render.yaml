@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: mausam-setu-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHONPATH
+        value: .
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: ALLOWED_ORIGINS
+        value: https://mausam-setu.vercel.app,https://mausamsetu.vercel.app,http://localhost:3000,http://localhost:5173
+      - key: PROJECT_NAME
+        value: Mausam Setu Intelligence API
+      - key: VERSION
+        value: 1.0.0

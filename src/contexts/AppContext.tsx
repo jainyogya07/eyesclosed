@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Language, getLanguageMeta, isLanguage } from '../i18n/languages';
 
-export type Language = 'hi' | 'en';
+export type { Language };
 export type ViewMode = 'simple' | 'scientific';
 export type PlatformMode = 'farmer' | 'panchayat' | 'scientific';
 
@@ -45,21 +46,38 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     try {
-      const saved = localStorage.getItem('kisaan-lang') as Language;
-      return saved === 'hi' || saved === 'en' ? saved : 'en';
+      const saved = localStorage.getItem('mausam-lang') || localStorage.getItem('kisaan-lang');
+      if (isLanguage(saved)) return saved;
     } catch {
-      return 'en';
+      // ignore
     }
+    const nav = typeof navigator !== 'undefined' ? navigator.language.toLowerCase() : 'hi';
+    if (nav.startsWith('hi')) return 'hi';
+    if (nav.startsWith('pa')) return 'pa';
+    if (nav.startsWith('gu')) return 'gu';
+    if (nav.startsWith('mr')) return 'mr';
+    if (nav.startsWith('bn')) return 'bn';
+    if (nav.startsWith('ta')) return 'ta';
+    if (nav.startsWith('te')) return 'te';
+    if (nav.startsWith('kn')) return 'kn';
+    if (nav.startsWith('or')) return 'or';
+    return 'hi';
   });
 
   const setLanguage = (lang: Language) => {
     try {
-      localStorage.setItem('kisaan-lang', lang);
+      localStorage.setItem('mausam-lang', lang);
     } catch {
       // Ignore
     }
     setLanguageState(lang);
   };
+
+  useEffect(() => {
+    const meta = getLanguageMeta(language);
+    document.documentElement.lang = meta.bcp47;
+    document.title = `MausamSetu — ${meta.native}`;
+  }, [language]);
 
   const [platformMode, setPlatformModeState] = useState<PlatformMode>(() => {
     try {
@@ -101,7 +119,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return;
     }
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = language === 'hi' ? 'hi-IN' : 'en-IN';
+    utterance.lang = getLanguageMeta(language).bcp47;
     utterance.rate = 0.92;
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);

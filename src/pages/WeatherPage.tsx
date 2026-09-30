@@ -22,7 +22,7 @@ import {
 export const WeatherPage: React.FC = () => {
   const { language, location } = useApp();
   const { data, backendStatus } = useLivePrediction();
-  const hi = language === 'hi';
+  const hi = language !== 'en';
 
   const [selectedHorizon, setSelectedHorizon] = useState<string>('Now');
   const [techDrawerOpen, setTechDrawerOpen] = useState(false);

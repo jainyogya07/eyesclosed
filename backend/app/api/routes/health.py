@@ -17,6 +17,8 @@ def get_health():
 
     return {
         "status": "HEALTHY",
+        "brand": "Mausam Setu",
+        "slogan": "Sahi Samay, Sahi Salah, Har Kisaan Tak",
         "service": settings.PROJECT_NAME,
         "version": settings.VERSION,
         "active_training_job": training_status.is_training_active,

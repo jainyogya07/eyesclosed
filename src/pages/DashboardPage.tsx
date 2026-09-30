@@ -95,7 +95,7 @@ export const DashboardPage: React.FC = () => {
       >
         <div className="glass-panel" style={{ padding: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '6px' }}>
-            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language === 'hi' ? 'हवा का तापमान' : 'AIR TEMP'}</span>
+            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language !== 'en' ? 'हवा का तापमान' : 'AIR TEMP'}</span>
             <Thermometer size={16} color="var(--color-atmosphere-blue)" />
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)' }}>
@@ -108,33 +108,33 @@ export const DashboardPage: React.FC = () => {
 
         <div className="glass-panel" style={{ padding: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '6px' }}>
-            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language === 'hi' ? '24 घंटे वर्षा' : '24H RAIN'}</span>
+            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language !== 'en' ? '24 घंटे वर्षा' : '24H RAIN'}</span>
             <CloudRain size={16} color="var(--color-atmosphere-blue)" />
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-atmosphere-blue)' }}>
             {twin.precipitation.prediction.expected_rainfall_mm} mm
           </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-            {(twin.precipitation.prediction.rain_probability * 100).toFixed(0)}% {language === 'hi' ? 'संभावना' : 'Probability'}
+            {(twin.precipitation.prediction.rain_probability * 100).toFixed(0)}% {language !== 'en' ? 'संभावना' : 'Probability'}
           </div>
         </div>
 
         <div className="glass-panel" style={{ padding: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '6px' }}>
-            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language === 'hi' ? 'जड़ क्षेत्र नमी (40cm)' : 'ROOT SOIL (40cm)'}</span>
+            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language !== 'en' ? 'जड़ क्षेत्र नमी (40cm)' : 'ROOT SOIL (40cm)'}</span>
             <Droplets size={16} color="var(--color-earth-emerald)" />
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-earth-emerald)' }}>
             {twin.soil.prediction.root_zone_sm_vwc_pct}% VWC
           </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-            {language === 'hi' ? 'पर्याप्त नमी उपलब्ध' : 'Adequate moisture'}
+            {language !== 'en' ? 'पर्याप्त नमी उपलब्ध' : 'Adequate moisture'}
           </div>
         </div>
 
         <div className="glass-panel" style={{ padding: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '6px' }}>
-            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language === 'hi' ? 'फसल अवस्था' : 'CROP STAGE'}</span>
+            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language !== 'en' ? 'फसल अवस्था' : 'CROP STAGE'}</span>
             <Sprout size={16} color="var(--color-earth-emerald)" />
           </div>
           <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: '4px' }}>
@@ -147,27 +147,27 @@ export const DashboardPage: React.FC = () => {
 
         <div className="glass-panel" style={{ padding: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '6px' }}>
-            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language === 'hi' ? 'जोखिम स्थिति' : 'HAZARD RISK'}</span>
+            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language !== 'en' ? 'जोखिम स्थिति' : 'HAZARD RISK'}</span>
             <Activity size={16} color="var(--color-earth-emerald)" />
           </div>
           <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-earth-emerald)' }}>
-            {language === 'hi' ? 'सुरक्षित (हरा)' : 'STABLE (GREEN)'}
+            {language !== 'en' ? 'सुरक्षित (हरा)' : 'STABLE (GREEN)'}
           </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-            {language === 'hi' ? 'बाढ़ जोखिम' : 'Flood'}: {twin.flood.prediction.risk_level}
+            {language !== 'en' ? 'बाढ़ जोखिम' : 'Flood'}: {twin.flood.prediction.risk_level}
           </div>
         </div>
 
         <div className="glass-panel" style={{ padding: '16px', borderLeft: '4px solid var(--color-earth-emerald)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '6px' }}>
-            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language === 'hi' ? 'आज का फैसला' : 'TODAY ACTION'}</span>
+            <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)' }}>{language !== 'en' ? 'आज का फैसला' : 'TODAY ACTION'}</span>
             <CheckCircle2 size={16} color="var(--color-earth-emerald)" />
           </div>
           <div style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--color-hazard-crimson)' }}>
-            {language === 'hi' ? 'सिंचाई रोकें' : 'HOLD IRRIGATION'}
+            {language !== 'en' ? 'सिंचाई रोकें' : 'HOLD IRRIGATION'}
           </div>
           <div style={{ fontSize: '0.72rem', color: 'var(--color-earth-emerald)', fontWeight: 600, marginTop: '2px' }}>
-            {language === 'hi' ? '₹1,450 डीजल बचत' : 'Saves ₹1,450 diesel'}
+            {language !== 'en' ? '₹1,450 डीजल बचत' : 'Saves ₹1,450 diesel'}
           </div>
         </div>
       </div>
@@ -177,7 +177,7 @@ export const DashboardPage: React.FC = () => {
         <div className="decision-overview-heading">
           <div>
             <span className="decision-label">AI + agronomy + local data</span>
-            <h2>{language === 'hi' ? 'इस पंचायत के लिए उपयुक्त फसलें' : 'Crop suitability for this Panchayat'}</h2>
+            <h2>{language !== 'en' ? 'इस पंचायत के लिए उपयुक्त फसलें' : 'Crop suitability for this Panchayat'}</h2>
             <p>
               {language === 'hi'
                 ? 'मौसम, 7-दिवसीय पूर्वानुमान, मिट्टी की नमी और प्रकार का एक साथ समन्वित मूल्यांकन।'
@@ -185,17 +185,17 @@ export const DashboardPage: React.FC = () => {
             </p>
           </div>
           <Link to="/decision-center" className="decision-link">
-            {language === 'hi' ? 'विस्तृत सलाह देखें' : 'Open recommendation'} <ArrowRight size={16} />
+            {language !== 'en' ? 'विस्तृत सलाह देखें' : 'Open recommendation'} <ArrowRight size={16} />
           </Link>
         </div>
         <div className="decision-overview-grid">
           <article className="scenario-card">
-            <span className="scenario-tag">{language === 'hi' ? 'सक्रिय परिदृश्य' : 'ACTIVE SCENARIO'}</span>
-            <h3>{language === 'hi' ? 'सामान्य मानसून' : 'Normal monsoon'}</h3>
+            <span className="scenario-tag">{language !== 'en' ? 'सक्रिय परिदृश्य' : 'ACTIVE SCENARIO'}</span>
+            <h3>{language !== 'en' ? 'सामान्य मानसून' : 'Normal monsoon'}</h3>
             <div className="scenario-metrics">
-              <span><b>78%</b> {language === 'hi' ? 'वर्षा संभावना' : 'rainfall outlook'}</span>
-              <span><b>+0.4°C</b> {language === 'hi' ? 'ट्रेंड' : 'trend'}</span>
-              <span><b>{language === 'hi' ? 'मध्यम' : 'Moderate'}</b> {language === 'hi' ? 'पानी' : 'water'}</span>
+              <span><b>78%</b> {language !== 'en' ? 'वर्षा संभावना' : 'rainfall outlook'}</span>
+              <span><b>+0.4°C</b> {language !== 'en' ? 'ट्रेंड' : 'trend'}</span>
+              <span><b>{language !== 'en' ? 'मध्यम' : 'Moderate'}</b> {language !== 'en' ? 'पानी' : 'water'}</span>
             </div>
             <p>
               {language === 'hi'
@@ -206,24 +206,24 @@ export const DashboardPage: React.FC = () => {
           <article className="crop-rank-card">
             <span>01</span>
             <div>
-              <b>{language === 'hi' ? 'बाजरा' : 'Bajra'}</b>
-              <small>{language === 'hi' ? 'अत्यधिक उपयुक्त · कम पानी आवश्यकता' : 'High suitability · Low water demand'}</small>
+              <b>{language !== 'en' ? 'बाजरा' : 'Bajra'}</b>
+              <small>{language !== 'en' ? 'अत्यधिक उपयुक्त · कम पानी आवश्यकता' : 'High suitability · Low water demand'}</small>
             </div>
             <strong>91%</strong>
           </article>
           <article className="crop-rank-card">
             <span>02</span>
             <div>
-              <b>{language === 'hi' ? 'मूंग' : 'Moong'}</b>
-              <small>{language === 'hi' ? 'अत्यधिक उपयुक्त · कम अवधि फसल' : 'High suitability · Short duration'}</small>
+              <b>{language !== 'en' ? 'मूंग' : 'Moong'}</b>
+              <small>{language !== 'en' ? 'अत्यधिक उपयुक्त · कम अवधि फसल' : 'High suitability · Short duration'}</small>
             </div>
             <strong>87%</strong>
           </article>
           <article className="crop-rank-card caution">
             <span>!</span>
             <div>
-              <b>{language === 'hi' ? 'धान' : 'Paddy'}</b>
-              <small>{language === 'hi' ? 'इस परिदृश्य में अधिक जल जोखिम' : 'High water risk under this scenario'}</small>
+              <b>{language !== 'en' ? 'धान' : 'Paddy'}</b>
+              <small>{language !== 'en' ? 'इस परिदृश्य में अधिक जल जोखिम' : 'High water risk under this scenario'}</small>
             </div>
             <strong>42%</strong>
           </article>
@@ -249,7 +249,7 @@ export const DashboardPage: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Clock size={18} color="var(--color-atmosphere-blue)" />
             <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)' }}>
-              {language === 'hi' ? 'अगले 24 घंटों का सटीक समय चक्र' : 'Next 24-Hour Micro-Climate Timeline'}
+              {language !== 'en' ? 'अगले 24 घंटों का सटीक समय चक्र' : 'Next 24-Hour Micro-Climate Timeline'}
             </h3>
           </div>
           <span className="badge badge-frozen">M1/M3 DOWNLINK</span>

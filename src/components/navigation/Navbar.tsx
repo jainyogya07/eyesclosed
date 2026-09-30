@@ -28,6 +28,8 @@ import { useFarm } from '../../contexts/FarmContext';
 import { useRole } from '../../contexts/RoleContext';
 import { KisaanLogo } from '../brand/KisaanLogo';
 import { realtimeTelemetry, TelemetryPacket } from '../../services/realtimeTelemetryService';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { LANGUAGES } from '../../i18n';
 
 export const Navbar: React.FC = () => {
   const { language, setLanguage, location, isSignedIn, signOut, platformMode, setPlatformMode } = useApp();
@@ -61,7 +63,7 @@ export const Navbar: React.FC = () => {
     }, 400);
   };
 
-  const hi = language === 'hi';
+  const hi = language !== 'en';
   const referenceHome = pageLocation.pathname === '/home' || pageLocation.pathname === '/';
 
   const primaryLinks = [
@@ -407,52 +409,7 @@ export const Navbar: React.FC = () => {
             <span>{telemetry.pingMs}ms</span>
           </button>
 
-          {/* Segmented Language Switcher */}
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              background: referenceHome ? 'rgba(0,0,0,0.3)' : '#e2e8f0',
-              borderRadius: '999px',
-              padding: '2px',
-              border: '1px solid rgba(255,255,255,0.3)'
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setLanguage('en')}
-              style={{
-                background: !hi ? '#059669' : 'transparent',
-                color: !hi ? '#ffffff' : referenceHome ? '#ffffff' : '#475569',
-                border: 'none',
-                borderRadius: '999px',
-                padding: '4px 10px',
-                fontWeight: 800,
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              EN
-            </button>
-            <button
-              type="button"
-              onClick={() => setLanguage('hi')}
-              style={{
-                background: hi ? '#059669' : 'transparent',
-                color: hi ? '#ffffff' : referenceHome ? '#ffffff' : '#475569',
-                border: 'none',
-                borderRadius: '999px',
-                padding: '4px 10px',
-                fontWeight: 800,
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              हिं
-            </button>
-          </div>
+          <LanguageSwitcher variant={referenceHome ? 'dark' : 'light'} compact />
 
           {/* User Profile */}
           <div className="profile-wrap">
@@ -470,13 +427,16 @@ export const Navbar: React.FC = () => {
                 <div className="profile-menu-title">
                   <Globe2 size={15} /> {hi ? 'भाषा चुनें' : 'Choose language'}
                 </div>
-                <div className="profile-language-actions">
-                  <button className={!hi ? 'selected' : ''} onClick={() => setLanguage('en')}>
-                    English
-                  </button>
-                  <button className={hi ? 'selected' : ''} onClick={() => setLanguage('hi')}>
-                    हिंदी
-                  </button>
+                <div className="profile-language-actions lang-profile-grid">
+                  {LANGUAGES.map((item) => (
+                    <button
+                      key={item.code}
+                      className={language === item.code ? 'selected' : ''}
+                      onClick={() => setLanguage(item.code)}
+                    >
+                      {item.native}
+                    </button>
+                  ))}
                 </div>
                 <div className="profile-menu-divider" />
                 {isSignedIn ? (
