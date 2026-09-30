@@ -22,15 +22,14 @@ import {
   Upload,
   X,
   ShieldCheck,
-  Layers,
   Tv,
   Check,
-  Eye,
-  RotateCcw
+  ExternalLink,
+  ChevronRight
 } from 'lucide-react';
 import { useFarm } from '../contexts/FarmContext';
 import { useApp } from '../contexts/AppContext';
-import { rankFarmerReels, FarmerReel, REELS_REPOSITORY } from '../services/videoRecommendationEngine';
+import { rankFarmerReels, FarmerReel } from '../services/videoRecommendationEngine';
 
 export const LearnPage: React.FC = () => {
   const { farm, playVoice, stopVoice, isSpeaking } = useFarm();
@@ -42,12 +41,14 @@ export const LearnPage: React.FC = () => {
   const [activeStepTab, setActiveStepTab] = useState<'takeaways' | 'what' | 'why' | 'action'>('takeaways');
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [useYoutubePlayer, setUseYoutubePlayer] = useState<boolean>(true);
+  // Default to false for guaranteed instant autoplay & zero black screens
+  const [useYoutubePlayer, setUseYoutubePlayer] = useState<boolean>(false);
   const [likedReels, setLikedReels] = useState<Record<string, boolean>>({});
   const [savedReels, setSavedReels] = useState<Record<string, boolean>>({});
   const [understoodReels, setUnderstoodReels] = useState<Record<string, boolean>>({});
   const [appliedReels, setAppliedReels] = useState<Record<string, boolean>>({});
   const [showWhyModal, setShowWhyModal] = useState<boolean>(false);
+  const [showFullDetails, setShowFullDetails] = useState<boolean>(false);
   const [shareToast, setShareToast] = useState<boolean>(false);
   const [appliedToast, setAppliedToast] = useState<string | null>(null);
 
@@ -217,24 +218,24 @@ export const LearnPage: React.FC = () => {
         immediateActionEn: 'Open drainage bund notch immediately. Post-drainage, foliar spray Chelated Iron (12%) @ 1g/L. Strictly withhold urea.',
         expertSource: 'ICAR Soybean & Paddy Health Advisory Cell'
       });
-    }, 1800);
+    }, 1600);
   };
 
   if (!currentReel) return null;
 
   return (
     <div
-      className="kisan-shorts-page"
+      className="kisan-shorts-page font-reels"
       style={{
         maxWidth: '1280px',
         margin: '0 auto',
-        padding: '1.25rem 1rem 3.5rem',
+        padding: '1rem 1rem 3.5rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
       }}
     >
-      {/* Top Banner: Context & 3D Twin Link */}
+      {/* Top Banner: Logo, Live Context & 3D Twin Link */}
       <div style={{ width: '100%', maxWidth: '640px', marginBottom: '14px' }}>
         <div
           style={{
@@ -246,29 +247,43 @@ export const LearnPage: React.FC = () => {
             gap: '8px'
           }}
         >
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span
+          {/* Logo & Headline */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Link to="/home" style={{ textDecoration: 'none' }}>
+              <img
+                src="/assets/mausam-setu-logo.png"
+                alt="MausamSetu Logo"
                 style={{
-                  background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-                  color: '#ffffff',
-                  fontSize: '0.7rem',
-                  fontWeight: 900,
-                  padding: '3px 10px',
-                  borderRadius: '999px',
-                  letterSpacing: '0.04em',
-                  boxShadow: '0 2px 6px rgba(5,150,105,0.3)'
+                  height: '42px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  borderRadius: '6px'
                 }}
-              >
-                🎓 KISAN VIGYAN VIDEO FEED
-              </span>
-              <span style={{ fontSize: '0.76rem', color: '#64748b', fontWeight: 700 }}>
-                {en ? 'MANAGE · ICAR · TNAU Verified' : 'प्रमाणित कृषि प्रशिक्षण वीडियो'}
-              </span>
+              />
+            </Link>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span
+                  style={{
+                    background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+                    color: '#ffffff',
+                    fontSize: '0.68rem',
+                    fontWeight: 900,
+                    padding: '2px 8px',
+                    borderRadius: '999px',
+                    letterSpacing: '0.04em'
+                  }}
+                >
+                  🎓 MANAGE · ICAR · TNAU
+                </span>
+                <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700 }}>
+                  {en ? 'Training Feed' : 'प्रमाणित प्रशिक्षण'}
+                </span>
+              </div>
+              <h1 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', margin: '2px 0 0' }}>
+                {en ? 'Learn: Practical Farm Demonstrations' : 'सीखें: खेत पर व्यावहारिक प्रशिक्षण'}
+              </h1>
             </div>
-            <h1 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0f172a', margin: '4px 0 0' }}>
-              {en ? 'Learn: Practical Farm Demonstrations' : 'सीखें: खेत पर व्यावहारिक प्रशिक्षण'}
-            </h1>
           </div>
 
           {/* Quick link to 3D Digital Twin */}
@@ -302,14 +317,14 @@ export const LearnPage: React.FC = () => {
             border: '1.5px solid #a7f3d0',
             borderRadius: '16px',
             padding: '10px 14px',
-            marginBottom: '12px',
+            marginBottom: '10px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px', marginBottom: '6px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.76rem', fontWeight: 800, color: '#065f46' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.74rem', fontWeight: 800, color: '#065f46' }}>
               <Sprout size={14} color="#059669" />
-              <span>{en ? 'Live Recommendation Logic' : 'स्मार्ट वीडियो चयन का आधार'}:</span>
+              <span>{en ? 'Active Recommendation Chain' : 'खेत व मौसम से जुड़ा चयन'}:</span>
             </div>
             <span style={{ fontSize: '0.7rem', color: '#0284c7', fontWeight: 700, background: '#ffffff', padding: '2px 8px', borderRadius: '999px', border: '1px solid #bae6fd' }}>
               📍 {farm.isConfigured ? (en ? farm.panchayat.name : farm.panchayat.hi) : location.panchayatName}
@@ -317,19 +332,15 @@ export const LearnPage: React.FC = () => {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.74rem', color: '#334155', flexWrap: 'wrap' }}>
             <span style={{ background: '#ffffff', padding: '2px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontWeight: 700 }}>
-              🌾 {en ? 'Paddy (Basmati)' : 'धान (बासमती)'}
-            </span>
-            <span style={{ color: '#94a3b8' }}>→</span>
-            <span style={{ background: '#ffffff', padding: '2px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontWeight: 700 }}>
-              🌱 {en ? 'Nursery / Flowering' : 'नर्सरी व फूल अवस्था'}
+              🌾 {en ? 'Paddy' : 'धान'}
             </span>
             <span style={{ color: '#94a3b8' }}>→</span>
             <span style={{ background: '#fee2e2', color: '#991b1b', padding: '2px 8px', borderRadius: '6px', border: '1px solid #fecaca', fontWeight: 800 }}>
-              🌧️ 14.8mm Rain / 32% Saturation
+              🌧️ 14.8mm Rain / 32% Soil Moisture
             </span>
             <span style={{ color: '#94a3b8' }}>→</span>
-            <span style={{ color: '#059669', fontWeight: 800 }}>
-              {en ? '3 Matching Teaching Videos' : '3 सटीक प्रशिक्षण वीडियो'}
+            <span style={{ color: '#059669', fontWeight: 900 }}>
+              {en ? '3 Matching Teaching Videos' : '3 सटीक व्यावहारिक वीडियो'}
             </span>
           </div>
         </div>
@@ -347,8 +358,9 @@ export const LearnPage: React.FC = () => {
           {categories.map((cat) => {
             const isSelected = activeCategory === cat.id;
             return (
-              <button
+              <motion.button
                 key={cat.id}
+                whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={() => {
                   setActiveCategory(cat.id);
@@ -369,7 +381,7 @@ export const LearnPage: React.FC = () => {
                 }}
               >
                 {en ? cat.labelEn : cat.labelHi}
-              </button>
+              </motion.button>
             );
           })}
         </div>
@@ -384,16 +396,72 @@ export const LearnPage: React.FC = () => {
           position: 'relative',
           width: '100%',
           maxWidth: '520px',
-          height: '750px',
-          borderRadius: '24px',
+          height: '740px',
+          borderRadius: '26px',
           overflow: 'hidden',
           background: '#090d16',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.35)',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.4)',
           border: '2px solid rgba(255, 255, 255, 0.15)'
         }}
       >
-        {/* VIDEO SURFACE: YouTube Embed OR MP4 Video Fallback */}
-        {useYoutubePlayer && currentReel.youtubeId ? (
+        {/* VIDEO SURFACE: GUARANTEED FAST LOCAL MP4 WITH AUTO-PLAY & FALLBACK */}
+        {!useYoutubePlayer ? (
+          <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+            <video
+              ref={videoRef}
+              key={currentReel.id + '-mp4'}
+              src={currentReel.videoUrl}
+              poster={currentReel.posterUrl}
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              onClick={togglePlay}
+              onError={(e) => {
+                const target = e.currentTarget;
+                target.src = '/assets/videos/field_irrigation.mp4';
+                target.play().catch(() => {});
+              }}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                cursor: 'pointer'
+              }}
+            />
+
+            {/* Play/Pause Center Indicator when paused */}
+            {!isPlaying && (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                onClick={togglePlay}
+                style={{
+                  position: 'absolute',
+                  top: '42%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  background: 'rgba(0,0,0,0.65)',
+                  backdropFilter: 'blur(8px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#ffffff',
+                  cursor: 'pointer',
+                  zIndex: 28,
+                  border: '1.5px solid rgba(255,255,255,0.3)'
+                }}
+              >
+                <Play size={28} style={{ marginLeft: '4px' }} />
+              </motion.div>
+            )}
+          </div>
+        ) : (
+          /* Official YouTube Stream Mode */
           <div style={{ width: '100%', height: '100%', position: 'relative' }}>
             <iframe
               key={currentReel.id + '-yt'}
@@ -409,38 +477,15 @@ export const LearnPage: React.FC = () => {
               }}
             />
           </div>
-        ) : (
-          <video
-            ref={videoRef}
-            key={currentReel.id + '-mp4'}
-            src={currentReel.videoUrl}
-            poster={currentReel.posterUrl}
-            autoPlay
-            loop
-            muted={isMuted}
-            playsInline
-            onClick={togglePlay}
-            onError={(e) => {
-              const target = e.currentTarget;
-              target.src = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
-              target.play().catch(() => {});
-            }}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              cursor: 'pointer'
-            }}
-          />
         )}
 
-        {/* Semi-transparent Gradient Overlay for Legibility */}
+        {/* Soft Vignette Overlay (Top & Bottom only so middle video stays visible) */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             background:
-              'linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.05) 28%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.95) 100%)',
+              'linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.92) 100%)',
             pointerEvents: 'none',
             zIndex: 10
           }}
@@ -511,18 +556,18 @@ export const LearnPage: React.FC = () => {
               </span>
             </div>
 
-            {/* Video Mode Switcher (YouTube / Direct MP4) */}
+            {/* Video Mode Switcher (Direct Video / YouTube Stream) */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <button
                 type="button"
                 onClick={() => setUseYoutubePlayer(!useYoutubePlayer)}
-                title={useYoutubePlayer ? 'Switch to Quick Stream' : 'Switch to Official YouTube Stream'}
+                title={useYoutubePlayer ? 'Switch to Quick HD Video' : 'Switch to Official YouTube Stream'}
                 style={{
-                  background: useYoutubePlayer ? '#ef4444' : 'rgba(0,0,0,0.6)',
+                  background: useYoutubePlayer ? '#ef4444' : 'rgba(0,0,0,0.65)',
                   color: '#ffffff',
-                  fontSize: '0.64rem',
+                  fontSize: '0.66rem',
                   fontWeight: 800,
-                  padding: '3px 8px',
+                  padding: '3px 9px',
                   borderRadius: '999px',
                   border: '1px solid rgba(255,255,255,0.3)',
                   cursor: 'pointer',
@@ -532,7 +577,7 @@ export const LearnPage: React.FC = () => {
                 }}
               >
                 <Tv size={11} />
-                <span>{useYoutubePlayer ? 'YouTube HD' : 'Direct MP4'}</span>
+                <span>{useYoutubePlayer ? 'YouTube HD' : '⚡ Direct HD Video'}</span>
               </button>
 
               <span
@@ -553,7 +598,7 @@ export const LearnPage: React.FC = () => {
 
           {/* Expert Presenter Tag */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.72rem', color: '#e2e8f0', fontWeight: 700 }}>
+            <span style={{ fontSize: '0.74rem', color: '#f8fafc', fontWeight: 800 }}>
               👨🔬 {en ? currentReel.expertNameEn : currentReel.expertNameHi}
             </span>
             <span style={{ fontSize: '0.68rem', color: '#94a3b8' }}>•</span>
@@ -568,7 +613,7 @@ export const LearnPage: React.FC = () => {
           style={{
             position: 'absolute',
             right: 12,
-            bottom: 110,
+            bottom: 120,
             zIndex: 35,
             display: 'flex',
             flexDirection: 'column',
@@ -577,7 +622,8 @@ export const LearnPage: React.FC = () => {
           }}
         >
           {/* Scroll Up / Previous Reel Button */}
-          <button
+          <motion.button
+            whileTap={{ scale: 0.9 }}
             type="button"
             onClick={handlePrev}
             title={en ? 'Previous (Scroll Up)' : 'पिछला वीडियो (ऊपर)'}
@@ -597,10 +643,11 @@ export const LearnPage: React.FC = () => {
             }}
           >
             <ChevronUp size={22} />
-          </button>
+          </motion.button>
 
           {/* Scroll Down / Next Reel Button */}
-          <button
+          <motion.button
+            whileTap={{ scale: 0.9 }}
             type="button"
             onClick={handleNext}
             title={en ? 'Next (Scroll Down)' : 'अगला वीडियो (नीचे)'}
@@ -621,7 +668,7 @@ export const LearnPage: React.FC = () => {
             }}
           >
             <ChevronDown size={22} />
-          </button>
+          </motion.button>
 
           {/* Sound Mute/Unmute */}
           <button
@@ -646,7 +693,8 @@ export const LearnPage: React.FC = () => {
           </button>
 
           {/* Like Button */}
-          <button
+          <motion.button
+            whileTap={{ scale: 1.25 }}
             type="button"
             onClick={() => handleLike(currentReel.id)}
             style={{
@@ -668,7 +716,7 @@ export const LearnPage: React.FC = () => {
             <span style={{ fontSize: '0.6rem', fontWeight: 800, marginTop: '2px', color: '#ffffff' }}>
               {currentReel.likesCount + (likedReels[currentReel.id] ? 1 : 0)}
             </span>
-          </button>
+          </motion.button>
 
           {/* Bookmark Button */}
           <button
@@ -713,20 +761,20 @@ export const LearnPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Bottom Educational & Decision Overlay */}
+        {/* Bottom Sleek Educational Card (Compact & Expandable) */}
         <div
           style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
-            padding: '16px 74px 16px 16px',
+            padding: '12px 70px 14px 14px',
             zIndex: 30,
             color: '#ffffff'
           }}
         >
           {/* Reason Badge: Why You're Seeing This */}
-          <div style={{ marginBottom: '8px' }}>
+          <div style={{ marginBottom: '6px' }}>
             <button
               type="button"
               onClick={() => setShowWhyModal(!showWhyModal)}
@@ -734,18 +782,18 @@ export const LearnPage: React.FC = () => {
                 background: 'rgba(16, 185, 129, 0.25)',
                 border: '1px solid rgba(16, 185, 129, 0.6)',
                 borderRadius: '999px',
-                padding: '3px 10px',
+                padding: '2px 9px',
                 color: '#a7f3d0',
-                fontSize: '0.68rem',
+                fontSize: '0.66rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '5px'
+                gap: '4px'
               }}
             >
               <Sparkles size={11} />
-              <span>{en ? 'Why You See This Video' : 'यह वीडियो आपके लिए क्यों?'}</span>
+              <span>{en ? 'Why This Video Fits Today' : 'आज यह वीडियो क्यों?'}</span>
               <Info size={11} />
             </button>
 
@@ -762,17 +810,17 @@ export const LearnPage: React.FC = () => {
                     backdropFilter: 'blur(16px)',
                     border: '1px solid rgba(148, 163, 184, 0.3)',
                     borderRadius: '12px',
-                    padding: '10px 12px',
-                    fontSize: '0.74rem',
+                    padding: '8px 10px',
+                    fontSize: '0.72rem',
                     color: '#e2e8f0',
-                    lineHeight: 1.4
+                    lineHeight: 1.35
                   }}
                 >
-                  <div style={{ fontWeight: 800, color: '#34d399', marginBottom: '4px' }}>
+                  <div style={{ fontWeight: 800, color: '#34d399', marginBottom: '3px' }}>
                     {en ? 'Personalized Match with Active Farm' : 'आपके खेत व आज के मौसम से सीधा संबंध'}
                   </div>
                   {(en ? currentReel.whyYouSeeThisEn : currentReel.whyYouSeeThisHi).map((item, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '5px', margin: '3px 0' }}>
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '5px', margin: '2px 0' }}>
                       <span style={{ color: '#10b981' }}>✓</span>
                       <span>{item}</span>
                     </div>
@@ -783,225 +831,179 @@ export const LearnPage: React.FC = () => {
           </div>
 
           {/* Video Title */}
-          <h2 style={{ fontSize: '1.05rem', fontWeight: 900, margin: '0 0 10px', lineHeight: 1.35 }}>
+          <h2 style={{ fontSize: '0.98rem', fontWeight: 900, margin: '0 0 8px', lineHeight: 1.3 }}>
             {en ? currentReel.titleEn : currentReel.titleHi}
           </h2>
 
-          {/* "सीखें → देखें → अपने खेत पर लागू करें" Tabs */}
+          {/* "💡 3 बातें याद रखें" (3 Key Takeaways) Card */}
           <div
             style={{
-              display: 'flex',
-              gap: '5px',
-              background: 'rgba(255, 255, 255, 0.12)',
-              backdropFilter: 'blur(10px)',
-              padding: '3px',
-              borderRadius: '10px',
-              marginBottom: '10px'
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setActiveStepTab('takeaways')}
-              style={{
-                flex: 1.3,
-                padding: '5px 0',
-                borderRadius: '7px',
-                border: 'none',
-                background: activeStepTab === 'takeaways' ? '#059669' : 'transparent',
-                color: '#ffffff',
-                fontSize: '0.68rem',
-                fontWeight: 800,
-                cursor: 'pointer'
-              }}
-            >
-              {en ? '💡 3 KEY TAKEAWAYS' : '💡 3 बातें याद रखें'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveStepTab('what')}
-              style={{
-                flex: 1,
-                padding: '5px 0',
-                borderRadius: '7px',
-                border: 'none',
-                background: activeStepTab === 'what' ? '#ffffff' : 'transparent',
-                color: activeStepTab === 'what' ? '#0f172a' : '#cbd5e1',
-                fontSize: '0.68rem',
-                fontWeight: 800,
-                cursor: 'pointer'
-              }}
-            >
-              {en ? '01 / WHAT' : '01 / स्थिति'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveStepTab('why')}
-              style={{
-                flex: 1,
-                padding: '5px 0',
-                borderRadius: '7px',
-                border: 'none',
-                background: activeStepTab === 'why' ? '#ffffff' : 'transparent',
-                color: activeStepTab === 'why' ? '#0f172a' : '#cbd5e1',
-                fontSize: '0.68rem',
-                fontWeight: 800,
-                cursor: 'pointer'
-              }}
-            >
-              {en ? '02 / WHY' : '02 / कारण'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveStepTab('action')}
-              style={{
-                flex: 1.1,
-                padding: '5px 0',
-                borderRadius: '7px',
-                border: 'none',
-                background: activeStepTab === 'action' ? '#38bdf8' : 'transparent',
-                color: activeStepTab === 'action' ? '#0f172a' : '#cbd5e1',
-                fontSize: '0.68rem',
-                fontWeight: 800,
-                cursor: 'pointer'
-              }}
-            >
-              {en ? '03 / ACTION' : '03 / खेत पर'}
-            </button>
-          </div>
-
-          {/* Interactive Content Card */}
-          <div
-            style={{
-              background: 'rgba(0, 0, 0, 0.6)',
+              background: 'rgba(15, 23, 42, 0.78)',
               backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              border: '1.5px solid rgba(255, 255, 255, 0.18)',
               borderRadius: '14px',
-              padding: '10px 12px',
-              fontSize: '0.78rem',
-              lineHeight: 1.45,
-              minHeight: '82px'
+              padding: '8px 10px',
+              fontSize: '0.74rem',
+              lineHeight: 1.35
             }}
           >
-            {activeStepTab === 'takeaways' && (
-              <div>
-                <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#34d399', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <span>🎯 {en ? '3 Rules from the Demonstration' : 'वैज्ञानिक प्रदर्शन की 3 मुख्य बातें'}:</span>
-                </div>
-                {(en ? currentReel.keyTakeawaysEn : currentReel.keyTakeawaysHi).map((point, idx) => (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', margin: '3px 0' }}>
-                    <span
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 900, color: '#34d399', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Sparkles size={11} />
+                <span>{en ? '3 RULES TO REMEMBER' : '3 बातें याद रखें'}:</span>
+              </span>
+
+              <button
+                type="button"
+                onClick={() => setShowFullDetails(!showFullDetails)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#38bdf8',
+                  fontSize: '0.66rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  padding: 0
+                }}
+              >
+                {showFullDetails ? (en ? 'Hide Steps ▲' : 'संक्षिप्त करें ▲') : (en ? 'Show Steps ▼' : 'पूरा विवरण ▼')}
+              </button>
+            </div>
+
+            {/* 3 Key Points */}
+            {(en ? currentReel.keyTakeawaysEn : currentReel.keyTakeawaysHi).slice(0, showFullDetails ? 3 : 2).map((point, idx) => (
+              <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '5px', margin: '2px 0' }}>
+                <span
+                  style={{
+                    background: '#059669',
+                    color: '#ffffff',
+                    fontSize: '0.58rem',
+                    fontWeight: 900,
+                    width: '14px',
+                    height: '14px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    marginTop: '2px'
+                  }}
+                >
+                  {idx + 1}
+                </span>
+                <span style={{ fontSize: '0.72rem', color: '#f1f5f9' }}>{point}</span>
+              </div>
+            ))}
+
+            {/* Expanded 3-Step Deep Dive */}
+            {showFullDetails && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                style={{ marginTop: '8px', paddingTop: '6px', borderTop: '1px solid rgba(255,255,255,0.15)' }}
+              >
+                <div style={{ display: 'flex', gap: '4px', marginBottom: '6px' }}>
+                  {(['what', 'why', 'action'] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setActiveStepTab(tab)}
                       style={{
-                        background: '#059669',
+                        flex: 1,
+                        padding: '3px 0',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: activeStepTab === tab ? '#059669' : 'rgba(255,255,255,0.1)',
                         color: '#ffffff',
                         fontSize: '0.62rem',
-                        fontWeight: 900,
-                        width: '16px',
-                        height: '16px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                        marginTop: '2px'
+                        fontWeight: 800,
+                        cursor: 'pointer'
                       }}
                     >
-                      {idx + 1}
-                    </span>
-                    <span style={{ fontSize: '0.74rem', color: '#f1f5f9' }}>{point}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+                      {tab === 'what' ? (en ? '01 WHAT' : '01 स्थिति') : tab === 'why' ? (en ? '02 WHY' : '02 कारण') : (en ? '03 ACTION' : '03 कदम')}
+                    </button>
+                  ))}
+                </div>
 
-            {activeStepTab === 'what' && (
-              <div>
-                <span style={{ color: '#38bdf8', fontWeight: 800 }}>
-                  {en ? currentReel.step1TitleEn : currentReel.step1TitleHi}:{' '}
-                </span>
-                <span>{en ? currentReel.step1DescEn : currentReel.step1DescHi}</span>
-              </div>
-            )}
-
-            {activeStepTab === 'why' && (
-              <div>
-                <span style={{ color: '#fbbf24', fontWeight: 800 }}>
-                  {en ? currentReel.step2TitleEn : currentReel.step2TitleHi}:{' '}
-                </span>
-                <span>{en ? currentReel.step2DescEn : currentReel.step2DescHi}</span>
-              </div>
-            )}
-
-            {activeStepTab === 'action' && (
-              <div>
-                <span style={{ color: '#4ade80', fontWeight: 800 }}>
-                  {en ? currentReel.step3TitleEn : currentReel.step3TitleHi}:{' '}
-                </span>
-                <span style={{ fontWeight: 800 }}>{en ? currentReel.step3ActionEn : currentReel.step3ActionHi}</span>
-              </div>
+                <div style={{ fontSize: '0.7rem', color: '#e2e8f0' }}>
+                  {activeStepTab === 'what' && (
+                    <span><strong>{en ? currentReel.step1TitleEn : currentReel.step1TitleHi}:</strong> {en ? currentReel.step1DescEn : currentReel.step1DescHi}</span>
+                  )}
+                  {activeStepTab === 'why' && (
+                    <span><strong>{en ? currentReel.step2TitleEn : currentReel.step2TitleHi}:</strong> {en ? currentReel.step2DescEn : currentReel.step2DescHi}</span>
+                  )}
+                  {activeStepTab === 'action' && (
+                    <span><strong style={{ color: '#4ade80' }}>{en ? currentReel.step3TitleEn : currentReel.step3TitleHi}:</strong> {en ? currentReel.step3ActionEn : currentReel.step3ActionHi}</span>
+                  )}
+                </div>
+              </motion.div>
             )}
           </div>
 
-          {/* Action Row: [समझ गया] + [खेत पर लागू करें] + [फोटो भेजें] + [सुनें] */}
-          <div style={{ marginTop: '10px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          {/* Action Row: [समझ गया] + [खेत पर लागू करें] + [सुनें] */}
+          <div style={{ marginTop: '8px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
             {/* Mark as Understood [समझ गया] */}
-            <button
+            <motion.button
+              whileTap={{ scale: 0.94 }}
               type="button"
               onClick={() => handleUnderstood(currentReel.id)}
               style={{
                 flex: 1,
-                minWidth: '100px',
+                minWidth: '95px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '5px',
-                padding: '7px 10px',
+                gap: '4px',
+                padding: '7px 8px',
                 borderRadius: '999px',
                 border: understoodReels[currentReel.id] ? '1.5px solid #10b981' : '1.5px solid rgba(255,255,255,0.3)',
-                background: understoodReels[currentReel.id] ? '#059669' : 'rgba(255,255,255,0.15)',
+                background: understoodReels[currentReel.id] ? '#059669' : 'rgba(255,255,255,0.18)',
                 color: '#ffffff',
                 fontSize: '0.72rem',
                 fontWeight: 800,
                 cursor: 'pointer'
               }}
             >
-              {understoodReels[currentReel.id] ? <Check size={14} /> : <CheckCircle2 size={14} />}
+              {understoodReels[currentReel.id] ? <Check size={13} /> : <CheckCircle2 size={13} />}
               <span>{understoodReels[currentReel.id] ? (en ? 'Understood ✓' : 'समझ गया ✓') : (en ? 'Understood' : 'समझ गया')}</span>
-            </button>
+            </motion.button>
 
             {/* Apply to Farm [खेत पर लागू करें] */}
-            <button
+            <motion.button
+              whileTap={{ scale: 0.94 }}
               type="button"
               onClick={() => handleApplyToFarm(currentReel)}
               style={{
                 flex: 1.2,
-                minWidth: '110px',
+                minWidth: '105px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '5px',
-                padding: '7px 10px',
+                gap: '4px',
+                padding: '7px 8px',
                 borderRadius: '999px',
                 border: appliedReels[currentReel.id] ? '1.5px solid #38bdf8' : '1.5px solid rgba(56, 189, 248, 0.6)',
-                background: appliedReels[currentReel.id] ? '#0284c7' : 'rgba(2, 132, 199, 0.4)',
+                background: appliedReels[currentReel.id] ? '#0284c7' : 'rgba(2, 132, 199, 0.45)',
                 color: '#ffffff',
                 fontSize: '0.72rem',
                 fontWeight: 800,
                 cursor: 'pointer'
               }}
             >
-              <Sprout size={14} />
+              <Sprout size={13} />
               <span>{appliedReels[currentReel.id] ? (en ? 'Applied ✓' : 'लागू किया ✓') : (en ? 'Apply on Farm' : 'खेत पर लागू करें')}</span>
-            </button>
+            </motion.button>
 
             {/* Voice Read Aloud [3 बातें सुनें] */}
-            <button
+            <motion.button
+              whileTap={{ scale: 0.94 }}
               type="button"
               onClick={handleListen}
               style={{
-                padding: '7px 12px',
+                padding: '7px 11px',
                 borderRadius: '999px',
                 border: 'none',
-                background: isSpeaking ? '#dc2626' : 'rgba(255,255,255,0.2)',
+                background: isSpeaking ? '#dc2626' : 'rgba(255,255,255,0.22)',
                 color: '#ffffff',
                 fontSize: '0.72rem',
                 fontWeight: 800,
@@ -1013,49 +1015,50 @@ export const LearnPage: React.FC = () => {
             >
               <Volume2 size={13} />
               <span>{isSpeaking ? (en ? 'Stop' : 'रोकें') : en ? 'Listen' : 'सुनें'}</span>
-            </button>
+            </motion.button>
           </div>
 
           {/* Prompt: Leaf yellowing or disease check -> Send Photo */}
           {(currentReel.category === 'crop_protection' || currentReel.id.includes('yellowing') || currentReel.id.includes('disease')) && (
-            <div
+            <motion.div
+              initial={{ scale: 0.96 }}
+              animate={{ scale: 1 }}
               onClick={() => setShowPhotoModal(true)}
               style={{
-                marginTop: '8px',
-                background: 'rgba(245, 158, 11, 0.25)',
-                border: '1.5px solid rgba(245, 158, 11, 0.7)',
+                marginTop: '6px',
+                background: 'rgba(245, 158, 11, 0.28)',
+                border: '1.5px solid rgba(245, 158, 11, 0.8)',
                 borderRadius: '10px',
-                padding: '6px 10px',
+                padding: '5px 9px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
+                cursor: 'pointer'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <AlertTriangle size={14} color="#fbbf24" />
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#fef3c7' }}>
-                  {en ? 'Seeing yellow leaves or pests in your field?' : 'आपके खेत में भी ऐसी समस्या दिख रही है?'}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <AlertTriangle size={13} color="#fbbf24" />
+                <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#fef3c7' }}>
+                  {en ? 'Yellow leaves in your crop?' : 'आपके खेत में भी पत्तियां पीली दिख रही हैं?'}
                 </span>
               </div>
               <span
                 style={{
                   background: '#f59e0b',
                   color: '#ffffff',
-                  fontSize: '0.68rem',
+                  fontSize: '0.66rem',
                   fontWeight: 800,
-                  padding: '3px 8px',
+                  padding: '2px 7px',
                   borderRadius: '999px',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '4px'
+                  gap: '3px'
                 }}
               >
-                <Camera size={11} />
+                <Camera size={10} />
                 <span>{en ? 'Send Photo →' : 'फोटो भेजें →'}</span>
               </span>
-            </div>
+            </motion.div>
           )}
         </div>
 
@@ -1095,15 +1098,15 @@ export const LearnPage: React.FC = () => {
               exit={{ opacity: 0, y: 20 }}
               style={{
                 position: 'absolute',
-                top: 70,
-                left: '20px',
-                right: '20px',
-                background: 'rgba(15, 23, 42, 0.95)',
+                top: 65,
+                left: '16px',
+                right: '16px',
+                background: 'rgba(15, 23, 42, 0.96)',
                 color: '#34d399',
-                padding: '10px 14px',
+                padding: '8px 12px',
                 borderRadius: '12px',
                 border: '1.5px solid #10b981',
-                fontSize: '0.75rem',
+                fontSize: '0.74rem',
                 fontWeight: 800,
                 zIndex: 50,
                 boxShadow: '0 8px 25px rgba(0,0,0,0.5)',
@@ -1126,7 +1129,7 @@ export const LearnPage: React.FC = () => {
             style={{
               position: 'fixed',
               inset: 0,
-              background: 'rgba(0, 0, 0, 0.75)',
+              background: 'rgba(0, 0, 0, 0.78)',
               backdropFilter: 'blur(8px)',
               zIndex: 999,
               display: 'flex',
@@ -1144,20 +1147,20 @@ export const LearnPage: React.FC = () => {
                 borderRadius: '24px',
                 maxWidth: '480px',
                 width: '100%',
-                padding: '24px',
+                padding: '22px',
                 boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
                 border: '1.5px solid #e2e8f0',
                 color: '#0f172a'
               }}
             >
               {/* Modal Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#ecfdf5', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Camera size={20} />
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 900 }}>
+                    <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 900 }}>
                       {en ? 'AI Plant Health Diagnosis' : 'फसल स्वास्थ्य निदान (AI डॉक्टर)'}
                     </h3>
                     <p style={{ margin: '2px 0 0', fontSize: '0.72rem', color: '#64748b' }}>
@@ -1184,20 +1187,20 @@ export const LearnPage: React.FC = () => {
                     style={{
                       border: '2px dashed #059669',
                       borderRadius: '16px',
-                      padding: '28px 16px',
+                      padding: '24px 16px',
                       textAlign: 'center',
                       background: '#f0fdf4',
                       cursor: 'pointer',
-                      marginBottom: '16px',
+                      marginBottom: '14px',
                       transition: 'all 0.2s ease'
                     }}
                   >
-                    <Upload size={32} color="#059669" style={{ margin: '0 auto 8px' }} />
-                    <strong style={{ fontSize: '0.88rem', color: '#065f46', display: 'block' }}>
+                    <Upload size={30} color="#059669" style={{ margin: '0 auto 6px' }} />
+                    <strong style={{ fontSize: '0.86rem', color: '#065f46', display: 'block' }}>
                       {en ? 'Click to Upload Leaf Photo / Open Camera' : 'पत्ती या तने की फोटो अपलोड करें'}
                     </strong>
-                    <span style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px', display: 'block' }}>
-                      {en ? 'Supported: JPG, PNG, WEBP (Clear macro shot)' : 'साफ व नजदीकी फोटो लें ताकि नसें व धब्बे दिखें'}
+                    <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px', display: 'block' }}>
+                      {en ? 'Clear macro shot of leaf veins and spots' : 'साफ व नजदीकी फोटो लें ताकि नसें व धब्बे दिखें'}
                     </span>
                   </div>
 
@@ -1212,13 +1215,13 @@ export const LearnPage: React.FC = () => {
                       onClick={handleTriggerPhotoAnalysis}
                       style={{
                         width: '100%',
-                        padding: '12px',
+                        padding: '11px',
                         borderRadius: '12px',
                         background: '#059669',
                         color: '#ffffff',
                         border: 'none',
                         fontWeight: 900,
-                        fontSize: '0.85rem',
+                        fontSize: '0.84rem',
                         cursor: 'pointer',
                         boxShadow: '0 4px 14px rgba(5,150,105,0.3)'
                       }}
@@ -1234,25 +1237,25 @@ export const LearnPage: React.FC = () => {
                       background: '#ecfdf5',
                       border: '1.5px solid #a7f3d0',
                       borderRadius: '16px',
-                      padding: '14px',
-                      marginBottom: '16px'
+                      padding: '12px',
+                      marginBottom: '14px'
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <span style={{ background: '#059669', color: '#ffffff', padding: '2px 8px', borderRadius: '999px', fontSize: '0.68rem', fontWeight: 800 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <span style={{ background: '#059669', color: '#ffffff', padding: '2px 8px', borderRadius: '999px', fontSize: '0.66rem', fontWeight: 800 }}>
                         ✓ {en ? 'MATCH CONFIRMED' : 'सटीक पहचान'} ({photoDiagnosisResult.confidence})
                       </span>
-                      <span style={{ fontSize: '0.68rem', color: '#047857', fontWeight: 700 }}>
+                      <span style={{ fontSize: '0.66rem', color: '#047857', fontWeight: 700 }}>
                         {photoDiagnosisResult.expertSource}
                       </span>
                     </div>
 
-                    <strong style={{ fontSize: '0.95rem', color: '#065f46', display: 'block', marginBottom: '6px' }}>
+                    <strong style={{ fontSize: '0.92rem', color: '#065f46', display: 'block', marginBottom: '6px' }}>
                       {en ? photoDiagnosisResult.diagnosisEn : photoDiagnosisResult.diagnosisHi}
                     </strong>
 
-                    <div style={{ fontSize: '0.78rem', color: '#1e293b', background: '#ffffff', padding: '10px', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
-                      <strong style={{ color: '#dc2626', display: 'block', marginBottom: '4px' }}>
+                    <div style={{ fontSize: '0.76rem', color: '#1e293b', background: '#ffffff', padding: '8px 10px', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
+                      <strong style={{ color: '#dc2626', display: 'block', marginBottom: '3px' }}>
                         ⚡ {en ? 'Immediate Scientific Remedy' : 'तुरंत करने योग्य वैज्ञानिक उपाय'}:
                       </strong>
                       <span>{en ? photoDiagnosisResult.immediateActionEn : photoDiagnosisResult.immediateActionHi}</span>
@@ -1265,13 +1268,13 @@ export const LearnPage: React.FC = () => {
                       onClick={() => setPhotoDiagnosisResult(null)}
                       style={{
                         flex: 1,
-                        padding: '10px',
+                        padding: '9px',
                         borderRadius: '10px',
                         border: '1.5px solid #cbd5e1',
                         background: '#ffffff',
                         color: '#475569',
                         fontWeight: 800,
-                        fontSize: '0.78rem',
+                        fontSize: '0.76rem',
                         cursor: 'pointer'
                       }}
                     >
@@ -1287,13 +1290,13 @@ export const LearnPage: React.FC = () => {
                       }}
                       style={{
                         flex: 1.5,
-                        padding: '10px',
+                        padding: '9px',
                         borderRadius: '10px',
                         border: 'none',
                         background: '#059669',
                         color: '#ffffff',
                         fontWeight: 800,
-                        fontSize: '0.78rem',
+                        fontSize: '0.76rem',
                         cursor: 'pointer'
                       }}
                     >
@@ -1309,7 +1312,7 @@ export const LearnPage: React.FC = () => {
 
       {/* Region / Category Notice */}
       {fallbackNotice && (
-        <div style={{ marginTop: '14px', fontSize: '0.76rem', color: '#64748b', textAlign: 'center' }}>
+        <div style={{ marginTop: '12px', fontSize: '0.74rem', color: '#64748b', textAlign: 'center' }}>
           {fallbackNotice}
         </div>
       )}

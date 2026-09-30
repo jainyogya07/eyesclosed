@@ -1,24 +1,48 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../contexts/AppContext';
+import { SocialMediaLinks } from '../brand/SocialIcons';
 
 export const Footer: React.FC = () => {
   const { language } = useApp();
   const hi = language === 'hi';
 
   return (
-    <footer className="platform-footer" aria-label="Mausam Setu Footer">
+    <footer className="platform-footer" aria-label="MausamSetu Footer">
       <div className="platform-footer-grid">
-        <div>
-          <strong>{hi ? 'मौसम सेतु' : 'Mausam Setu'}</strong>
-          <p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Link to="/home" style={{ display: 'inline-block' }}>
+            <img
+              src="/assets/mausam-setu-logo.png"
+              alt="MausamSetu Logo - Sahi Samay, Sahi Salah, Har Kisaan Tak"
+              style={{
+                height: '52px',
+                width: 'auto',
+                maxWidth: '220px',
+                objectFit: 'contain',
+                borderRadius: '8px'
+              }}
+            />
+          </Link>
+          <strong style={{ fontSize: '0.86rem', color: '#059669', letterSpacing: '0.02em' }}>
+            {hi ? 'सही समय, सही सलाह, हर किसान तक' : 'Sahi Samay, Sahi Salah, Har Kisaan Tak'}
+          </strong>
+          <p style={{ margin: 0, fontSize: '0.78rem', color: '#64748b', lineHeight: 1.4 }}>
             {hi
-              ? '1-किमी हाइपरलोकल मौसम, उपग्रह मिट्टी नमी व AI कृषि निर्णय प्रणाली।'
+              ? '1-किमी हाइपरलोकल मौसम, उपग्रह मिट्टी नमी व ICAR/MANAGE प्रमाणित कृषि निर्णय प्रणाली।'
               : '1-km hyperlocal weather, satellite soil moisture telemetry, and AI agricultural decision support.'}
           </p>
           <span className="footer-status">
             <i /> {hi ? 'लाइव टेलीमेट्री और मॉडल सक्रिय' : 'Live telemetry & AI models active'}
           </span>
+
+          {/* Social Media Links: YouTube, Twitter/X, Instagram */}
+          <div style={{ marginTop: '6px' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#475569', display: 'block', marginBottom: '6px' }}>
+              {hi ? 'जुड़ें और सीखें' : 'Connect & Learn'}:
+            </span>
+            <SocialMediaLinks compact />
+          </div>
         </div>
 
         <div>

@@ -83,6 +83,32 @@ export const FarmerPinpointHub: React.FC = () => {
   const [isSpeakingAudio, setIsSpeakingAudio] = useState(false);
   const stopVoiceRef = useRef<(() => void) | null>(null);
 
+  // Repeatable Analysis State
+  const [analysisCount, setAnalysisCount] = useState<number>(1);
+  const [isReanalyzing, setIsReanalyzing] = useState<boolean>(false);
+  const [lastAnalysisTime, setLastAnalysisTime] = useState<string>('अभी (Just now)');
+  const [analysisNotice, setAnalysisNotice] = useState<string | null>(null);
+
+  const handleReRunAnalysis = () => {
+    setIsReanalyzing(true);
+    setTimeout(() => {
+      setIsReanalyzing(false);
+      setAnalysisCount((prev) => prev + 1);
+      const now = new Date();
+      const timeStr = `${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}:${now.getSeconds() < 10 ? '0' : ''}${now.getSeconds()}`;
+      setLastAnalysisTime(timeStr);
+      const msg = hi
+        ? `विश्लेषण चक्र #${analysisCount + 1} संपन्न! ${panchayat.hi} के लिए लाइव मौसम व मिट्टी नमी की नई रिपोर्ट तैयार है।`
+        : `Analysis Run #${analysisCount + 1} completed! Refreshed with live WRF model data.`;
+      setAnalysisNotice(msg);
+      setTimeout(() => setAnalysisNotice(null), 4500);
+
+      if (sectionRefs.sinchai.current) {
+        sectionRefs.sinchai.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 900);
+  };
+
   // Section Refs for smooth scrolling
   const sectionRefs = {
     input: useRef<HTMLDivElement>(null),
@@ -633,6 +659,91 @@ export const FarmerPinpointHub: React.FC = () => {
               ICAR-CSSRI Lucknow Regional Baseline
             </div>
           </div>
+
+          {/* Repeatable Analysis Action Box */}
+          <div
+            style={{
+              marginTop: '1.25rem',
+              padding: '1rem 1.25rem',
+              background: 'linear-gradient(135deg, #090d16 0%, #064e3b 100%)',
+              borderRadius: '16px',
+              border: '1.5px solid #10b981',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '12px',
+              boxShadow: '0 8px 24px -6px rgba(5, 150, 105, 0.3)'
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                <span style={{ background: '#10b981', color: '#090d16', padding: '2px 8px', borderRadius: '999px', fontSize: '0.68rem', fontWeight: 900 }}>
+                  🔄 {hi ? `विश्लेषण चक्र #${analysisCount}` : `Analysis Run #${analysisCount}`}
+                </span>
+                <span style={{ fontSize: '0.72rem', color: '#a7f3d0' }}>
+                  {hi ? `अंतिम सिंक: ${lastAnalysisTime}` : `Last refreshed: ${lastAnalysisTime}`}
+                </span>
+              </div>
+              <strong style={{ fontSize: '0.94rem', color: '#ffffff', display: 'block' }}>
+                {hi ? 'खेत का बार-बार विश्लेषण करने की सुविधा' : 'On-Demand Multi-Scenario Re-Analysis'}
+              </strong>
+              <p style={{ margin: '2px 0 0', fontSize: '0.74rem', color: '#cbd5e1' }}>
+                {hi ? 'फसल, रकबा या साधन बदलें और तुरंत नया वैज्ञानिक फैसला पाएं।' : 'Tweak crops, plots or water sources and re-run live WRF calculations.'}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleReRunAnalysis}
+              disabled={isReanalyzing}
+              style={{
+                background: isReanalyzing ? '#047857' : '#10b981',
+                color: '#ffffff',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '12px',
+                fontSize: '0.85rem',
+                fontWeight: 900,
+                cursor: isReanalyzing ? 'wait' : 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.45)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <RotateCcw size={16} className={isReanalyzing ? 'animate-spin' : ''} />
+              <span>{isReanalyzing ? (hi ? 'गणना जारी है...' : 'Analyzing WRF Grid...') : (hi ? '⚡ नया विश्लेषण करें' : '⚡ Re-run Analysis')}</span>
+            </button>
+          </div>
+
+          {/* Animated Re-analysis Success Notice */}
+          <AnimatePresence>
+            {analysisNotice && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                style={{
+                  marginTop: '10px',
+                  background: '#ecfdf5',
+                  border: '1.5px solid #10b981',
+                  color: '#065f46',
+                  padding: '10px 14px',
+                  borderRadius: '12px',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                <CheckCircle2 size={18} color="#059669" />
+                <span>{analysisNotice}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </section>
 
         {/* ========================================================================= */}

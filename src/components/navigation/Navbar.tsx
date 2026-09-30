@@ -114,9 +114,9 @@ export const Navbar: React.FC = () => {
             src="/assets/mausam-setu-logo.png"
             alt="MausamSetu - Sahi Samay, Sahi Salah, Har Kisaan Tak"
             style={{
-              height: '44px',
+              height: '48px',
               width: 'auto',
-              maxWidth: '185px',
+              maxWidth: '220px',
               objectFit: 'contain',
               display: 'block'
             }}

@@ -22,6 +22,7 @@ import {
 import { useApp } from '../contexts/AppContext';
 import { useFarm } from '../contexts/FarmContext';
 import heroAerial from '../../assets/images/kisaan-aerial-hero.png';
+import { SocialMediaLinks } from '../components/brand/SocialIcons';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -109,7 +110,7 @@ export const LandingPage: React.FC = () => {
   ] as const;
 
   return (
-    <div className="plantiq-home">
+    <div className="plantiq-home font-landing">
       {/* 1. CINEMATIC HERO WITH VIDEO BACKGROUND */}
       <section className="plantiq-hero kisan-reference-hero" style={{ backgroundImage: `url(${heroAerial})` }}>
         <video
@@ -131,6 +132,23 @@ export const LandingPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
+            {/* Attached Official Logo */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+              <img
+                src="/assets/mausam-setu-logo.png"
+                alt="MausamSetu Logo - Sahi Samay, Sahi Salah, Har Kisaan Tak"
+                style={{
+                  height: '66px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  borderRadius: '12px',
+                  background: 'rgba(255,255,255,0.96)',
+                  padding: '4px 12px',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.25)'
+                }}
+              />
+            </div>
+
             <span className="reference-kicker">
               <MapPin size={15} /> {location.panchayatName} · {hi ? 'मौसम सेतु कृषि इंटेलिजेंस' : 'Mausam Setu Climate Intelligence'}
             </span>
@@ -678,6 +696,110 @@ export const LandingPage: React.FC = () => {
               {hi ? 'सभी 32 वैज्ञानिक फीचर देखें' : 'View all 32 platform features'} <ChevronRight size={17} />
             </Link>
           </motion.div>
+        </div>
+      </section>
+
+      {/* 6.5. ABOUT US & INSTITUTIONAL MISSION SECTION */}
+      <section
+        id="about-us"
+        style={{
+          background: 'linear-gradient(180deg, #f8fafc 0%, #ecfdf5 100%)',
+          padding: '4rem 1.5rem',
+          borderTop: '1px solid #e2e8f0',
+          borderBottom: '1px solid #cbd5e1'
+        }}
+      >
+        <div style={{ maxWidth: '1160px', margin: '0 auto' }}>
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '28px',
+              padding: 'clamp(1.5rem, 4vw, 3rem)',
+              boxShadow: '0 20px 40px -15px rgba(5, 150, 105, 0.1)',
+              border: '1.5px solid #a7f3d0'
+            }}
+          >
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem', alignItems: 'center' }}>
+              {/* Left Column: Brand, Logo & Story */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
+                  <img
+                    src="/assets/mausam-setu-logo.png"
+                    alt="MausamSetu Logo - Sahi Samay, Sahi Salah, Har Kisaan Tak"
+                    style={{
+                      height: '74px',
+                      width: 'auto',
+                      objectFit: 'contain',
+                      borderRadius: '12px'
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'inline-block', background: '#ecfdf5', color: '#047857', padding: '4px 12px', borderRadius: '999px', fontSize: '0.78rem', fontWeight: 800, marginBottom: '10px', border: '1px solid #a7f3d0' }}>
+                  {hi ? 'हमारे बारे में / मौसमसेतु मिशन' : 'ABOUT US / THE MAUSAMSETU MISSION'}
+                </div>
+
+                <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 10px', lineHeight: 1.15 }}>
+                  {hi ? 'सही समय, सही सलाह, हर किसान तक' : 'Sahi Samay, Sahi Salah, Har Kisaan Tak'}
+                </h2>
+
+                <p style={{ color: '#475569', fontSize: '0.94rem', lineHeight: 1.6, margin: '0 0 1.25rem' }}>
+                  {hi
+                    ? 'मौसमसेतु (MausamSetu) भारत का पहला AI-सक्षम 1-किमी हाइपरलोकल कृषि-जलवायु इंटेलिजेंस प्लेटफॉर्म है। हम ICAR, MANAGE, TNAU और IMD के वैज्ञानिक मॉडल्स को उपग्रह रिमोट सेंसिंग और 3D डिजिटल ट्विन तकनीक से जोड़कर सीधे किसान की हथेली तक पहुंचाते हैं।'
+                    : 'MausamSetu is India’s premier AI-native 1-km hyperlocal agro-climate platform. Connecting national scientific institutions (ICAR, MANAGE, TNAU, IMD) with Sentinel satellite remote sensing and 3D physics simulation to empower farmers.'}
+                </p>
+
+                {/* Social Media Links: YouTube, Twitter/X, Instagram */}
+                <div>
+                  <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0f172a', display: 'block', marginBottom: '8px' }}>
+                    {hi ? 'आधिकारिक सोशल मीडिया माध्यमों पर जुड़ें' : 'Connect with our Community'}:
+                  </span>
+                  <SocialMediaLinks />
+                </div>
+              </div>
+
+              {/* Right Column: 4 Impact Metrics & Institutional Foundation */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                  <div style={{ background: '#f0fdf4', padding: '18px', borderRadius: '18px', border: '1px solid #bbf7d0' }}>
+                    <strong style={{ fontSize: '1.8rem', color: '#059669', display: 'block', fontWeight: 900 }}>45,000+</strong>
+                    <span style={{ fontSize: '0.76rem', color: '#166534', fontWeight: 700 }}>
+                      {hi ? 'पंजीकृत किसान व खेत' : 'Registered Farmers & Plots'}
+                    </span>
+                  </div>
+
+                  <div style={{ background: '#f0f9ff', padding: '18px', borderRadius: '18px', border: '1px solid #bae6fd' }}>
+                    <strong style={{ fontSize: '1.8rem', color: '#0284c7', display: 'block', fontWeight: 900 }}>35%</strong>
+                    <span style={{ fontSize: '0.76rem', color: '#075985', fontWeight: 700 }}>
+                      {hi ? 'सिंचाई जल व बिजली बचत' : 'Irrigation Water & Power Saved'}
+                    </span>
+                  </div>
+
+                  <div style={{ background: '#fffbeb', padding: '18px', borderRadius: '18px', border: '1px solid #fde68a' }}>
+                    <strong style={{ fontSize: '1.8rem', color: '#d97706', display: 'block', fontWeight: 900 }}>1-km</strong>
+                    <span style={{ fontSize: '0.76rem', color: '#92400e', fontWeight: 700 }}>
+                      {hi ? 'सूक्ष्म-जलवायु ग्रिड सटीकता' : 'Microclimate Grid Precision'}
+                    </span>
+                  </div>
+
+                  <div style={{ background: '#faf5ff', padding: '18px', borderRadius: '18px', border: '1px solid #e9d5ff' }}>
+                    <strong style={{ fontSize: '1.8rem', color: '#7c3aed', display: 'block', fontWeight: 900 }}>100%</strong>
+                    <span style={{ fontSize: '0.76rem', color: '#5b21b6', fontWeight: 700 }}>
+                      {hi ? 'प्रमाणित वैज्ञानिक प्रशिक्षण' : 'Institutional Video Demonstrations'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Institutional Alliance Pill */}
+                <div style={{ background: '#f8fafc', padding: '14px 18px', borderRadius: '16px', border: '1px solid #e2e8f0', fontSize: '0.76rem', color: '#475569' }}>
+                  <strong style={{ color: '#0f172a', display: 'block', marginBottom: '4px' }}>
+                    🏛️ {hi ? 'राष्ट्रीय वैज्ञानिक साझेदारी' : 'National Scientific Alliances'}:
+                  </strong>
+                  <span>ICAR-IISR · MANAGE Hyderabad · TNAU Coimbatore · IMD WRF · ISRO Bhuvan</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -59,7 +59,18 @@
   --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --font-reels: 'Space Grotesk', 'Outfit', sans-serif;
+  --font-syne: 'Syne', 'Outfit', sans-serif;
 }
+
+/* Distinct Page-Specific Typography Systems */
+.font-landing { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; }
+.font-farmer { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+.font-reels { font-family: 'Space Grotesk', 'Outfit', sans-serif; }
+.font-twin { font-family: 'Space Grotesk', 'JetBrains Mono', sans-serif; }
+.font-mono-data { font-family: 'JetBrains Mono', monospace; }
+.font-syne-heading { font-family: 'Syne', 'Outfit', sans-serif; }
+.font-inter-gov { font-family: 'Inter', -apple-system, sans-serif; }
 
 /* Farmer-first home: clear language, calm colour, one decision at a time. */
 .farmer-nav { position: sticky; top: 0; z-index: 100; background: rgba(255,253,247,.94); backdrop-filter: blur(14px); border-bottom: 1px solid #ece8dc; }
