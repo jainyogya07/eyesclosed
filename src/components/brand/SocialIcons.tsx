@@ -127,3 +127,116 @@ export const SocialMediaLinks: React.FC<{ compact?: boolean }> = ({ compact = fa
     </div>
   );
 };
+
+/**
+ * Compact Icon-Only Social Cluster for Navigation Headers
+ */
+export const HeaderSocialIcons: React.FC<{ light?: boolean }> = ({ light = true }) => {
+  return (
+    <div
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        background: light ? 'rgba(0, 0, 0, 0.35)' : 'rgba(241, 245, 249, 0.8)',
+        backdropFilter: 'blur(10px)',
+        padding: '3px 6px',
+        borderRadius: '999px',
+        border: light ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid #cbd5e1'
+      }}
+    >
+      {/* YouTube */}
+      <a
+        href="https://www.youtube.com/@manageindia"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="YouTube — कृषि तकनीक व किसान ट्रेनिंग वीडियो"
+        aria-label="YouTube Channel"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '28px',
+          height: '28px',
+          borderRadius: '50%',
+          background: 'rgba(255, 0, 0, 0.15)',
+          color: '#ff3333',
+          textDecoration: 'none',
+          transition: 'all 0.2s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.15)';
+          e.currentTarget.style.background = 'rgba(255, 0, 0, 0.35)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.background = 'rgba(255, 0, 0, 0.15)';
+        }}
+      >
+        <YoutubeIcon size={15} color="#ff3333" />
+      </a>
+
+      {/* Twitter / X */}
+      <a
+        href="https://twitter.com/icarindia"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Twitter / X — ताज़ा मौसम व कृषि अलर्ट"
+        aria-label="Twitter X Account"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '28px',
+          height: '28px',
+          borderRadius: '50%',
+          background: light ? 'rgba(255, 255, 255, 0.12)' : 'rgba(15, 23, 42, 0.1)',
+          color: light ? '#ffffff' : '#0f172a',
+          textDecoration: 'none',
+          transition: 'all 0.2s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.15)';
+          e.currentTarget.style.background = light ? 'rgba(255, 255, 255, 0.28)' : 'rgba(15, 23, 42, 0.25)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.background = light ? 'rgba(255, 255, 255, 0.12)' : 'rgba(15, 23, 42, 0.1)';
+        }}
+      >
+        <TwitterIcon size={13} color={light ? '#ffffff' : '#0f172a'} />
+      </a>
+
+      {/* Instagram */}
+      <a
+        href="https://instagram.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Instagram — सफल किसानों की कहानियां"
+        aria-label="Instagram Account"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '28px',
+          height: '28px',
+          borderRadius: '50%',
+          background: 'rgba(217, 70, 239, 0.16)',
+          textDecoration: 'none',
+          transition: 'all 0.2s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.15)';
+          e.currentTarget.style.background = 'rgba(217, 70, 239, 0.35)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.background = 'rgba(217, 70, 239, 0.16)';
+        }}
+      >
+        <InstagramIcon size={14} />
+      </a>
+    </div>
+  );
+};
+

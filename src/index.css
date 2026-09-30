@@ -730,4 +730,39 @@ html, body {
   }
 }
 
+/* =====================================================================
+   Dedicated Landing Navbar Styles
+   ===================================================================== */
+.landing-navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: linear-gradient(180deg, rgba(10, 22, 12, 0.94) 0%, rgba(10, 22, 12, 0.6) 80%, transparent 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 990px) {
+  .landing-nav-links {
+    display: none !important;
+  }
+  .landing-mobile-menu-toggle {
+    display: inline-flex !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .landing-header-socials {
+    display: none !important;
+  }
+  .landing-primary-cta {
+    padding: 7px 12px !important;
+    font-size: 0.78rem !important;
+  }
+}
+
+
 

@@ -5,6 +5,7 @@ import { FarmProvider } from './contexts/FarmContext';
 import { RoleProvider } from './contexts/RoleContext';
 import { LivePredictionProvider } from './providers/LivePredictionProvider';
 import { Navbar } from './components/navigation/Navbar';
+import { LandingNavbar } from './components/navigation/LandingNavbar';
 import { Sidebar } from './components/navigation/Sidebar';
 import { FarmContextBar } from './components/navigation/FarmContextBar';
 import { IntelligenceRail } from './components/navigation/IntelligenceRail';
@@ -98,7 +99,7 @@ const AppShell: React.FC = () => {
           : 'linear-gradient(180deg, rgba(248, 250, 252, 0.88) 0%, rgba(241, 245, 249, 0.94) 100%), url("/assets/farm-landscape-bg.jpg") center top / cover fixed no-repeat'
       }}
     >
-      {!isLogin && <Navbar />}
+      {!isLogin && (isHome ? <LandingNavbar /> : <Navbar />)}
       {!isLogin && !isHome && !isGovernance && <FarmContextBar />}
 
       {/* Spacious Left Sidebar with responsive offset */}
