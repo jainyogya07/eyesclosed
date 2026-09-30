@@ -268,7 +268,7 @@ export const IntelligenceRail: React.FC = () => {
             color: '#dc2626',
             page: '/district-officer/risk-command',
             headline: 'Active District Hazards',
-            detail: '730 ha lowland waterlogging exposure across Bakshi Ka Talab & Itaunja.',
+            detail: '730 ha lowland waterlogging exposure across Gharaunda & Itaunja.',
             action: 'Deploy drainage pump directive.'
           },
           {

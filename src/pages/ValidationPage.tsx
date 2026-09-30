@@ -69,7 +69,7 @@ export const ValidationPage: React.FC = () => {
               <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                 <td style={{ padding: '12px 14px', fontWeight: 700, color: 'var(--color-earth-emerald)' }}>TRAIN</td>
                 <td style={{ padding: '12px 14px', fontFamily: 'var(--font-mono)' }}>AWS_LKO_01, 02, 03</td>
-                <td style={{ padding: '12px 14px' }}>Amausi, Bakshi Ka Talab, Mohanlalganj</td>
+                <td style={{ padding: '12px 14px' }}>Amausi, Gharaunda, Mohanlalganj</td>
                 <td style={{ padding: '12px 14px' }}>Feature fitting and tree optimization</td>
                 <td style={{ padding: '12px 14px' }}><span className="badge badge-frozen">TRAINING AGENTS</span></td>
               </tr>

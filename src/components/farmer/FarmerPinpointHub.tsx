@@ -35,7 +35,7 @@ import { VerticalActionTabs, TabId } from '../navigation/VerticalActionTabs';
 export const PILOT_PANCHAYATS = [
   { code: '0924001001', name: 'Malihabad', hi: 'मलिहाबाद', soilType: 'सैंडी दोमट (Sandy Loam)', ph: 7.2, npk: 'N: मध्यम, P: अधिक, K: मध्यम', waterTable: '14 मीटर' },
   { code: '0924001002', name: 'Mohanlalganj', hi: 'मोहनलालगंज', soilType: 'दोमट मटियार (Loam Clay)', ph: 7.4, npk: 'N: कम, P: मध्यम, K: अधिक', waterTable: '11 मीटर' },
-  { code: '0924001003', name: 'Bakshi Ka Talab', hi: 'बख्शी का तालाब', soilType: 'कछार दोमट (Alluvial Loam)', ph: 7.1, npk: 'N: मध्यम, P: मध्यम, K: मध्यम', waterTable: '9 मीटर' },
+  { code: '0924001003', name: 'Gharaunda', hi: 'घरौंदा', soilType: 'कछार दोमट (Alluvial Loam)', ph: 7.1, npk: 'N: मध्यम, P: मध्यम, K: मध्यम', waterTable: '9 मीटर' },
   { code: '0924001004', name: 'Chinhat', hi: 'चिनहट', soilType: 'सिल्ट दोमट (Silt Loam)', ph: 7.3, npk: 'N: कम, P: कम, K: मध्यम', waterTable: '13 मीटर' },
   { code: '0924001005', name: 'Amausi', hi: 'अमौसी', soilType: 'क्ले दोमट (Clay Loam)', ph: 7.5, npk: 'N: मध्यम, P: अधिक, K: अधिक', waterTable: '10 मीटर' }
 ];

@@ -77,7 +77,7 @@ export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children
           levelEn: 'Local Operations & Village Oversight',
           levelHi: 'स्थानीय ग्राम परिचालन व निगरानी',
           assignedDistrict: 'Lucknow',
-          assignedBlock: 'Bakshi Ka Talab',
+          assignedBlock: 'Gharaunda',
           assignedPanchayat: activePanchayat.name,
           assignedVillages: activePanchayat.villages.map((v) => v.name),
           subordinatePanchayatsCount: 1

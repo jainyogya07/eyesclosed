@@ -81,9 +81,14 @@ const AppShell: React.FC = () => {
     }
   }, [farm.isConfigured, farm.panchayat?.code]);
 
+  const isGovernance =
+    location.pathname.startsWith('/panchayat-officer') ||
+    location.pathname.startsWith('/agriculture-expert') ||
+    location.pathname.startsWith('/district-officer');
+
   return (
     <div
-      className={`platform-shell ${isHome ? 'home-shell' : ''} ${isLogin ? 'login-shell' : ''}`}
+      className={`platform-shell ${isHome ? 'home-shell' : ''} ${isLogin ? 'login-shell' : ''} ${isGovernance ? 'governance-shell' : ''}`}
       style={{
         minHeight: '100vh',
         display: 'flex',
@@ -94,7 +99,7 @@ const AppShell: React.FC = () => {
       }}
     >
       {!isLogin && <Navbar />}
-      {!isLogin && !isHome && <FarmContextBar />}
+      {!isLogin && !isHome && !isGovernance && <FarmContextBar />}
 
       {/* Spacious Left Sidebar with responsive offset */}
       {!isLogin && !isHome && (
@@ -193,8 +198,8 @@ const AppShell: React.FC = () => {
         </Routes>
       </main>
 
-      {/* Floating Right-Side Intelligence Rail (Desktop) */}
-      {!isLogin && !isHome && <IntelligenceRail />}
+      {/* Floating Right-Side Intelligence Rail (Farmer Mode Only, Never on Governance) */}
+      {!isLogin && !isHome && !isGovernance && <IntelligenceRail />}
 
       {!isLogin && (
         <>

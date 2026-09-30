@@ -37,7 +37,7 @@ export const PanchayatOfficerHub: React.FC<PanchayatOfficerHubProps> = ({ initia
   const [activeTab, setActiveTab] = useState<string>(initialTab);
   const [selectedVillage, setSelectedVillage] = useState<string>('all');
   const [selectedGridCell, setSelectedGridCell] = useState<{ id: string; lat: number; lon: number; rain: number; risk: string } | null>({
-    id: 'Cell-BKT-04',
+    id: 'Cell-GHR-04',
     lat: 27.016,
     lon: 80.884,
     rain: 14.8,
@@ -53,6 +53,12 @@ export const PanchayatOfficerHub: React.FC<PanchayatOfficerHubProps> = ({ initia
     message: 'Stop all electric tubewell pumping. Open field drainage cuts before 3:00 PM to discharge standing water.'
   });
   const [publishedSuccess, setPublishedSuccess] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
 
   const tabs = [
     { id: 'dashboard', labelEn: 'Dashboard', labelHi: 'डैशबोर्ड', icon: Layers },
@@ -182,48 +188,16 @@ export const PanchayatOfficerHub: React.FC<PanchayatOfficerHubProps> = ({ initia
         </div>
       </div>
 
-      {/* Sub-Navigation Tabs */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '8px',
-          overflowX: 'auto',
-          paddingBottom: '12px',
-          marginBottom: '20px',
-          borderBottom: '1px solid #e2e8f0',
-          scrollbarWidth: 'none'
-        }}
-      >
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '9px 16px',
-                borderRadius: '12px',
-                border: isActive ? '1.5px solid #059669' : '1px solid #e2e8f0',
-                background: isActive ? '#ecfdf5' : '#ffffff',
-                color: isActive ? '#059669' : '#475569',
-                fontSize: '0.82rem',
-                fontWeight: isActive ? 800 : 600,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease',
-                boxShadow: isActive ? '0 4px 12px rgba(5, 150, 105, 0.12)' : 'none'
-              }}
-            >
-              <Icon size={16} color={isActive ? '#059669' : '#64748b'} />
-              <span>{en ? tab.labelEn : tab.labelHi}</span>
-            </button>
-          );
-        })}
+      {/* Active Module Indicator */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            {en ? 'Active Module' : 'सक्रिय मॉड्यूल'}:
+          </span>
+          <span style={{ fontSize: '0.9rem', fontWeight: 900, color: '#065f46' }}>
+            {tabs.find((t) => t.id === activeTab)?.[en ? 'labelEn' : 'labelHi'] || 'Dashboard'}
+          </span>
+        </div>
       </div>
 
       {/* Notification Toast */}
@@ -486,14 +460,14 @@ export const PanchayatOfficerHub: React.FC<PanchayatOfficerHubProps> = ({ initia
             {/* Simulated 1km Grid Matrix */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '16px' }}>
               {[
-                { id: 'Cell-BKT-01', name: 'Rampur North', rain: 13.2, risk: 'Low' },
-                { id: 'Cell-BKT-02', name: 'Rampur South', rain: 16.4, risk: 'Moderate' },
-                { id: 'Cell-BKT-03', name: 'Shivpur Center', rain: 15.6, risk: 'Moderate' },
-                { id: 'Cell-BKT-04', name: 'Kishanpur Basin', rain: 18.0, risk: 'High Waterlogging' },
-                { id: 'Cell-BKT-05', name: 'Kalyanpur East', rain: 11.2, risk: 'Low' },
-                { id: 'Cell-BKT-06', name: 'Kalyanpur West', rain: 12.0, risk: 'Low' },
-                { id: 'Cell-BKT-07', name: 'Panchayat Hub', rain: 14.8, risk: 'Moderate' },
-                { id: 'Cell-BKT-08', name: 'Canal Siphon', rain: 17.5, risk: 'High Silt Runoff' }
+                { id: 'Cell-GHR-01', name: 'Rampur North', rain: 13.2, risk: 'Low' },
+                { id: 'Cell-GHR-02', name: 'Rampur South', rain: 16.4, risk: 'Moderate' },
+                { id: 'Cell-GHR-03', name: 'Shivpur Center', rain: 15.6, risk: 'Moderate' },
+                { id: 'Cell-GHR-04', name: 'Kishanpur Basin', rain: 18.0, risk: 'High Waterlogging' },
+                { id: 'Cell-GHR-05', name: 'Kalyanpur East', rain: 11.2, risk: 'Low' },
+                { id: 'Cell-GHR-06', name: 'Kalyanpur West', rain: 12.0, risk: 'Low' },
+                { id: 'Cell-GHR-07', name: 'Panchayat Hub', rain: 14.8, risk: 'Moderate' },
+                { id: 'Cell-GHR-08', name: 'Canal Siphon', rain: 17.5, risk: 'High Silt Runoff' }
               ].map((cell) => {
                 const isSelected = selectedGridCell?.id === cell.id;
                 return (

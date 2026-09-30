@@ -18,12 +18,16 @@ import {
   Cpu,
   Database,
   ShieldCheck,
-  BookOpen
+  BookOpen,
+  Activity,
+  RefreshCw,
+  Radio
 } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import { useFarm } from '../../contexts/FarmContext';
 import { useRole } from '../../contexts/RoleContext';
 import { KisaanLogo } from '../brand/KisaanLogo';
+import { realtimeTelemetry, TelemetryPacket } from '../../services/realtimeTelemetryService';
 
 export const Navbar: React.FC = () => {
   const { language, setLanguage, location, isSignedIn, signOut, platformMode, setPlatformMode } = useApp();
@@ -34,6 +38,29 @@ export const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [telemetry, setTelemetry] = useState<TelemetryPacket>(realtimeTelemetry.getLastPacket());
+  const [showTelemetryModal, setShowTelemetryModal] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncToast, setSyncToast] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const unsub = realtimeTelemetry.subscribe((pkt) => {
+      setTelemetry(pkt);
+    });
+    return unsub;
+  }, []);
+
+  const handleManualSync = () => {
+    setIsSyncing(true);
+    setTimeout(() => {
+      const pkt = realtimeTelemetry.forceSync();
+      setTelemetry(pkt);
+      setIsSyncing(false);
+      setSyncToast(hi ? 'लाइव टेलीमेट्री सिंक संपन्न!' : 'Live telemetry synchronized!');
+      setTimeout(() => setSyncToast(null), 3000);
+    }, 400);
+  };
+
   const hi = language === 'hi';
   const referenceHome = pageLocation.pathname === '/home' || pageLocation.pathname === '/';
 
@@ -59,18 +86,41 @@ export const Navbar: React.FC = () => {
     { to: '/data-center', label: hi ? 'डेटा केंद्र व टेलीमेट्री' : 'Data Center & Telemetry', icon: Database }
   ];
 
+  const isGovernance =
+    pageLocation.pathname.startsWith('/panchayat-officer') ||
+    pageLocation.pathname.startsWith('/agriculture-expert') ||
+    pageLocation.pathname.startsWith('/district-officer');
+
   return (
     <header className={`farmer-nav ${referenceHome ? 'plantiq-nav agripilot-reference-nav' : ''}`}>
       <div className="farmer-nav-inner">
         {/* Brand */}
-        <Link to="/home" className="brand" aria-label="Mausam Setu Home">
-          <span className="brand-mark" style={{ display: 'flex', alignItems: 'center' }}>
-            <KisaanLogo size={38} />
-          </span>
-          <span>
-            <strong>Mausam Setu</strong>
-            <small>{hi ? 'हाइपरलोकल कृषि व मौसम सेतु' : 'Hyperlocal Farm Climate Bridge'}</small>
-          </span>
+        <Link
+          to="/home"
+          className="brand borderless-brand"
+          aria-label="Mausam Setu Home"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            textDecoration: 'none',
+            border: 'none',
+            outline: 'none',
+            boxShadow: 'none',
+            background: 'transparent',
+            padding: 0
+          }}
+        >
+          <img
+            src="/assets/mausam-setu-logo.png"
+            alt="MausamSetu - Sahi Samay, Sahi Salah, Har Kisaan Tak"
+            style={{
+              height: '44px',
+              width: 'auto',
+              maxWidth: '185px',
+              objectFit: 'contain',
+              display: 'block'
+            }}
+          />
         </Link>
 
         {/* Role-Based Governance Architecture Switcher */}
@@ -165,71 +215,127 @@ export const Navbar: React.FC = () => {
           </button>
         </div>
 
-        {/* Primary Desktop Nav */}
-        <nav className="farmer-nav-links platform-nav-links" aria-label="Main Navigation">
-          {primaryLinks.map(({ to, label }) => (
-            <NavLink key={to} to={to}>
-              {label}
-            </NavLink>
-          ))}
+        {/* Primary Desktop Nav: ONLY show farmer links when NOT in governance mode */}
+        {!isGovernance ? (
+          <nav className="farmer-nav-links platform-nav-links" aria-label="Main Navigation">
+            {primaryLinks.map(({ to, label }) => (
+              <NavLink key={to} to={to}>
+                {label}
+              </NavLink>
+            ))}
 
-          {/* More Dropdown */}
-          <div className="profile-wrap" style={{ display: 'inline-block' }}>
-            <button
-              type="button"
-              onClick={() => setMoreOpen(!moreOpen)}
-              className="more-nav-button"
+            {/* More Dropdown */}
+            <div className="profile-wrap" style={{ display: 'inline-block' }}>
+              <button
+                type="button"
+                onClick={() => setMoreOpen(!moreOpen)}
+                className="more-nav-button"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: referenceHome ? '#d7dfd6' : 'var(--text-secondary)',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  padding: '6px 8px'
+                }}
+              >
+                <span>{hi ? 'वैज्ञानिक लैब' : 'More Tools'}</span>
+                <ChevronDown size={13} />
+              </button>
+
+              {moreOpen && (
+                <div
+                  className="profile-menu"
+                  style={{ width: '230px', top: 'calc(100% + 6px)' }}
+                  onMouseLeave={() => setMoreOpen(false)}
+                >
+                  <div className="profile-menu-title">
+                    <Cpu size={14} /> {hi ? 'वैज्ञानिक इंफ्रास्ट्रक्चर' : 'Scientific Models'}
+                  </div>
+                  {moreLinks.map(({ to, label, icon: SubIcon }) => (
+                    <NavLink
+                      key={to}
+                      to={to}
+                      onClick={() => setMoreOpen(false)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 10px',
+                        borderRadius: '8px',
+                        textDecoration: 'none',
+                        color: '#1e293b',
+                        fontSize: '0.78rem',
+                        fontWeight: 600
+                      }}
+                    >
+                      <SubIcon size={15} color="#059669" />
+                      <span>{label}</span>
+                    </NavLink>
+                  ))}
+                </div>
+              )}
+            </div>
+          </nav>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Link
+              to="/my-farm"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '4px',
-                background: 'transparent',
-                border: 'none',
-                color: referenceHome ? '#d7dfd6' : 'var(--text-secondary)',
-                fontSize: '0.82rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                padding: '6px 8px'
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '999px',
+                background: '#ffffff',
+                border: '1.5px solid #059669',
+                color: '#059669',
+                fontSize: '0.76rem',
+                fontWeight: 800,
+                textDecoration: 'none',
+                boxShadow: '0 2px 6px rgba(5, 150, 105, 0.08)'
               }}
             >
-              <span>{hi ? 'वैज्ञानिक लैब' : 'More Tools'}</span>
-              <ChevronDown size={13} />
-            </button>
+              <span>👨‍🌾</span>
+              <span>{hi ? 'किसान डैशबोर्ड' : 'Farmer Dashboard'}</span>
+            </Link>
 
-            {moreOpen && (
-              <div
-                className="profile-menu"
-                style={{ width: '230px', top: 'calc(100% + 6px)' }}
-                onMouseLeave={() => setMoreOpen(false)}
-              >
-                <div className="profile-menu-title">
-                  <Cpu size={14} /> {hi ? 'वैज्ञानिक इंफ्रास्ट्रक्चर' : 'Scientific Models'}
-                </div>
-                {moreLinks.map(({ to, label, icon: SubIcon }) => (
-                  <NavLink
-                    key={to}
-                    to={to}
-                    onClick={() => setMoreOpen(false)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      padding: '8px 10px',
-                      borderRadius: '8px',
-                      textDecoration: 'none',
-                      color: '#1e293b',
-                      fontSize: '0.78rem',
-                      fontWeight: 600
-                    }}
-                  >
-                    <SubIcon size={15} color="#059669" />
-                    <span>{label}</span>
-                  </NavLink>
-                ))}
-              </div>
-            )}
+            <button
+              type="button"
+              onClick={() => setShowTelemetryModal(!showTelemetryModal)}
+              title={hi ? 'रीयल-टाइम बैकएंड टेलीमेट्री कनेक्शन स्थिति देखें' : 'View real-time backend telemetry connection status'}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '5px 12px',
+                borderRadius: '999px',
+                background: '#ecfdf5',
+                border: '1px solid #a7f3d0',
+                color: '#065f46',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: '#10b981',
+                  boxShadow: '0 0 8px #10b981'
+                }}
+              />
+              <span>{hi ? `लाइव सिंक (${telemetry.pingMs}ms)` : `Live 1km Sync (${telemetry.pingMs}ms)`}</span>
+            </button>
           </div>
-        </nav>
+        )}
 
         {/* Action Controls */}
         <div className="nav-actions">
@@ -268,6 +374,38 @@ export const Navbar: React.FC = () => {
             <MapPin size={13} />
             <span>{hi ? scope.scopeBadgeHi : scope.scopeBadgeEn}</span>
           </span>
+
+          {/* Real-time sync indicator (Global) */}
+          <button
+            type="button"
+            onClick={() => setShowTelemetryModal(!showTelemetryModal)}
+            title={hi ? 'रीयल-टाइम बैकएंड टेलीमेट्री स्थिति' : 'Real-time telemetry stream status'}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '5px',
+              padding: '5px 10px',
+              borderRadius: '999px',
+              background: referenceHome ? 'rgba(0,0,0,0.3)' : '#ecfdf5',
+              border: referenceHome ? '1px solid rgba(255,255,255,0.25)' : '1px solid #a7f3d0',
+              color: referenceHome ? '#ffffff' : '#065f46',
+              fontSize: '0.72rem',
+              fontWeight: 800,
+              cursor: 'pointer'
+            }}
+          >
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                background: '#10b981',
+                boxShadow: '0 0 6px #10b981'
+              }}
+            />
+            <Activity size={12} color={referenceHome ? '#6ee7b7' : '#059669'} />
+            <span>{telemetry.pingMs}ms</span>
+          </button>
 
           {/* Segmented Language Switcher */}
           <div
@@ -378,6 +516,109 @@ export const Navbar: React.FC = () => {
             {menuOpen ? <X /> : <Menu />}
           </button>
         </div>
+
+        {/* Real-time Telemetry Stream Modal Popover */}
+        {showTelemetryModal && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '64px',
+              right: '20px',
+              width: '360px',
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '20px',
+              boxShadow: '0 16px 40px rgba(15, 23, 42, 0.22)',
+              border: '1px solid #cbd5e1',
+              zIndex: 1000
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Radio size={18} color="#059669" />
+                <strong style={{ fontSize: '0.92rem', color: '#0f172a' }}>
+                  {hi ? 'रीयल-टाइम बैकएंड टेलीमेट्री' : 'Live Real-Time Telemetry Stream'}
+                </strong>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowTelemetryModal(false)}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '14px', fontSize: '0.78rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span style={{ color: '#64748b' }}>Active Node:</span>
+                <strong style={{ color: '#0f172a' }}>{telemetry.nodeId}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span style={{ color: '#64748b' }}>Assigned Region:</span>
+                <strong style={{ color: '#059669' }}>{telemetry.panchayat}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span style={{ color: '#64748b' }}>Stream Latency:</span>
+                <strong style={{ color: '#0284c7' }}>{telemetry.pingMs} ms (WebSocket Active)</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#64748b' }}>Last Heartbeat:</span>
+                <span style={{ color: '#475569' }}>{telemetry.timestamp}</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginBottom: '16px', fontSize: '0.76rem' }}>
+              <div style={{ background: '#f0fdf4', padding: '10px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                <span style={{ color: '#047857', display: 'block', fontSize: '0.68rem', fontWeight: 800 }}>LIVE TEMP</span>
+                <strong style={{ fontSize: '1.1rem', color: '#065f46' }}>{telemetry.temperatureC}°C</strong>
+              </div>
+              <div style={{ background: '#eff6ff', padding: '10px', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
+                <span style={{ color: '#1d4ed8', display: 'block', fontSize: '0.68rem', fontWeight: 800 }}>RAIN (LAST HR)</span>
+                <strong style={{ fontSize: '1.1rem', color: '#1e40af' }}>{telemetry.rainLastHourMm} mm</strong>
+              </div>
+              <div style={{ background: '#fefce8', padding: '10px', borderRadius: '8px', border: '1px solid #fef08a' }}>
+                <span style={{ color: '#a16207', display: 'block', fontSize: '0.68rem', fontWeight: 800 }}>SOIL MOISTURE</span>
+                <strong style={{ fontSize: '1.1rem', color: '#854d0e' }}>{telemetry.soilMoisturePct}%</strong>
+              </div>
+              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                <span style={{ color: '#475569', display: 'block', fontSize: '0.68rem', fontWeight: 800 }}>WIND SPEED</span>
+                <strong style={{ fontSize: '1.1rem', color: '#0f172a' }}>{telemetry.windSpeedKmh} km/h</strong>
+              </div>
+            </div>
+
+            {syncToast && (
+              <div style={{ background: '#ecfdf5', color: '#065f46', padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700, marginBottom: '12px', textAlign: 'center' }}>
+                {syncToast}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={handleManualSync}
+              disabled={isSyncing}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '9px 16px',
+                borderRadius: '10px',
+                background: '#059669',
+                color: '#ffffff',
+                border: 'none',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                cursor: isSyncing ? 'wait' : 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <RefreshCw size={15} style={{ animation: isSyncing ? 'spin 1s linear infinite' : 'none' }} />
+              <span>{isSyncing ? (hi ? 'सिंक हो रहा है...' : 'Syncing Telemetry...') : (hi ? 'मैन्युअल सिंक करें' : 'Trigger Manual Ingest / Sync')}</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Expanded Mobile Menu */}

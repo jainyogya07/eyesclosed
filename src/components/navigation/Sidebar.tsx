@@ -20,13 +20,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Sprout,
-  Film,
-  Navigation
+  Film
 } from 'lucide-react';
 import { useRole } from '../../contexts/RoleContext';
 import { useApp } from '../../contexts/AppContext';
-import { useFarm, PILOT_PANCHAYATS_CATALOG } from '../../contexts/FarmContext';
-import { detectUserLocation } from '../../services/geoService';
 
 interface SidebarProps {
   collapsed: boolean;
@@ -35,52 +32,12 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const { role, scope, activePanchayat } = useRole();
-  const { language, setLocation } = useApp();
-  const { farm, configureFarm } = useFarm();
+  const { language } = useApp();
   const pageLocation = useLocation();
-  const navigate = useNavigate();
-
-  const [detecting, setDetecting] = useState(false);
-  const [geoStatus, setGeoStatus] = useState<string | null>(null);
 
   const en = language === 'en';
   const isHome = pageLocation.pathname === '/home' || pageLocation.pathname === '/';
   const isLogin = pageLocation.pathname === '/login';
-
-  const handleAutoDetectLocation = async () => {
-    setDetecting(true);
-    setGeoStatus(en ? 'Detecting GPS...' : 'GPS खोज रहे हैं...');
-    try {
-      const res = await detectUserLocation(PILOT_PANCHAYATS_CATALOG);
-      if (res.success && res.nearestPanchayat) {
-        const p = res.nearestPanchayat;
-        setLocation({
-          panchayatCode: p.code,
-          panchayatName: p.name,
-          district: p.district,
-          state: p.state,
-          lat: p.lat,
-          lon: p.lon
-        });
-        if (farm.isConfigured) {
-          configureFarm({
-            panchayat: p,
-            soil: { ...farm.soil, type: p.soilType, ph: p.ph }
-          });
-        }
-        setGeoStatus(en ? `Found: ${p.name}` : `स्थान: ${p.hi}`);
-        setTimeout(() => setGeoStatus(null), 3500);
-      } else {
-        setGeoStatus(res.errorMessage || (en ? 'Location unavailable' : 'स्थान उपलब्ध नहीं'));
-        setTimeout(() => setGeoStatus(null), 3000);
-      }
-    } catch {
-      setGeoStatus(en ? 'GPS detection failed' : 'GPS डिटेक्शन विफल');
-      setTimeout(() => setGeoStatus(null), 3000);
-    } finally {
-      setDetecting(false);
-    }
-  };
 
   if (isLogin || isHome) return null;
 
@@ -343,61 +300,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
           background: 'rgba(248, 250, 252, 0.8)'
         }}
       >
-        {!collapsed && (
-          <div style={{ marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.64rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase' }}>
-              {en ? 'Active Scope' : 'सक्रिय कार्यक्षेत्र'}
+        {!collapsed ? (
+          <div>
+            <span style={{ fontSize: '0.64rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              {en ? 'Active Region Scope' : 'सक्रिय कार्यक्षेत्र'}
             </span>
-            <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: '2px' }}>
               {scope.scopeBadgeEn}
             </div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '8px', padding: '4px 8px', borderRadius: '6px', background: '#ecfdf5', border: '1px solid #a7f3d0' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 6px #10b981' }} />
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#047857' }}>
+                {en ? 'Live 1km Telemetry' : 'लाइव टेलीमेट्री'}
+              </span>
+            </div>
           </div>
-        )}
-
-        <button
-          type="button"
-          onClick={handleAutoDetectLocation}
-          disabled={detecting}
-          title={en ? 'Auto-Detect My Location (GPS)' : 'जीपीएस से मेरा स्थान पहचानें'}
-          style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: collapsed ? 'center' : 'flex-start',
-            gap: '8px',
-            padding: collapsed ? '8px 0' : '7px 10px',
-            borderRadius: '9px',
-            border: '1px solid #cbd5e1',
-            background: '#ffffff',
-            color: '#334155',
-            fontSize: '0.74rem',
-            fontWeight: 700,
-            cursor: detecting ? 'wait' : 'pointer'
-          }}
-        >
-          <Navigation
-            size={14}
-            color="#0284c7"
-            style={{ animation: detecting ? 'spin 1.5s linear infinite' : 'none' }}
-          />
-          {!collapsed && (
-            <span>{detecting ? (en ? 'Locating...' : 'खोज रहे हैं...') : en ? 'Use My Location' : 'स्थान पहचानें'}</span>
-          )}
-        </button>
-
-        {!collapsed && geoStatus && (
-          <div
-            style={{
-              marginTop: '6px',
-              padding: '4px 8px',
-              borderRadius: '6px',
-              background: '#eff6ff',
-              color: '#1d4ed8',
-              fontSize: '0.68rem',
-              fontWeight: 600
-            }}
-          >
-            {geoStatus}
+        ) : (
+          <div style={{ display: 'flex', justifyContent: 'center' }} title={scope.scopeBadgeEn}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
           </div>
         )}
       </div>

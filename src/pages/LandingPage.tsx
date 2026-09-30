@@ -16,68 +16,19 @@ import {
   ArrowRight,
   Sparkles,
   RotateCcw,
-  Navigation,
   Sliders,
   CheckCircle2
 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
-import { useFarm, PILOT_PANCHAYATS_CATALOG } from '../contexts/FarmContext';
-import { detectUserLocation } from '../services/geoService';
+import { useFarm } from '../contexts/FarmContext';
 import heroAerial from '../../assets/images/kisaan-aerial-hero.png';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { language, location, setLocation } = useApp();
+  const { language, location } = useApp();
   const { farm, loadDemoFarm, configureFarm, resetFarm } = useFarm();
   const hi = language === 'hi';
   const en = !hi;
-
-  const [detecting, setDetecting] = useState(false);
-  const [geoMsg, setGeoMsg] = useState<string | null>(null);
-
-  const handleAutoDetectLocation = async () => {
-    setDetecting(true);
-    setGeoMsg(en ? 'Detecting GPS coordinates...' : 'GPS स्थान खोजा जा रहा है...');
-    try {
-      const res = await detectUserLocation(PILOT_PANCHAYATS_CATALOG);
-      if (res.success && res.nearestPanchayat) {
-        const p = res.nearestPanchayat;
-        setLocation({
-          panchayatCode: p.code,
-          panchayatName: p.name,
-          district: p.district,
-          state: p.state,
-          lat: p.lat,
-          lon: p.lon
-        });
-
-        if (farm.isConfigured) {
-          configureFarm({
-            panchayat: p,
-            soil: {
-              ...farm.soil,
-              type: p.soilType,
-              ph: p.ph
-            }
-          });
-        }
-        setGeoMsg(
-          en
-            ? `Detected: ${res.detectedPlaceName || p.name} (${res.distanceKm} km away)`
-            : `स्थान मिला: ${p.hi} (${res.distanceKm} किमी दूर)`
-        );
-        setTimeout(() => setGeoMsg(null), 4000);
-      } else {
-        setGeoMsg(res.errorMessage || (en ? 'Location unavailable' : 'स्थान उपलब्ध नहीं'));
-        setTimeout(() => setGeoMsg(null), 4000);
-      }
-    } catch {
-      setGeoMsg(en ? 'GPS detection failed' : 'GPS डिटेक्शन विफल');
-      setTimeout(() => setGeoMsg(null), 3000);
-    } finally {
-      setDetecting(false);
-    }
-  };
 
   const solutionModules = [
     [
@@ -198,13 +149,12 @@ export const LandingPage: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={handleAutoDetectLocation}
-                disabled={detecting}
+                onClick={() => navigate('/panchayat-officer')}
                 className="plantiq-secondary"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(5, 150, 105, 0.18)', borderColor: 'rgba(16, 185, 129, 0.45)', color: '#ffffff' }}
               >
-                <Navigation size={16} />
-                <span>{detecting ? (hi ? 'खोज रहे हैं...' : 'Detecting...') : hi ? 'मेरा स्थान पहचानें (GPS)' : 'Use My Location'}</span>
+                <span>🏛️</span>
+                <span>{hi ? 'अधिकारी व विशेषज्ञ केंद्र' : 'Officer & Expert Dashboards'}</span>
               </button>
               <button
                 type="button"
@@ -219,22 +169,6 @@ export const LandingPage: React.FC = () => {
                 {hi ? 'डिजिटल ट्विन 3D' : 'Digital Twin 3D'}
               </Link>
             </div>
-            {geoMsg && (
-              <div
-                style={{
-                  marginTop: '12px',
-                  display: 'inline-block',
-                  background: 'rgba(255, 255, 255, 0.92)',
-                  color: '#0369a1',
-                  padding: '6px 14px',
-                  borderRadius: '999px',
-                  fontSize: '0.8rem',
-                  fontWeight: 700
-                }}
-              >
-                {geoMsg}
-              </div>
-            )}
           </motion.div>
         </div>
       </section>

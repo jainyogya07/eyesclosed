@@ -64,13 +64,13 @@ export interface PanchayatRecord {
   priorityRank: number; // District ranking: 1, 2, 3...
 }
 
-// 5 Panchayats under District Lucknow (Bakshi Ka Talab, Malihabad, Itaunja, Kakori, Sarojini Nagar)
+// 5 Panchayats under District Lucknow (Gharaunda, Malihabad, Itaunja, Kakori, Sarojini Nagar)
 export const DISTRICT_PANCHAYATS: PanchayatRecord[] = [
   {
     code: '0924001001',
-    name: 'Bakshi Ka Talab',
-    nameHi: 'बख्शी का तालाब',
-    block: 'Bakshi Ka Talab',
+    name: 'Gharaunda',
+    nameHi: 'घरौंदा',
+    block: 'Gharaunda',
     district: 'Lucknow',
     state: 'Uttar Pradesh',
     lat: 27.0167,
@@ -121,7 +121,7 @@ export const DISTRICT_PANCHAYATS: PanchayatRecord[] = [
     code: '0924001002',
     name: 'Itaunja',
     nameHi: 'इटौंजा',
-    block: 'Bakshi Ka Talab',
+    block: 'Gharaunda',
     district: 'Lucknow',
     state: 'Uttar Pradesh',
     lat: 27.0833,
@@ -399,7 +399,7 @@ export const UNIFIED_CROP_SUITABILITY: CropSuitabilityRecord[] = [
     economicReturnPerHa: '₹42,000 - ₹48,000',
     riskFactor: 'Grain molding if prolonged unseasonal rain occurs at maturity',
     whyExplanationEn:
-      'Exceptionally low water demand (350mm vs 1100mm for paddy). Deep taproot tolerates dry spells; ideal for upland sandy-loam tracts of Bakshi Ka Talab with minimal irrigation infrastructure.',
+      'Exceptionally low water demand (350mm vs 1100mm for paddy). Deep taproot tolerates dry spells; ideal for upland sandy-loam tracts of Gharaunda with minimal irrigation infrastructure.',
     whyExplanationHi:
       'बहुत कम पानी की आवश्यकता (केवल 350 मिमी)। गहरी जड़ प्रणाली सूखे को सहन कर लेती है। बिना सिंचाई वाले ऊंचे खेतों के लिए सर्वाधिक उपयुक्त।'
   },
@@ -534,7 +534,7 @@ export const UNIFIED_ACTIVE_RISKS: ActiveRiskHazard[] = [
     id: 'risk-01',
     hazardType: 'Waterlogging',
     severity: 'HIGH',
-    location: 'Bakshi Ka Talab (Villages Rampur & Shivpur) + Itaunja Lowlands',
+    location: 'Gharaunda (Villages Rampur & Shivpur) + Itaunja Lowlands',
     affectedAreaHa: 730,
     affectedCrop: 'Paddy (Flowering / Tillering)',
     expectedDuration: 'Next 24 to 36 hours',
@@ -548,7 +548,7 @@ export const UNIFIED_ACTIVE_RISKS: ActiveRiskHazard[] = [
     id: 'risk-02',
     hazardType: 'Heavy Rain',
     severity: 'MODERATE',
-    location: 'District Northern Arc (Bakshi Ka Talab & Itaunja Blocks)',
+    location: 'District Northern Arc (Gharaunda & Itaunja Blocks)',
     affectedAreaHa: 1420,
     affectedCrop: 'Standing Kharif Crops',
     expectedDuration: 'Next 18 hours (Peak 4 PM - 9 PM)',
@@ -622,7 +622,7 @@ export const INITIAL_ADVISORIES: AdvisoryItem[] = [
     titleHi: 'वैज्ञानिक परामर्श: यूरिया का छिड़काव रोकें व फफूंदनाशी सुरक्षा',
     issue: 'High Canopy Humidity and Elevated ETc during Panicle Emergence',
     affectedCrop: 'Paddy & Early Mustard',
-    affectedVillages: ['Bakshi Ka Talab Cluster'],
+    affectedVillages: ['Gharaunda Cluster'],
     urgency: 'HIGH',
     message:
       'Nitrogen top-dressing must be withheld until surface leaf wetness drops below 4 hours. If sheath blight symptoms appear on leaf sheaths, prepare 0.2% validamycin spray after rain event passes.',

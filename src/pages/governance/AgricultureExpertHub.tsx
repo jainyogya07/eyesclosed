@@ -56,6 +56,12 @@ export const AgricultureExpertHub: React.FC<AgricultureExpertHubProps> = ({ init
   const [expertSigned, setExpertSigned] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  React.useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
+
   const tabs = [
     { id: 'dashboard', labelEn: 'Dashboard', labelHi: 'डैशबोर्ड', icon: Layers },
     { id: 'crop-intelligence', labelEn: 'Crop Intelligence', labelHi: 'फसल विश्लेषण', icon: Wheat },
@@ -137,48 +143,16 @@ export const AgricultureExpertHub: React.FC<AgricultureExpertHubProps> = ({ init
         </div>
       </div>
 
-      {/* Sub-Navigation Tabs */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '8px',
-          overflowX: 'auto',
-          paddingBottom: '12px',
-          marginBottom: '20px',
-          borderBottom: '1px solid #e2e8f0',
-          scrollbarWidth: 'none'
-        }}
-      >
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '9px 16px',
-                borderRadius: '12px',
-                border: isActive ? '1.5px solid #059669' : '1px solid #e2e8f0',
-                background: isActive ? '#ecfdf5' : '#ffffff',
-                color: isActive ? '#059669' : '#475569',
-                fontSize: '0.82rem',
-                fontWeight: isActive ? 800 : 600,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease',
-                boxShadow: isActive ? '0 4px 12px rgba(5, 150, 105, 0.12)' : 'none'
-              }}
-            >
-              <Icon size={16} color={isActive ? '#059669' : '#64748b'} />
-              <span>{en ? tab.labelEn : tab.labelHi}</span>
-            </button>
-          );
-        })}
+      {/* Active Module Indicator */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            {en ? 'Active Module' : 'सक्रिय मॉड्यूल'}:
+          </span>
+          <span style={{ fontSize: '0.9rem', fontWeight: 900, color: '#047857' }}>
+            {tabs.find((t) => t.id === activeTab)?.[en ? 'labelEn' : 'labelHi'] || 'Dashboard'}
+          </span>
+        </div>
       </div>
 
       {/* Toast */}

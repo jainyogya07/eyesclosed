@@ -77,9 +77,9 @@ export const PILOT_PANCHAYATS_CATALOG: PanchayatInfo[] = [
   },
   {
     code: '0924001003',
-    name: 'Bakshi Ka Talab',
-    hi: 'बख्शी का तालाब',
-    block: 'Bakshi Ka Talab',
+    name: 'Gharaunda',
+    hi: 'घरौंदा',
+    block: 'Gharaunda',
     district: 'Lucknow',
     state: 'Uttar Pradesh',
     lat: 26.9800,
