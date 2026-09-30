@@ -17,8 +17,6 @@ import {
 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import heroAerial from '../../assets/images/kisaan-aerial-hero.png';
-import { AgroWarpBackground } from '../components/cinematic/AgroWarpBackground';
-import { FarmerPinpointHub } from '../components/farmer/FarmerPinpointHub';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -104,10 +102,7 @@ export const LandingPage: React.FC = () => {
   ] as const;
 
   return (
-    <div className="plantiq-home" style={{ position: 'relative', overflowX: 'hidden' }}>
-      {/* 0. LUMA-STYLE AGRO-WARP CINEMATIC BACKGROUND (Golden wheat + emerald chlorophyll + rain cyan rays & bio-spores) */}
-      <AgroWarpBackground speedMultiplier={1} rayCount={52} particleCount={90} />
-
+    <div className="plantiq-home">
       {/* 1. CINEMATIC HERO WITH VIDEO BACKGROUND */}
       <section className="plantiq-hero kisan-reference-hero" style={{ backgroundImage: `url(${heroAerial})` }}>
         <video
@@ -139,18 +134,8 @@ export const LandingPage: React.FC = () => {
                 : 'Connecting Indian agriculture with 1-km hyperlocal weather, satellite soil telemetry, and predictive AI.'}
             </p>
             <div className="plantiq-hero-actions">
-              <a
-                href="#farmer-hub"
-                className="plantiq-primary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('farmer-hub')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                {hi ? 'आज का सीधा फैसला देखें' : 'Today Field Decision'} <ChevronRight size={19} />
-              </a>
-              <button onClick={() => navigate('/panchayat')} className="plantiq-secondary">
-                {hi ? 'मेरी पंचायत ग्रिड' : 'Panchayat Grid'}
+              <button onClick={() => navigate('/panchayat')} className="plantiq-primary">
+                {hi ? 'मेरी पंचायत ग्रिड देखें' : 'Explore Panchayat Grid'} <ChevronRight size={19} />
               </button>
               <Link to="/digital-twin" className="plantiq-secondary">
                 {hi ? 'डिजिटल ट्विन 3D' : 'Digital Twin 3D'}
@@ -174,21 +159,8 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. PINPOINT FARMER DECISION HUB (Zero-clutter, Animated Cards, Right-side Vertical Tabs) */}
-      <section
-        id="farmer-hub"
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          padding: '2.5rem 0 3.5rem',
-          background: 'transparent'
-        }}
-      >
-        <FarmerPinpointHub />
-      </section>
-
-      {/* 4. MAUSAM SETU INTELLIGENCE SUITE OVERVIEW */}
-      <section className="kisan-intelligence-section" style={{ position: 'relative', zIndex: 10 }}>
+      {/* 3. MAUSAM SETU INTELLIGENCE SUITE OVERVIEW */}
+      <section className="kisan-intelligence-section">
         <div className="plantiq-container">
           <motion.header
             className="kisan-intelligence-heading"

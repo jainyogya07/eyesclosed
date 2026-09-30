@@ -7,10 +7,10 @@ import {
   SlidersHorizontal,
   Mic,
   AlertTriangle,
-  Volume2
+  TestTube
 } from 'lucide-react';
 
-export type TabId = 'sinchai' | 'fasal' | 'mausam' | 'scenario' | 'awaaz' | 'alerts';
+export type TabId = 'input' | 'sinchai' | 'fasal' | 'mausam' | 'scenario' | 'awaaz' | 'alerts';
 
 export interface VerticalActionTabsProps {
   activeTab: TabId;
@@ -27,27 +27,35 @@ export const TABS_CONFIG: {
   color: string;
 }[] = [
   {
+    id: 'input',
+    icon: TestTube,
+    labelHi: 'खेत व मिट्टी इनपुट',
+    labelEn: 'Farm & Soil Input',
+    badge: 'SETUP',
+    color: '#059669' // Emerald
+  },
+  {
     id: 'sinchai',
     icon: Droplets,
     labelHi: 'सिंचाई फैसला',
     labelEn: 'Irrigation Action',
-    badge: 'आज',
-    color: '#06b6d4' // Cyan
+    badge: 'TODAY',
+    color: '#0284c7' // Atmospheric Sky Blue
   },
   {
     id: 'fasal',
     icon: Sprout,
     labelHi: 'फसल सिफारिश',
-    labelEn: 'Top Crop Suitability',
+    labelEn: 'Crop Suitability',
     badge: '88%',
-    color: '#10b981' // Emerald
+    color: '#16a34a' // Green
   },
   {
     id: 'mausam',
     icon: CloudSun,
     labelHi: '1-किमी मौसम',
     labelEn: 'Hyperlocal Weather',
-    color: '#38bdf8' // Sky
+    color: '#0891b2' // Cyan
   },
   {
     id: 'scenario',
@@ -55,23 +63,23 @@ export const TABS_CONFIG: {
     labelHi: 'जलवायु सिम्युलेटर',
     labelEn: 'Climate Stress Sandbox',
     badge: 'AI',
-    color: '#f59e0b' // Amber
+    color: '#d97706' // Amber
   },
   {
     id: 'awaaz',
     icon: Mic,
     labelHi: 'किसान वाणी (माइक)',
     labelEn: 'Voice Assistant (Speak)',
-    badge: 'LIVE',
-    color: '#ec4899' // Pink / Voice
+    badge: 'MIC',
+    color: '#db2777' // Rose Pink
   },
   {
     id: 'alerts',
     icon: AlertTriangle,
     labelHi: 'पंचायत चेतावनी',
-    labelEn: 'Disaster & Hazard Alerts',
+    labelEn: 'Hazard Alerts',
     badge: '1',
-    color: '#ef4444' // Red
+    color: '#dc2626' // Red
   }
 ];
 
@@ -84,7 +92,7 @@ export const VerticalActionTabs: React.FC<VerticalActionTabsProps> = ({
 
   return (
     <aside
-      aria-label="Quick Navigator"
+      aria-label="Quick Section Navigator"
       className="vertical-action-tabs"
       style={{
         position: 'fixed',
@@ -95,14 +103,14 @@ export const VerticalActionTabs: React.FC<VerticalActionTabsProps> = ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '10px',
+        gap: '8px',
         padding: '10px 8px',
-        background: 'rgba(5, 15, 10, 0.72)',
+        background: 'rgba(255, 255, 255, 0.94)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderRadius: '999px',
-        border: '1px solid rgba(74, 222, 128, 0.25)',
-        boxShadow: '0 20px 45px rgba(0, 0, 0, 0.6), 0 0 20px rgba(5, 150, 105, 0.15)'
+        border: '1.5px solid rgba(203, 213, 225, 0.8)',
+        boxShadow: '0 12px 30px rgba(15, 23, 42, 0.10), 0 2px 8px rgba(0, 0, 0, 0.04)'
       }}
     >
       {TABS_CONFIG.map((tab) => {
@@ -122,22 +130,21 @@ export const VerticalActionTabs: React.FC<VerticalActionTabsProps> = ({
             <AnimatePresence>
               {(isHovered || (isActive && hoveredTab === null)) && (
                 <motion.div
-                  initial={{ opacity: 0, x: 12, scale: 0.92 }}
+                  initial={{ opacity: 0, x: 10, scale: 0.95 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: 8, scale: 0.95 }}
-                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  exit={{ opacity: 0, x: 6, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
                   style={{
                     position: 'absolute',
                     right: '100%',
                     marginRight: '12px',
                     whiteSpace: 'nowrap',
-                    background: 'rgba(10, 22, 15, 0.92)',
-                    backdropFilter: 'blur(16px)',
-                    border: `1px solid ${isActive ? tab.color : 'rgba(255, 255, 255, 0.12)'}`,
+                    background: '#ffffff',
+                    border: `1.5px solid ${isActive ? tab.color : '#e2e8f0'}`,
                     borderRadius: '12px',
                     padding: '6px 14px',
-                    color: '#f8fafc',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
+                    color: '#0f172a',
+                    boxShadow: '0 8px 24px rgba(15, 23, 42, 0.12)',
                     pointerEvents: 'none',
                     display: 'flex',
                     alignItems: 'center',
@@ -145,18 +152,18 @@ export const VerticalActionTabs: React.FC<VerticalActionTabsProps> = ({
                     zIndex: 100
                   }}
                 >
-                  <span style={{ fontSize: '0.82rem', fontWeight: 700, letterSpacing: '0.01em' }}>
+                  <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a' }}>
                     {tab.labelHi}
                   </span>
-                  <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
                     ({tab.labelEn})
                   </span>
                   {tab.badge && (
                     <span
                       style={{
                         background: tab.color,
-                        color: '#051b11',
-                        fontSize: '0.65rem',
+                        color: '#ffffff',
+                        fontSize: '0.62rem',
                         fontWeight: 900,
                         padding: '1px 6px',
                         borderRadius: '999px',
@@ -177,8 +184,8 @@ export const VerticalActionTabs: React.FC<VerticalActionTabsProps> = ({
               whileHover={{ scale: 1.15 }}
               whileTap={{ scale: 0.92 }}
               style={{
-                width: '46px',
-                height: '46px',
+                width: '44px',
+                height: '44px',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -187,10 +194,10 @@ export const VerticalActionTabs: React.FC<VerticalActionTabsProps> = ({
                 cursor: 'pointer',
                 position: 'relative',
                 background: isActive
-                  ? `radial-gradient(circle, ${tab.color}33 0%, rgba(255,255,255,0.05) 80%)`
-                  : 'rgba(255, 255, 255, 0.04)',
-                color: isActive ? tab.color : '#94a3b8',
-                transition: 'all 0.25s ease'
+                  ? `${tab.color}15`
+                  : 'transparent',
+                color: isActive ? tab.color : '#64748b',
+                transition: 'all 0.2s ease'
               }}
               title={tab.labelHi}
             >
@@ -198,13 +205,13 @@ export const VerticalActionTabs: React.FC<VerticalActionTabsProps> = ({
               {isActive && (
                 <motion.div
                   layoutId="verticalTabGlow"
-                  transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                  transition={{ type: 'spring', stiffness: 380, damping: 28 }}
                   style={{
                     position: 'absolute',
                     inset: -2,
                     borderRadius: '50%',
                     border: `2px solid ${tab.color}`,
-                    boxShadow: `0 0 16px ${tab.color}88`,
+                    boxShadow: `0 0 10px ${tab.color}40`,
                     pointerEvents: 'none'
                   }}
                 />
@@ -219,26 +226,25 @@ export const VerticalActionTabs: React.FC<VerticalActionTabsProps> = ({
                     position: 'absolute',
                     inset: -4,
                     borderRadius: '50%',
-                    background: '#ec4899',
+                    background: '#db2777',
                     pointerEvents: 'none'
                   }}
                 />
               )}
 
-              <Icon size={20} />
+              <Icon size={19} />
 
-              {/* Small notification badge */}
+              {/* Notification badge */}
               {tab.badge && !isActive && (
                 <span
                   style={{
                     position: 'absolute',
                     top: '2px',
                     right: '2px',
-                    width: '8px',
-                    height: '8px',
+                    width: '7px',
+                    height: '7px',
                     borderRadius: '50%',
-                    background: tab.color,
-                    boxShadow: `0 0 8px ${tab.color}`
+                    background: tab.color
                   }}
                 />
               )}
